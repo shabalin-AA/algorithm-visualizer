@@ -1,32 +1,67 @@
+import java.util.ArrayList;
+
 public class Compiler {
-  final static int init_cap = 16;
-  final static int grow_factor = 2;
-  static byte[] res;
-  static Flowchart fc;
-  static Node current;
+  Node[] nds;
+  Edge[] eds;
+  ArrayList<Byte> bytecode;
 
-  static void resize() {
-    byte[] tmp = new byte[res.length];
-    for (int i = 0; i < res.length; i++) {
-      tmp[i] = res[i];
+  public Compiler(Node[] nds, Edge[] eds) {
+    this.nds = nds;
+    this.eds = eds;
+    this.bytecode = new ArrayList<Byte>();
+  }
+
+  Node firstNode() {
+    for (Node n : nds) {
+      boolean found = false;
+      for (Edge e : eds) {
+        if (e.target == n.id) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) return n;
     }
-    res = new byte[tmp.length * grow_factor];
-    for (int i = 0; i < tmp.length; i++) {
-      res[i] = tmp[i];
+    return null;
+  }
+
+  Node nextNode(Node crnt) {
+    switch (crnt.type) {
+      case COND:
+        break;
+      default:
+        int idx = -1;
+        for (Edge e : eds) {
+          if (e.source == crnt.id) {
+            idx = e.target;
+            break;
+          }
+        }
+        for (Node n : nds) {
+          if (n.id == idx) return n;
+        }
+        return null;
+    }
+    return null;
+  }
+
+  void compileNode(Node n) {
+    switch (n.type) {
+      case CALC: 
+        System.out.printf("%d \t %s\n", n.id, n.type.name());
+        break;
+      case COND:
+        System.out.printf("%d \t %s\n", n.id, n.type.name());
+        break;
+      default: break;
     }
   }
 
-  static void step() {
-    current = current.left;
-  }
-
-  public static byte[] compile(Flowchart fc) {
-    res = new byte[init_cap];
-    fc = fc;
-    current = fc.root;
-    while (current.type != NodeType.TERMINATION_NODE) {
-      step();
+  public void compile() {
+    Node crnt = firstNode();
+    while (crnt != null) {
+      compileNode(crnt);
+      crnt = nextNode(crnt);
     }
-    return res;
   }
 }

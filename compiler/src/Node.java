@@ -1,18 +1,11 @@
 public class Node {
-  NodeType type;
-  String code;
-  Node left;
-  Node right;
-  public Node(NodeType type, String code) {
+  public int id;
+  public NodeType type;
+  public String code;
+
+  public Node(int id, NodeType type, String code) {
+    this.id = id;
     this.type = type;
     this.code = code;
-  }
-  public Node appendl(Node n) {
-    this.left = n;
-    return n;
-  }
-  public Node appendr(Node n) {
-    this.right = n;
-    return n;
   }
 }
