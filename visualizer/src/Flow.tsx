@@ -1,17 +1,27 @@
 import { useCallback } from "react";
+import { useState } from "react";
 import {
   ReactFlow,
   Node,
   addEdge,
+  SelectionMode,
   Background,
+  BackgroundVariant,
+  MiniMap,
   Edge,
   Connection,
   useNodesState,
-  useEdgesState
+  useEdgesState,
+  Panel,
+  Controls, 
+  ControlButton
 } from "@xyflow/react";
 import CalcBlock from "./CustomNode";
 import "@xyflow/react/dist/style.css";
+import NodeCustomPoints from "./CustomNodeBlock";
+import ButtonEdge from './ButtonEdge';
 
+// const panOnDrag = [1, 2];
 
 const initialNodes: Node[] = [
   {
@@ -27,17 +37,41 @@ const initialNodes: Node[] = [
     type: "CalcBlock",
     data: { label: "Calc Block" },
     position: { x: 400, y: 200 }
-  }
+  },
+
+  {
+    id: "5",
+    type: "NodeCustomPoints",
+    data: { label: "While" },
+    position: { x: 185, y: 250 },
+    style: {
+      background: '#fff',
+      border: '1px solid #777',
+      fontSize: 15,
+      padding: 10,
+    },
+  },
+  { id: "6", data: { label: "Node 4" }, position: { x: 150, y: 350 } },
+  
+
 ];
 
 const initialEdges: Edge[] = [
   { id: "e1-2", source: "1", target: "2", animated: true },
-  { id: "e1-3", source: "1", target: "3" }
+  { id: "e1-3", source: "1", target: "3" },
+  { id: "e5-6", source: "5", target: "6", type: 'buttonedge'},
+  { id: "e6-5", source: "6", target: "5", type: 'step',}
 ];
 
 const nodeTypes = {
-  CalcBlock: CalcBlock
+  CalcBlock: CalcBlock,
+  NodeCustomPoints: NodeCustomPoints
 };
+
+const edgeTypes = {
+  buttonedge: ButtonEdge,
+};
+
 
 const BasicFlow = () => {
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
@@ -54,13 +88,36 @@ const BasicFlow = () => {
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
+      // panOnScroll = {true}
+      // selectionOnDrag = {true}
+      // panOnDrag={panOnDrag}
+      // selectionMode={SelectionMode.Partial}
       nodeTypes={nodeTypes}
+      edgeTypes={edgeTypes}
       fitView
     >
-      <Background />
+      <MiniMap
+      pannable zoomable
+      />
+
+      <Background
+        id="1"
+        gap={25}
+        color="#f1f1f1"
+        variant={BackgroundVariant.Lines}
+      />
+ 
+      <Background
+        id="2"
+        gap={100}
+        color="#98ff98"
+        variant={BackgroundVariant.Lines}
+      />
+
     </ReactFlow>
   );
-};
+}
+
 
 export default BasicFlow;
 
