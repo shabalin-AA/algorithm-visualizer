@@ -49,11 +49,16 @@ public class Interpreter {
     else if (c == '=' ||
              c == '+' ||
              c == '>' ||
-             c == '<')
+             c == '<' ||
+             c == '-' ||
+             c == '*' ||
+             c == '/' ||
+             c == '!' ||
+             c == ';')
       return TokenType.OP;
-    else if (c >= 'A' && c <= 'z')
+    else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
       return TokenType.ID;
-    else if (c == ' ' ||
+    else if (c == ' '  ||
              c == '\t' ||
              c == '\n')
       return TokenType.SPACE;
@@ -63,36 +68,41 @@ public class Interpreter {
   class Token {
     public String str;
     public TokenType type;
+
+    public Token(TokenType type, String str) {
+      this.type = type;
+      this.str = str;
+    }
   }
 
   Token[] tokenize(String codeStr) {
     ArrayList<Token> res = new ArrayList<Token>();
-    int b = 0, e = 0;
     char[] code = codeStr.toCharArray();
-    Token crntTok = new Token();
+    int b = 0, e = 0;
+    TokenType bt, et;
     while (b < code.length) {
-      crntTok.type = getTokenType(code[b]);
-      e = b + 1;
-      if (e < code.length) {
-        TokenType et = getTokenType(code[e]);
-        while (et == crntTok.type) {
-          e++;
-          if (e == code.length) break;
-          et = getTokenType(code[e]);
-        }
+      bt = getTokenType(code[b]);
+      e = b;
+      et = getTokenType(code[e]);
+      while (et == bt) {
+        e++;
+        if (e == code.length) break;
+        et = getTokenType(code[e]);
       }
-      crntTok.str = codeStr.substring(b, e);
-      res.add(crntTok);
-      crntTok = new Token();
-      b = e + 1;
+      if (bt != TokenType.SPACE)
+        res.add(new Token(bt, codeStr.substring(b,e)));
+      b = e;
     }
     return res.toArray(new Token[res.size()]);
   }
 
   enum ExprType {
+    NEXT_EXPR,
     ASSIGN,
+    EQ, NOT_EQ,
     GT, LS,
-    ADD,
+    ADD, SUB,
+    MUL, DIV,
     NUM,
     ID,
     UNDEFINED
@@ -102,10 +112,16 @@ public class Interpreter {
     char[] chars = t.str.toCharArray();
     switch (t.type) {
       case OP:
+        if (t.str.equals(";")) return ExprType.NEXT_EXPR;
         if (t.str.equals("=")) return ExprType.ASSIGN;
         if (t.str.equals(">")) return ExprType.GT;
         if (t.str.equals("<")) return ExprType.LS;
         if (t.str.equals("+")) return ExprType.ADD;
+        if (t.str.equals("-")) return ExprType.SUB;
+        if (t.str.equals("*")) return ExprType.MUL;
+        if (t.str.equals("/")) return ExprType.DIV;
+        if (t.str.equals("==")) return ExprType.EQ;
+        if (t.str.equals("!=")) return ExprType.NOT_EQ;
         break;
       case NUM:
         for (char c : chars) {
@@ -174,6 +190,41 @@ public class Interpreter {
           b = this.args.get(1).eval();
           assert b instanceof Double;
           return ((double)a + (double)b);
+        case SUB:
+          a = this.args.get(0).eval();
+          assert a instanceof Double;
+          b = this.args.get(1).eval();
+          assert b instanceof Double;
+          return ((double)a - (double)b);
+        case MUL:
+          a = this.args.get(0).eval();
+          assert a instanceof Double;
+          b = this.args.get(1).eval();
+          assert b instanceof Double;
+          return ((double)a * (double)b);
+        case DIV:
+          a = this.args.get(0).eval();
+          assert a instanceof Double;
+          b = this.args.get(1).eval();
+          assert b instanceof Double;
+          return ((double)a / (double)b);
+        case EQ:
+          a = this.args.get(0).eval();
+          assert a instanceof Double;
+          b = this.args.get(1).eval();
+          assert b instanceof Double;
+          return ((double)a == (double)b);
+        case NOT_EQ:
+          a = this.args.get(0).eval();
+          assert a instanceof Double;
+          b = this.args.get(1).eval();
+          assert b instanceof Double;
+          return ((double)a != (double)b);
+        case NEXT_EXPR:
+          a = null;
+          for (Expr arg : this.args) 
+            a = arg.eval();
+          return a;
         default: break;
       }
       return null;
@@ -233,17 +284,19 @@ public class Interpreter {
   } 
 
   Object evalNode(Node n) {
-    //System.out.println(n.code);
     Token[] tokens = tokenize(n.code);
-    /*
-    for (Token t : tokens) {
-      System.out.printf("%s\t%s\n", t.str, t.type.name());
-    }
-    System.out.println(); 
-    */
     Expr ast = parse(tokens);
-    //System.out.println(ast);
     Object res = ast.eval();
+    if (true) { /* debug */
+      System.out.println(n.code);
+      for (Token t : tokens) {
+        System.out.printf("%s\t%s\n", t.str, t.type.name());
+      }
+      System.out.println(); 
+      System.out.println(ast);
+      System.out.println("result:\t" + res);
+      System.out.println('\n');
+    }
     switch (n.type) {
       case COND:
         scope.put("_if_value", (boolean)res);

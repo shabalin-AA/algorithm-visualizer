@@ -1,11 +1,11 @@
 public class Main {
   public static void main(String[] args) {
     Node[] nds = new Node[] {
-      new Node(0, NodeType.CALC, "a = 10"),
-      new Node(1, NodeType.COND, "a > 0"),
+      new Node(0, NodeType.CALC, "a = 10; d = 50"),
+      new Node(1, NodeType.COND, "a != 0"),
       new Node(2, NodeType.CALC, "b = a + 10"),
       new Node(3, NodeType.CALC, "b = a + 100"),
-      new Node(4, NodeType.CALC, "c = a + b")
+      new Node(4, NodeType.CALC, "d")
     };
     Edge[] eds = new Edge[] {
       new Edge(0, 0, 1),
