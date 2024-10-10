@@ -1,15 +1,24 @@
-import { Handle, Node, NodeResizer, Position, NodeProps} from "@xyflow/react";
+import { Handle, Node, Position, NodeProps} from "@xyflow/react";
 import "./styles.css"
 
-type Vlo = Node<{label: string}>;
+type Text = Node<{label: string}>;
 
-function NodeCustomPoints ({data}: NodeProps<Vlo>) {
+function NodeCustomPoints ({data}: NodeProps<Text>) {
   return (
-    <div>
-        <Handle type="source" position={Position.Bottom} />
-        <div style={{ padding: 10 }}>{data.label}</div>
-        <Handle type="target" position={Position.Right} />
-    </div>
+    <div> 
+        <div style={{
+          width: "50px", 
+          height: "50px",
+          background: '#fff',
+          border: '1px solid #777',
+          transform: "rotate(45deg)",
+          }}>
+        </div>
+        <div>
+            <Handle type="source" id="No" position={Position.Right} style={{right: -9}}/>
+            <Handle type="source" id="Yes" position={Position.Left} style={{left: -9}}/>
+        </div>  
+      </div>
   );
 };
 
