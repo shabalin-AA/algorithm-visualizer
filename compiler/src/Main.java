@@ -45,6 +45,7 @@ public class Main {
       Path.of(root), 
       SimpleFileServer.OutputLevel.INFO
     );
+    System.out.println("\n\nStarting server at localhost:3000");
     server.start();
   }
 
