@@ -1,16 +1,10 @@
 import com.sun.net.httpserver.HttpServer;
 import java.net.InetSocketAddress;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.SimpleFileServer;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.IOException;
-
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.nio.file.Path;
+
+import java.io.IOException;
 
 
 public class Main {
@@ -23,13 +17,9 @@ public class Main {
 
   public static void main(String[] args) throws IOException {
     int port = 3000;
-    server = SimpleFileServer.createFileServer(
-      new InetSocketAddress("localhost", port), 
-      Path.of(root), 
-      SimpleFileServer.OutputLevel.INFO
-    );
-    System.out.println("\n\nStarting server at localhost:" + port);
+    server = HttpServer.create(new InetSocketAddress(port), 0);
+    server.createContext("/", SimpleFileServer.createFileHandler(Path.of(root)));
+    server.createContext("/execute", new ExecuteHandler());
     server.start();
   }
-
 }
