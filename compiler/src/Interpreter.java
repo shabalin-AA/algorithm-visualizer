@@ -6,6 +6,7 @@ public class Interpreter {
   Node[] nds;
   Edge[] eds;
   HashMap<String, Object> scope;
+  HashMap<Integer, String> results;
 
   void printScope() {
     for (String k : scope.keySet()) {
@@ -21,6 +22,7 @@ public class Interpreter {
     this.nds = nds;
     this.eds = eds;
     this.scope = new HashMap<String, Object>();
+    this.results = new HashMap<Integer, String>();
   }
 
   Node firstNode() {
@@ -321,13 +323,12 @@ public class Interpreter {
     return null;
   }
 
-  public void eval() {
+  public HashMap<Integer, String> eval() {
     Node crnt = firstNode();
-    Object result = null;
     while (crnt != null) {
-      result = evalNode(crnt);
+      results.put(crnt.id, evalNode(crnt).toString());
       crnt = nextNode(crnt);
     }
-    System.out.println(result);
+    return results;
   }
 }

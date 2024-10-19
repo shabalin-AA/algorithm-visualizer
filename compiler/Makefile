@@ -1,5 +1,5 @@
 run: build
-	cd bin; java -ea Main
+	cd bin; java -ea -cp .:../lib/json.jar Main
 
 build: src/*.java
-	javac -d bin src/*.java
+	javac -cp lib/*.jar src/*.java -d bin
