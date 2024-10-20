@@ -26,7 +26,7 @@ public class Interpreter {
     this.scope = new HashMap<String, Object>();
     this.results = new HashMap<Integer, String>();
   }
-
+  
   Node firstNode() {
     for (Node n : nds) {
       boolean found = false;
