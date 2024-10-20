@@ -20,9 +20,9 @@ import CalcBlock from "./CustomNode";
 import "@xyflow/react/dist/style.css";
 import NodeCustomPoints from "./CustomNodeBlock";
 import ButtonEdge from './ButtonEdge';
-
-
+import axios from "axios"
 // const panOnDrag = [1, 2];
+const url = "http://localhost:3000/execute"
 
 const initialNodes: Node[] = [
   {
@@ -39,7 +39,6 @@ const initialNodes: Node[] = [
     data: { label: "Calc Block" },
     position: { x: 400, y: 200 }
   },
-  
   {
     id: "5",
     type: "NodeCustomPoints",
@@ -66,6 +65,19 @@ const edgeTypes = {
   buttonedge: ButtonEdge,
 };
 
+function AxiosPost(){
+
+  axios.post(url, {
+    Nodes: initialNodes,
+    Edges: initialEdges
+  })
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
 
 const BasicFlow = () => {
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
@@ -74,7 +86,7 @@ const BasicFlow = () => {
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
-
+  
   return (
     <ReactFlow
       nodes={nodes}
@@ -107,11 +119,13 @@ const BasicFlow = () => {
         color="#98ff98"
         variant={BackgroundVariant.Lines}
       />
-
+      
+      <Panel>
+        <h3>Оправить запрос</h3>
+          <button onClick={() => AxiosPost()}>отправить</button>
+        </Panel>
     </ReactFlow>
   );
 }
 
-
 export default BasicFlow;
-
