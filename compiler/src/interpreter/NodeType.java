@@ -1,3 +1,5 @@
+package interpreter;
+
 public enum NodeType {
   CALC,
   COND,

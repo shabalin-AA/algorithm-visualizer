@@ -6,14 +6,12 @@ import java.nio.file.Path;
 
 import java.io.IOException;
 
+import server.ExecuteHandler;
+
 
 public class Main {
-  static Node[] nds;
-  static Edge[] eds;
-  static Interpreter interpreter;
-
   static HttpServer server;
-  static String root = System.getProperty("user.dir") + "/../../visualizer/build";
+  static String root = System.getProperty("user.dir") + "/../visualizer/build";
 
   public static void main(String[] args) throws IOException {
     int port = 3000;

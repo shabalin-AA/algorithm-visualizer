@@ -1,5 +1,11 @@
-run: build
-	cd bin; java -ea -cp .:../lib/json.jar Main
+run-unix: build-unix
+	java -ea -cp .:lib/json.jar:bin Main
 
-build: src/*.java
-	javac -cp lib/*.jar src/*.java -d bin
+build-unix: src/*.java
+	javac -cp .:lib/json.jar:bin -sourcepath src src/Main.java -d bin
+
+run-win: build-win
+	java -ea -cp .;lib/json.jar;bin Main
+
+build-win: src/*.java
+	javac -cp .;lib/json.jar;bin -sourcepath src src/Main.java -d bin
