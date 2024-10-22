@@ -8,7 +8,6 @@ public class Interpreter {
   Node[] nds;
   Edge[] eds;
   HashMap<String, Object> scope;
-  HashMap<Integer, String> results;
 
   void printScope() {
     for (String k : scope.keySet()) {
@@ -24,9 +23,8 @@ public class Interpreter {
     this.nds = nds;
     this.eds = eds;
     this.scope = new HashMap<String, Object>();
-    this.results = new HashMap<Integer, String>();
   }
-  
+
   Node firstNode() {
     for (Node n : nds) {
       boolean found = false;
@@ -39,12 +37,6 @@ public class Interpreter {
       if (!found) return n;
     }
     return null;
-  }
-
-  enum TokenType {
-    ID, NUM, OP,
-    UNDEFINED,
-    SPACE
   }
 
   TokenType getTokenType(char c) {
@@ -66,17 +58,11 @@ public class Interpreter {
              c == '\t' ||
              c == '\n')
       return TokenType.SPACE;
+    else if (c == '(')
+      return TokenType.LEFT_PAREN;
+    else if (c == ')')
+      return TokenType.RIGHT_PAREN;
     return TokenType.UNDEFINED;
-  }
-
-  class Token {
-    public String str;
-    public TokenType type;
-
-    public Token(TokenType type, String str) {
-      this.type = type;
-      this.str = str;
-    }
   }
 
   Token[] tokenize(String codeStr) {
@@ -88,10 +74,16 @@ public class Interpreter {
       bt = getTokenType(code[b]);
       e = b;
       et = getTokenType(code[e]);
-      while (et == bt) {
+      if (bt == TokenType.LEFT_PAREN ||
+          bt == TokenType.RIGHT_PAREN) {
         e++;
-        if (e == code.length) break;
-        et = getTokenType(code[e]);
+      }
+      else {
+        while (et == bt) {
+          e++;
+          if (e == code.length) break;
+          et = getTokenType(code[e]);
+        }
       }
       if (bt != TokenType.SPACE)
         res.add(new Token(bt, codeStr.substring(b,e)));
@@ -100,20 +92,8 @@ public class Interpreter {
     return res.toArray(new Token[res.size()]);
   }
 
-  enum ExprType {
-    NEXT_EXPR,
-    ASSIGN,
-    EQ, NOT_EQ,
-    GT, LS,
-    ADD, SUB,
-    MUL, DIV,
-    NUM,
-    ID,
-    UNDEFINED
-  }
-
   ExprType getExprType(Token t) {
-    char[] chars = t.str.toCharArray();
+      char[] chars = t.str.toCharArray();
     switch (t.type) {
       case OP:
         if (t.str.equals(";")) return ExprType.NEXT_EXPR;
@@ -144,121 +124,45 @@ public class Interpreter {
     }
     return ExprType.UNDEFINED;
   }
-
-  class Expr {
-    ExprType type;
-    ArrayList<Expr> args;
-    Object value;
-
-    public Expr() {
-      this.type = ExprType.UNDEFINED;
-      this.args = new ArrayList<Expr>();
-    }
-
-    public String toString() {
-      return exprToString(this, 0);
-    }
-
-    public Object eval() {
-      switch (this.type) {
-        case NUM:
-          return value;
-        case ID:
-          String varName = (String)value;
-          if (scope.containsKey(varName))
-            return scope.get(varName);
-          else {
-            scope.put(varName, null);
-            return null;
-          }
-        case UNDEFINED:
-          return null;
-        case ASSIGN:
-          Expr idExpr = (Expr)this.args.get(0);
-          assert idExpr.type == ExprType.ID : "Need id expr on left";
-          Expr valueExpr = (Expr)this.args.get(1);
-          String id = (String)idExpr.value;
-          Object value = valueExpr.eval();
-          scope.put(id, value);
-          //printScope();
-          return value;
-        case GT:
-          Object a = this.args.get(0).eval();
-          assert a instanceof Double;
-          Object b = this.args.get(1).eval();
-          assert b instanceof Double;
-          return ((double)a) > ((double)b);
-        case ADD:
-          a = this.args.get(0).eval();
-          assert a instanceof Double;
-          b = this.args.get(1).eval();
-          assert b instanceof Double;
-          return ((double)a + (double)b);
-        case SUB:
-          a = this.args.get(0).eval();
-          assert a instanceof Double;
-          b = this.args.get(1).eval();
-          assert b instanceof Double;
-          return ((double)a - (double)b);
-        case MUL:
-          a = this.args.get(0).eval();
-          assert a instanceof Double;
-          b = this.args.get(1).eval();
-          assert b instanceof Double;
-          return ((double)a * (double)b);
-        case DIV:
-          a = this.args.get(0).eval();
-          assert a instanceof Double;
-          b = this.args.get(1).eval();
-          assert b instanceof Double;
-          return ((double)a / (double)b);
-        case EQ:
-          a = this.args.get(0).eval();
-          assert a instanceof Double;
-          b = this.args.get(1).eval();
-          assert b instanceof Double;
-          return ((double)a == (double)b);
-        case NOT_EQ:
-          a = this.args.get(0).eval();
-          assert a instanceof Double;
-          b = this.args.get(1).eval();
-          assert b instanceof Double;
-          return ((double)a != (double)b);
-        case NEXT_EXPR:
-          a = null;
-          for (Expr arg : this.args) 
-            a = arg.eval();
-          return a;
-        default: break;
-      }
-      return null;
-    }
-  }
-
-  String exprToString(Expr e, int depth) {
-    String res = e.type.name() + '\n';
-    for (Expr arg : e.args) {
-      for (int i = 0; i < depth; i++)
-        res += ' ';
-      res += '-';
-      res += exprToString(arg, depth + 1);
-    }
-    return res;
-  }
-
-  int minExprTypeIdx(Token[] tokens) {
-    ExprType minEt = ExprType.UNDEFINED;
-    int res = -1;
+  
+  int minPrecIdx(Token[] tokens) {
+    int minPrecedence = (int)1e6;
+    int idx = -1;
     for (int i = 0; i < tokens.length; i++) {
-      ExprType et = getExprType(tokens[i]);
-      if (et.ordinal() < minEt.ordinal()) {
-        minEt = et;
-        res = i;
+      TokenType tt = tokens[i].type;
+      if (tt == TokenType.LEFT_PAREN) {
+        int paren = 1;
+        while (paren != 0) {
+          i++;
+          switch (tokens[i].type) {
+            case LEFT_PAREN:  paren++; break;
+            case RIGHT_PAREN: paren--; break;
+          }
+        }
+        i++;
+        if (i >= tokens.length) break;
+      }
+      int p = getExprType(tokens[i]).ordinal();
+      if (p < minPrecedence) {
+        minPrecedence = p;
+        idx = i;
       }
     }
-    return res;
+    return idx;
   }
 
+  boolean checkParentheses(Token[] tokens) {
+    int paren = 0;
+    for (int i = 0; i < tokens.length; i++) {
+      switch (tokens[i].type) {
+        case LEFT_PAREN: paren++; break;
+        case RIGHT_PAREN: paren--; break;
+      }
+      if (paren < 0) return false;
+    }
+    return paren == 0;
+  }
+  
   Expr parse(Token[] tokens) {
     if (tokens.length == 0) return null;
     Expr res = new Expr();
@@ -275,11 +179,17 @@ public class Interpreter {
       }
       return res;
     }
-    int minETidx = minExprTypeIdx(tokens);
-    if (minETidx < 0) return null;
-    res.type = getExprType(tokens[minETidx]);
-    Token[] tokL = Arrays.copyOfRange(tokens, 0, minETidx);
-    Token[] tokR = Arrays.copyOfRange(tokens, minETidx+1, tokens.length);
+    if (tokens[0].type == TokenType.LEFT_PAREN &&
+        tokens[tokens.length-1].type == TokenType.RIGHT_PAREN) {
+      Token[] inner = Arrays.copyOfRange(tokens, 1, tokens.length-1);
+      if (checkParentheses(inner))
+        return parse(inner);
+    }
+    int minpIdx = minPrecIdx(tokens);
+    if (minpIdx < 0) return null;
+    res.type = getExprType(tokens[minpIdx]);
+    Token[] tokL = Arrays.copyOfRange(tokens, 0, minpIdx);
+    Token[] tokR = Arrays.copyOfRange(tokens, minpIdx+1, tokens.length);
     Expr left = parse(tokL);
     Expr right = parse(tokR);
     if (left != null) res.args.add(left);
@@ -288,18 +198,17 @@ public class Interpreter {
   } 
 
   Object evalNode(Node n) {
-    Token[] tokens = tokenize(n.code);
-    Expr ast = parse(tokens);
-    Object res = ast.eval();
-    if (true) { /* debug */
       System.out.println(n.code);
-      for (Token t : tokens) {
+    Token[] tokens = tokenize(n.code);
+      for (Token t : tokens)
         System.out.printf("%s\t%s\n", t.str, t.type.name());
-      }
       System.out.println(); 
+    Expr ast = parse(tokens);
       System.out.println(ast);
+    Object res = ast.eval(scope);
       System.out.println("result:\t" + res);
       System.out.println('\n');
+    if (true) { /* debug */
     }
     switch (n.type) {
       case COND:
@@ -327,8 +236,10 @@ public class Interpreter {
 
   public HashMap<Integer, String> eval() {
     Node crnt = firstNode();
+    HashMap<Integer, String> results = new HashMap<Integer, String>();
     while (crnt != null) {
-      results.put(crnt.id, evalNode(crnt).toString());
+      Object result = evalNode(crnt);
+      results.put(crnt.id, result.toString());
       crnt = nextNode(crnt);
     }
     return results;

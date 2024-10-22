@@ -53,6 +53,7 @@ public class ExecuteHandler implements HttpHandler {
   
   void executeFlowchart(HttpExchange t) {
     String body = requestBody(t, 1024);
+    System.out.println(body);
     JSONObject jo = new JSONObject(body);
     JSONArray nds = jo.getJSONArray("nds");
     Node[] nodes = new Node[nds.length()];

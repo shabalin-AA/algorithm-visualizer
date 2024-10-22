@@ -1,2 +1,2 @@
-all: 
+all: src/*
 	npm run build
