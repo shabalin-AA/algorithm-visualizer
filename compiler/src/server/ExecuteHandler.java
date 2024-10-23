@@ -1,12 +1,7 @@
 package server;
 
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.Headers;
-
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.IOException;
 
 import java.util.HashMap;
 
@@ -23,34 +18,7 @@ import interpreter.Node;
 import interpreter.Interpreter;
 
 
-public class ExecuteHandler implements HttpHandler {
-  String requestBody(HttpExchange t, int maxBytes) {
-    String body = "";
-    try {
-      InputStream is = t.getRequestBody();
-      byte[] requestBodyBytes = new byte[maxBytes];
-      is.read(requestBodyBytes);
-      is.close();
-      body = new String(requestBodyBytes);
-    }
-    catch (IOException e) {
-      System.out.println("cannot read request body\n" + e.toString());
-    }
-    return body;
-  }
-
-  void responseBody(HttpExchange t, String responseStr) {
-    try {
-      t.sendResponseHeaders(200, responseStr.length());
-      OutputStream os = t.getResponseBody();
-      os.write(responseStr.getBytes());
-      os.close();
-    }
-    catch (IOException e) {
-      System.out.println("cannot write response body\n" + e.toString());
-    }
-  }
-  
+public class ExecuteHandler extends MyHandler {
   void executeFlowchart(HttpExchange t) {
     String body = requestBody(t, 1024);
     System.out.println(body);
@@ -70,7 +38,7 @@ public class ExecuteHandler implements HttpHandler {
     Headers headers = t.getResponseHeaders();
     headers.set("Content-Type", "application/json");
     String responseStr = response.toString();
-    responseBody(t, responseStr);
+    stringResponse(t, responseStr);
   }
 
   void saveFlowchart(HttpExchange t) {
@@ -99,7 +67,7 @@ public class ExecuteHandler implements HttpHandler {
   }
 
   @Override
-  public void handle(HttpExchange t) throws IOException {
+  public void handle(HttpExchange t) {
     String method = t.getRequestMethod();
     String uri = t.getRequestURI().toString();
     String protocol = t.getProtocol();
