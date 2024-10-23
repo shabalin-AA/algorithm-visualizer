@@ -4,10 +4,16 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 public class Interpreter {
+  boolean DEBUG = true;
+  
   Node[] nds;
   Edge[] eds;
   HashMap<String, Object> scope;
+  Class<?>[] modules;
 
   void printScope() {
     for (String k : scope.keySet()) {
@@ -22,7 +28,18 @@ public class Interpreter {
   public Interpreter(Node[] nds, Edge[] eds) {
     this.nds = nds;
     this.eds = eds;
+    this.modules = new Class<?>[] {
+      Math.class
+    };
     this.scope = new HashMap<String, Object>();
+    for (Class<?> cls : modules) {
+      for (Field f : cls.getDeclaredFields()) {
+        scope.put(f.getName(), f);
+      }
+      for (Method m : cls.getDeclaredMethods()) {
+        scope.put(m.getName(), m);
+      }
+    }
   }
 
   Node firstNode() {
@@ -50,9 +67,10 @@ public class Interpreter {
              c == '*' ||
              c == '/' ||
              c == '!' ||
-             c == ';')
+             c == ';' ||
+             c == ',')
       return TokenType.OP;
-    else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+    else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c == '_'))
       return TokenType.ID;
     else if (c == ' '  ||
              c == '\t' ||
@@ -91,39 +109,6 @@ public class Interpreter {
     }
     return res.toArray(new Token[res.size()]);
   }
-
-  ExprType getExprType(Token t) {
-      char[] chars = t.str.toCharArray();
-    switch (t.type) {
-      case OP:
-        if (t.str.equals(";")) return ExprType.NEXT_EXPR;
-        if (t.str.equals("=")) return ExprType.ASSIGN;
-        if (t.str.equals(">")) return ExprType.GT;
-        if (t.str.equals("<")) return ExprType.LS;
-        if (t.str.equals("+")) return ExprType.ADD;
-        if (t.str.equals("-")) return ExprType.SUB;
-        if (t.str.equals("*")) return ExprType.MUL;
-        if (t.str.equals("/")) return ExprType.DIV;
-        if (t.str.equals("==")) return ExprType.EQ;
-        if (t.str.equals("!=")) return ExprType.NOT_EQ;
-        break;
-      case NUM:
-        for (char c : chars) {
-          if (c == '.' || (c >= '0' && c <= '9')) {}
-          else return ExprType.UNDEFINED;
-        }
-        return ExprType.NUM;
-      case ID:
-        for (char c : chars) {
-          if (c == '_' || 
-            (c >= '0' && c <= '9') ||
-            (c >= 'A' && c <= 'z')) {}
-          else return ExprType.UNDEFINED;
-        }
-        return ExprType.ID;
-    }
-    return ExprType.UNDEFINED;
-  }
   
   int minPrecIdx(Token[] tokens) {
     int minPrecedence = (int)1e6;
@@ -142,7 +127,7 @@ public class Interpreter {
         i++;
         if (i >= tokens.length) break;
       }
-      int p = getExprType(tokens[i]).ordinal();
+      int p = Expr.getType(tokens[i]).ordinal();
       if (p < minPrecedence) {
         minPrecedence = p;
         idx = i;
@@ -167,7 +152,7 @@ public class Interpreter {
     if (tokens.length == 0) return null;
     Expr res = new Expr();
     if (tokens.length == 1) {
-      res.type = getExprType(tokens[0]);
+      res.type = Expr.getType(tokens[0]);
       switch (res.type) {
         case NUM:
           res.value = Double.parseDouble(tokens[0].str);
@@ -187,7 +172,7 @@ public class Interpreter {
     }
     int minpIdx = minPrecIdx(tokens);
     if (minpIdx < 0) return null;
-    res.type = getExprType(tokens[minpIdx]);
+    res = parse(new Token[] {tokens[minpIdx]});
     Token[] tokL = Arrays.copyOfRange(tokens, 0, minpIdx);
     Token[] tokR = Arrays.copyOfRange(tokens, minpIdx+1, tokens.length);
     Expr left = parse(tokL);
@@ -198,17 +183,17 @@ public class Interpreter {
   } 
 
   Object evalNode(Node n) {
-      System.out.println(n.code);
     Token[] tokens = tokenize(n.code);
+    Expr ast = parse(tokens);
+    Object res = ast.eval(scope);
+    if (DEBUG) { 
+      System.out.println(n.code);
       for (Token t : tokens)
         System.out.printf("%s\t%s\n", t.str, t.type.name());
       System.out.println(); 
-    Expr ast = parse(tokens);
       System.out.println(ast);
-    Object res = ast.eval(scope);
       System.out.println("result:\t" + res);
       System.out.println('\n');
-    if (true) { /* debug */
     }
     switch (n.type) {
       case COND:
@@ -239,7 +224,9 @@ public class Interpreter {
     HashMap<Integer, String> results = new HashMap<Integer, String>();
     while (crnt != null) {
       Object result = evalNode(crnt);
-      results.put(crnt.id, result.toString());
+      String resStr = "null";
+      if (result != null) resStr = result.toString();
+      results.put(crnt.id, resStr);
       crnt = nextNode(crnt);
     }
     return results;

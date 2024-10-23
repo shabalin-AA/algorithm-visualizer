@@ -2,6 +2,7 @@ package interpreter;
 
 enum ExprType {
   NEXT_EXPR,
+  LIST,
   ASSIGN,
   EQ, NOT_EQ,
   GT, LS,

@@ -1,7 +1,11 @@
 package interpreter;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 
 class Expr {
@@ -29,7 +33,7 @@ class Expr {
     return res;
   }
 
-  ExprType getExprType(Token t) {
+  public static ExprType getType(Token t) {
     char[] chars = t.str.toCharArray();
     switch (t.type) {
       case OP:
@@ -43,6 +47,7 @@ class Expr {
         if (t.str.equals("/")) return ExprType.DIV;
         if (t.str.equals("==")) return ExprType.EQ;
         if (t.str.equals("!=")) return ExprType.NOT_EQ;
+        if (t.str.equals(",")) return ExprType.LIST;
         break;
       case NUM:
         for (char c : chars) {
@@ -63,13 +68,60 @@ class Expr {
   }
   
   public Object eval(HashMap<String, Object> scope) {
+    Object a, b;
     switch (this.type) {
+      case LIST:
+        Expr e1 = this.args.get(0);
+        Expr e2 = this.args.get(1);
+        List acc = null;
+        if (e1.type == ExprType.LIST) {
+          acc = (List)e1.eval(scope);
+          acc.add(e2.eval(scope));
+        }
+        else if (e2.type == ExprType.LIST) {
+          acc = (List)e2.eval(scope);
+          acc.add(e1.eval(scope));
+        }
+        else {
+          acc = new ArrayList();
+          acc.add(e1.eval(scope));
+          acc.add(e2.eval(scope));
+        }
+        return acc;
       case NUM:
         return value;
       case ID:
         String varName = (String)value;
-        if (scope.containsKey(varName))
-          return scope.get(varName);
+        if (scope.containsKey(varName)) {
+          a = scope.get(varName);
+          b = a;
+          if (a instanceof Field) {
+            Field f = (Field)a;
+            f.setAccessible(true);
+            try {
+              b = f.get(b);
+            }
+            catch (Exception e) {}
+          }
+          else if (a instanceof Method) {
+            Method m = (Method)a;
+            m.setAccessible(true);
+            try {
+              Object arguments = this.args.get(0).eval(scope);
+              if (arguments instanceof List) {
+                List argList = (List)arguments;
+                b = m.invoke(null, argList.toArray());
+              }
+              else {
+                b = m.invoke(null, arguments);
+              }
+            }
+            catch (Exception e) {
+              System.out.println(e);
+            }
+          }
+          return b;
+        }
         else {
           scope.put(varName, null);
           return null;
@@ -85,47 +137,55 @@ class Expr {
         scope.put(id, value);
         return value;
       case GT:
-        Object a = this.args.get(0).eval(scope);
-        assert a instanceof Double;
-        Object b = this.args.get(1).eval(scope);
-        assert b instanceof Double;
-        return ((double)a) > ((double)b);
+        try {
+          a = this.args.get(0).eval(scope);
+          b = this.args.get(1).eval(scope);
+          return ((double)a > (double)b);
+        }
+        catch (Exception e) {}
       case ADD:
-        a = this.args.get(0).eval(scope);
-        assert a instanceof Double;
-        b = this.args.get(1).eval(scope);
-        assert b instanceof Double;
-        return ((double)a + (double)b);
+        try {
+          a = this.args.get(0).eval(scope);
+          b = this.args.get(1).eval(scope);
+          return ((double)a + (double)b);
+        }
+        catch (Exception e) {}
       case SUB:
-        a = this.args.get(0).eval(scope);
-        assert a instanceof Double;
-        b = this.args.get(1).eval(scope);
-        assert b instanceof Double;
-        return ((double)a - (double)b);
+        try {
+          a = this.args.get(0).eval(scope);
+          b = this.args.get(1).eval(scope);
+          return ((double)a - (double)b);
+        }
+        catch (Exception e) {}
       case MUL:
-        a = this.args.get(0).eval(scope);
-        assert a instanceof Double;
-        b = this.args.get(1).eval(scope);
-        assert b instanceof Double;
-        return ((double)a * (double)b);
+        try {
+          a = this.args.get(0).eval(scope);
+          b = this.args.get(1).eval(scope);
+          return ((double)a * (double)b);
+        }
+        catch (Exception e) {}
       case DIV:
-        a = this.args.get(0).eval(scope);
-        assert a instanceof Double;
-        b = this.args.get(1).eval(scope);
-        assert b instanceof Double;
-        return ((double)a / (double)b);
+        try {
+          a = this.args.get(0).eval(scope);
+          b = this.args.get(1).eval(scope);
+          return ((double)a / (double)b);
+        }
+        catch (Exception e) {}
+        break;
       case EQ:
-        a = this.args.get(0).eval(scope);
-        assert a instanceof Double;
-        b = this.args.get(1).eval(scope);
-        assert b instanceof Double;
-        return ((double)a == (double)b);
+        try {
+          a = this.args.get(0).eval(scope);
+          b = this.args.get(1).eval(scope);
+          return ((double)a == (double)b);
+        }
+        catch (Exception e) {}
       case NOT_EQ:
-        a = this.args.get(0).eval(scope);
-        assert a instanceof Double;
-        b = this.args.get(1).eval(scope);
-        assert b instanceof Double;
-        return ((double)a != (double)b);
+        try {
+          a = this.args.get(0).eval(scope);
+          b = this.args.get(1).eval(scope);
+          return ((double)a != (double)b);
+        }
+        catch (Exception e) {}
       case NEXT_EXPR:
         a = null;
         for (Expr arg : this.args) 
