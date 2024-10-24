@@ -7,6 +7,9 @@ import java.util.Arrays;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import interpreter.expr.*;
+
+
 public class Interpreter {
   boolean DEBUG = true;
   
@@ -127,7 +130,7 @@ public class Interpreter {
         i++;
         if (i >= tokens.length) break;
       }
-      int p = Expr.getType(tokens[i]).ordinal();
+      int p = getExprType(tokens[i]).precedence();
       if (p < minPrecedence) {
         minPrecedence = p;
         idx = i;
@@ -147,53 +150,81 @@ public class Interpreter {
     }
     return paren == 0;
   }
+
+  Expr getExprType(Token t) {
+    char[] chars = t.str.toCharArray();
+    switch (t.type) {
+      case OP:
+        if (t.str.equals(";")) return new NextExpr();
+        if (t.str.equals("=")) return new AssignExpr();
+        if (t.str.equals(">")) return new GtExpr();
+        if (t.str.equals("<")) return new LsExpr();
+        if (t.str.equals("+")) return new AddExpr();
+        if (t.str.equals("-")) return new SubExpr();
+        if (t.str.equals("*")) return new MulExpr();
+        if (t.str.equals("/")) return new DivExpr();
+        if (t.str.equals("==")) return new EqExpr();
+        if (t.str.equals("!=")) return new NotEqExpr();
+        if (t.str.equals(",")) return new ListExpr();
+        break;
+      case NUM:
+        for (char c : chars) {
+          if (c == '.' || (c >= '0' && c <= '9')) {}
+          else return null;
+        }
+        return new NumExpr(Double.parseDouble(t.str));
+      case ID:
+        for (char c : chars) {
+          if (c == '_' || 
+            (c >= '0' && c <= '9') ||
+            (c >= 'A' && c <= 'z')) {}
+          else return null;
+        }
+        return new IdExpr(t.str);
+    }
+    return null;
+  }
   
   Expr parse(Token[] tokens) {
     if (tokens.length == 0) return null;
-    Expr res = new Expr();
     if (tokens.length == 1) {
-      res.type = Expr.getType(tokens[0]);
-      switch (res.type) {
-        case NUM:
-          res.value = Double.parseDouble(tokens[0].str);
-          break;
-        case ID:
-          res.value = tokens[0].str;
-          break;
-        default: break;
-      }
-      return res;
+      return getExprType(tokens[0]);
     }
     if (tokens[0].type == TokenType.LEFT_PAREN &&
         tokens[tokens.length-1].type == TokenType.RIGHT_PAREN) {
       Token[] inner = Arrays.copyOfRange(tokens, 1, tokens.length-1);
-      if (checkParentheses(inner))
-        return parse(inner);
+      if (checkParentheses(inner)) return parse(inner);
     }
     int minpIdx = minPrecIdx(tokens);
     if (minpIdx < 0) return null;
-    res = parse(new Token[] {tokens[minpIdx]});
+    Expr res = parse(new Token[] {tokens[minpIdx]});
     Token[] tokL = Arrays.copyOfRange(tokens, 0, minpIdx);
     Token[] tokR = Arrays.copyOfRange(tokens, minpIdx+1, tokens.length);
     Expr left = parse(tokL);
     Expr right = parse(tokR);
-    if (left != null) res.args.add(left);
-    if (right != null) res.args.add(right);
+    if (left != null) res.add(left);
+    if (right != null) res.add(right);
     return res;
   } 
 
   Object evalNode(Node n) {
-    Token[] tokens = tokenize(n.code);
-    Expr ast = parse(tokens);
-    Object res = ast.eval(scope);
-    if (DEBUG) { 
-      System.out.println(n.code);
-      for (Token t : tokens)
-        System.out.printf("%s\t%s\n", t.str, t.type.name());
-      System.out.println(); 
-      System.out.println(ast);
-      System.out.println("result:\t" + res);
-      System.out.println('\n');
+    Object res = null;
+    try {
+      Token[] tokens = tokenize(n.code);
+      Expr ast = parse(tokens);
+      res = ast.eval(scope);
+      if (DEBUG) { 
+        System.out.println(n.code);
+        for (Token t : tokens)
+          System.out.printf("%s\t%s\n", t.str, t.type.name());
+        System.out.println(); 
+        System.out.println(ast);
+        System.out.println("result:\t" + res);
+        System.out.println('\n');
+      }
+    }
+    catch (Exception e) {
+      System.out.println(e);
     }
     switch (n.type) {
       case COND:

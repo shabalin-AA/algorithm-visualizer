@@ -1,19 +1,21 @@
-package interpreter;
+package interpreter.expr;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
+public interface Expr {
+  public Object eval(HashMap<String, Object> scope);
+  public int precedence();
+  public void add(Expr child);
+}
 
-class Expr {
+/*
+class _Expr {
   ExprType type;
   ArrayList<Expr> args;
   Object value;
 
-  public Expr() {
+  public _Expr() {
     this.type = ExprType.UNDEFINED;
     this.args = new ArrayList<Expr>();
   }
@@ -197,3 +199,4 @@ class Expr {
   }
 }
   
+*/
