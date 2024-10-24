@@ -19,9 +19,7 @@ public class AssignExpr extends BinaryExpr {
 
   public void add(Expr child) {
     System.out.println(child);
-    if (child instanceof IdExpr) {
-      if (idExpr == null) idExpr = (IdExpr)child;
-    }
+    if (idExpr == null) idExpr = (IdExpr)child;
     else if (valueExpr == null) valueExpr = child;
   }
 }
