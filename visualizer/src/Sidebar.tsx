@@ -21,7 +21,7 @@ const DnDComponent: FC = () => {
       <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'output')} draggable>
         Output Node
       </div>
-      <div className="ifnode" onDragStart={(event) => onDragStart(event, 'NodeCustomPoints')} draggable>
+      <div className="ifnode" onDragStart={(event) => onDragStart(event, 'CustomNode')} draggable>
         If Node
       </div>
     </aside>
