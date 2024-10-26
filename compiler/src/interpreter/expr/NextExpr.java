@@ -3,23 +3,17 @@ package interpreter.expr;
 import java.util.HashMap;
 
 
-public class NextExpr implements Expr {
-  protected Expr first;
-  protected Expr second;
+public class NextExpr extends BinaryExpr {
   @Override
   public Object eval(HashMap<String, Object> scope) {
-    first.eval(scope);
-    return second.eval(scope);
+    l.eval(scope);
+    return r.eval(scope);
   }
 
   public int precedence() { return 0; }
 
   public void add(Expr child) {
-    if (first == null) first = child;
-    else if (second == null) second = child;
-  }
-
-  public String toString() {
-    return "" + first + second;
+    if (l == null) l = child;
+    else if (r == null) r = child;
   }
 }

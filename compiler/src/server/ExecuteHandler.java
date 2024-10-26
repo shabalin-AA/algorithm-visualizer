@@ -33,7 +33,11 @@ public class ExecuteHandler extends MyHandler {
     for (int i = 0; i < eds.length(); i++) {
       edges[i] = new Edge(eds.getJSONObject(i));
     }
-    HashMap<Integer, String> results = (new Interpreter(nodes, edges)).eval();
+    //TODO: make modules not hardcoded
+    Class<?>[] modules = new Class<?>[] {
+      Math.class
+    };
+    HashMap<Integer, String> results = (new Interpreter(nodes, edges, modules)).eval();
     JSONObject response = new JSONObject(results);
     Headers headers = t.getResponseHeaders();
     headers.set("Content-Type", "application/json");

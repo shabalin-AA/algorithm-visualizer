@@ -3,6 +3,8 @@ package interpreter;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -16,7 +18,6 @@ public class Interpreter {
   Node[] nds;
   Edge[] eds;
   HashMap<String, Object> scope;
-  Class<?>[] modules;
 
   void printScope() {
     for (String k : scope.keySet()) {
@@ -28,20 +29,39 @@ public class Interpreter {
     }
   }
 
-  public Interpreter(Node[] nds, Edge[] eds) {
+  String exprToString(Expr e, int depth) {
+    String res = "";
+    res += e.getClass().getName();
+    List<Field> allFields = new ArrayList<Field>();
+    for (Field f : e.getClass().getDeclaredFields()) allFields.add(f);
+    for (Field f : e.getClass().getSuperclass().getDeclaredFields()) allFields.add(f);
+    for (Field field : allFields) {
+      res += "\n";
+      for (int i = 0; i < depth+1; i++) res += "  ";
+      field.setAccessible(true);
+      Object value = null;
+      try { value = field.get(e); }
+      catch(Exception ex) {
+        System.out.println(ex);
+      }
+      res += field.getName() + ": "; 
+      if (value == null) 
+        res += "null";
+      else if (value instanceof Expr) 
+        res += exprToString((Expr)value, depth + 1);
+      else 
+        res += value.toString();
+    }
+    return res;
+  }
+
+  public Interpreter(Node[] nds, Edge[] eds, Class<?>[] modules) {
     this.nds = nds;
     this.eds = eds;
-    this.modules = new Class<?>[] {
-      Math.class
-    };
     this.scope = new HashMap<String, Object>();
     for (Class<?> cls : modules) {
-      for (Field f : cls.getDeclaredFields()) {
-        scope.put(f.getName(), f);
-      }
-      for (Method m : cls.getDeclaredMethods()) {
-        scope.put(m.getName(), m);
-      }
+      for (Field f : cls.getDeclaredFields()) scope.put(f.getName(), f);
+      for (Method m : cls.getDeclaredMethods()) scope.put(m.getName(), m);
     }
   }
 
@@ -218,7 +238,7 @@ public class Interpreter {
         for (Token t : tokens)
           System.out.printf("%s\t%s\n", t.str, t.type.name());
         System.out.println(); 
-        System.out.println(ast);
+        System.out.println(exprToString(ast, 0));
         System.out.println("result:\t" + res);
         System.out.println('\n');
       }

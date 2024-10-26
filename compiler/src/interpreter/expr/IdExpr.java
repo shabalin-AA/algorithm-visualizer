@@ -15,39 +15,50 @@ public class IdExpr implements Expr {
     this.id = id;
   }
 
+  Object evalField(Field field) {
+    field.setAccessible(true);
+    try {
+      return field.get(null);
+    }
+    catch (Exception e) {
+      System.out.println(e);
+    }
+    return null;
+  }
+
+  Object evalMethod(Method method, HashMap<String, Object> scope) {
+    method.setAccessible(true);
+    try {
+      Object arguments = this.arg.eval(scope);
+      //FIXME: invoking only static methods and fields (invoke(null,...))
+      if (arguments instanceof List) {
+        List argList = (List)arguments;
+        return method.invoke(null, argList.toArray());
+      }
+      else {
+        return method.invoke(null, arguments);
+      }
+    }
+    catch (Exception e) {
+      System.out.println(e);
+    }
+    return null;
+  }
+
   @Override
   public Object eval(HashMap<String, Object> scope) {
     String varName = id;
-    Object a,b;
     if (scope.containsKey(varName)) {
-      a = scope.get(varName);
-      b = a;
-      if (a instanceof Field) {
-        Field f = (Field)a;
-        f.setAccessible(true);
-        try {
-          b = f.get(b);
-        }
-        catch (Exception e) {}
+      Object value = scope.get(varName);
+      if (value instanceof Field) {
+        return evalField((Field)value);
       }
-      else if (a instanceof Method) {
-        Method m = (Method)a;
-        m.setAccessible(true);
-        try {
-          Object arguments = this.arg.eval(scope);
-          if (arguments instanceof List) {
-            List argList = (List)arguments;
-            b = m.invoke(null, argList.toArray());
-          }
-          else {
-            b = m.invoke(null, arguments);
-          }
-        }
-        catch (Exception e) {
-          System.out.println(e);
-        }
+      else if (value instanceof Method) {
+        return evalMethod((Method)value, scope);
       }
-      return b;
+      else {
+        return value;
+      }
     }
     else {
       scope.put(varName, null);
@@ -59,9 +70,5 @@ public class IdExpr implements Expr {
 
   public void add(Expr child) {
     if (arg == null) arg = child;
-  }
-
-  public String toString() {
-    return this.getClass().getName() + "\t" + this.id;
   }
 }

@@ -18,8 +18,4 @@ public class NumExpr implements Expr {
   public int precedence() { return 8; }
 
   public void add(Expr child) {}
-
-  public String toString() {
-    return this.getClass().getName() + "\t" + this.value;
-  }
 }
