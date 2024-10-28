@@ -3,6 +3,7 @@ import java.net.InetSocketAddress;
 import com.sun.net.httpserver.SimpleFileServer;
 import java.nio.file.Path;
 import java.io.IOException;
+import java.util.concurrent.Executors;
 
 import server.ExecuteHandler;
 import server.GetMethodsHandler;
@@ -19,6 +20,7 @@ public class Main {
       server.createContext("/", SimpleFileServer.createFileHandler(Path.of(root)));
       server.createContext("/execute", new ExecuteHandler());
       server.createContext("/methods", new GetMethodsHandler());
+      server.setExecutor(Executors.newCachedThreadPool());
       server.start();
     }
     catch (IOException e) {

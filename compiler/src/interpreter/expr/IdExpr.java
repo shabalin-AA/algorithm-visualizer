@@ -30,7 +30,7 @@ public class IdExpr implements Expr {
     method.setAccessible(true);
     try {
       Object arguments = this.arg.eval(scope);
-      //FIXME: invoking only static methods and fields (invoke(null,...))
+      //TODO: invoke non-static methods
       if (arguments instanceof List) {
         List argList = (List)arguments;
         return method.invoke(null, argList.toArray());
