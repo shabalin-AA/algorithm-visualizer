@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 
 import server.ExecuteHandler;
 import server.GetMethodsHandler;
+import server.SaveHandler;
 
 
 public class Main {
@@ -20,6 +21,7 @@ public class Main {
       server.createContext("/", SimpleFileServer.createFileHandler(Path.of(root)));
       server.createContext("/execute", new ExecuteHandler());
       server.createContext("/methods", new GetMethodsHandler());
+      server.createContext("/save",    new SaveHandler());
       server.setExecutor(Executors.newCachedThreadPool());
       server.start();
     }
