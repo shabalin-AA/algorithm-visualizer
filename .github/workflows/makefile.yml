@@ -12,10 +12,11 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      CI: false
+      CI: false  
 
     steps:
     - uses: actions/checkout@v4
-
+      with:
+        java-version: '17'
     - name: Run
       run: make
