@@ -14,7 +14,6 @@ import interpreter.Interpreter;
 
 public class ExecuteHandler extends MyHandler {
   void executeFlowchart(HttpExchange t) {
-    String body = requestBody(t, 1024);
     System.out.println(body);
     JSONObject jo = new JSONObject(body);
     JSONArray nds = jo.getJSONArray("nds");
@@ -45,10 +44,7 @@ public class ExecuteHandler extends MyHandler {
 
   @Override
   public void handle(HttpExchange t) {
-    String method = t.getRequestMethod();
-    String uri = t.getRequestURI().toString();
-    String protocol = t.getProtocol();
-    System.out.printf("%s %s %s\n", method, uri, protocol);
+    super.handle(t);
     if (method.equals("POST")) doPost(t);
   }
 }

@@ -37,10 +37,7 @@ public class SaveHandler extends MyHandler {
 
   @Override
   public void handle(HttpExchange t) {
-    String method = t.getRequestMethod();
-    String uri = t.getRequestURI().toString();
-    String protocol = t.getProtocol();
-    System.out.printf("%s %s %s\n", method, uri, protocol);
+    super.handle(t);
     if (method.equals("POST")) doPost(t);
   }
 }

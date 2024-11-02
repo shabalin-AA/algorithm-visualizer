@@ -8,6 +8,7 @@ import java.util.concurrent.Executors;
 import server.ExecuteHandler;
 import server.GetMethodsHandler;
 import server.SaveHandler;
+import server.FileHandler;
 
 
 public class Main {
@@ -19,6 +20,7 @@ public class Main {
     try {
       server = HttpServer.create(new InetSocketAddress(port), 0);
       server.createContext("/", SimpleFileServer.createFileHandler(Path.of(root)));
+      //server.createContext("/", new FileHandler(Path.of(root)));
       server.createContext("/execute", new ExecuteHandler());
       server.createContext("/methods", new GetMethodsHandler());
       server.createContext("/save",    new SaveHandler());

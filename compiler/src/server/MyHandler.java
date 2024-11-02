@@ -9,6 +9,11 @@ import java.io.IOException;
 
 
 public class MyHandler implements HttpHandler {
+  protected String method;
+  protected String uri;
+  protected String protocol;
+  protected String body;
+
   String requestBody(HttpExchange t, int maxBytes) {
     String body = "";
     try {
@@ -38,11 +43,10 @@ public class MyHandler implements HttpHandler {
 
   @Override
   public void handle(HttpExchange t) {
-    String method = t.getRequestMethod();
-    String uri = t.getRequestURI().toString();
-    String protocol = t.getProtocol();
-    System.out.printf("%s %s %s\n", method, uri, protocol);
-    System.out.println(requestBody(t, 1024));
-    stringResponse(t, "response");
+    method = t.getRequestMethod();
+    uri = t.getRequestURI().toString();
+    protocol = t.getProtocol();
+    body = requestBody(t, 1024);
+    System.out.printf("%s %s %s\n%s\n", method, uri, protocol, body);
   }
 }
