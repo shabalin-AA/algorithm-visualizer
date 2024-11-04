@@ -1,6 +1,6 @@
 build:
 	cd visualizer; make
-	cd compiler; make build-unix
+	cd executor; mvn spring-boot:run
 
 run: build
-	cd compiler; make run-unix
+	cd executor; mvn compile
