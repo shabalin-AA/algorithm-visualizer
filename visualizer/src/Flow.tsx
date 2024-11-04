@@ -20,14 +20,15 @@ import {
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
-import CustomNode from "./CustomNode";
+import CustomNodeIf from "./CustomNodeIf";
+import CustomNodeInput from "./CustomNodeInput";
 import CustomEdge from './CustomEdge';
 import axios from "axios"
 import Sidebar from './Sidebar';
 import { DnDProvider, useDnD } from './Context';
 import ContextMenu from './ContextMenu';
 
-// const panOnDrag = [1, 2];
+const panOnDrag = [1, 2];
 const url = "http://localhost:3000/execute"
 
 interface Menu {
@@ -48,25 +49,13 @@ const initialEdges: Edge[] = [
 ];
 
 const nodeTypes = {
-  CustomNode: CustomNode
+  CustomNodeIf: CustomNodeIf,
+  CustomNodeInput: CustomNodeInput
 };
 
 const edgeTypes = {
   CustomEdge: CustomEdge,
 };
-
-function AxiosPost(){
-  axios.post(url, {
-    Nodes: initialNodes,
-    Edges: initialEdges
-  })
-  .then(function (response) {
-    console.log(response);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
 
 const BasicFlow = () => {
   const reactFlowWrapper = useRef(null);
@@ -76,6 +65,20 @@ const BasicFlow = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [menu, setMenu] = useState<Menu | null>(null);
   const ref = useRef<HTMLInputElement>(null)
+
+  function AxiosPost(){
+    axios.post(url, {
+      Nodes: nodes,
+      Edges: edges
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+  
 
   const onReconnect = useCallback(
     (oldEdge: Edge, newConnection: Connection) =>
@@ -120,13 +123,12 @@ const BasicFlow = () => {
   const onNodeContextMenu = useCallback(
     (event: { preventDefault: () => void; clientY: number; clientX: number; }, node: Node) => {
       event.preventDefault();
-      console.log(event.clientX, event.clientY)
       setMenu({
         id: node.id,
-        top: event.clientY,
-        left: 300,
-        right: 300,
-        bottom: 300
+        top: 1,
+        left: 1,
+        right: 1,
+        bottom: 1
       });
     },
     [setMenu],

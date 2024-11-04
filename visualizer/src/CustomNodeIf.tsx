@@ -16,8 +16,9 @@ function CustomNode ({data}: NodeProps<Text>) {
           }}>
         </div>
         <div>
-            <Handle type="source" id="No" position={Position.Right} style={{right: -9}}/>
-            <Handle type="source" id="Yes" position={Position.Left} style={{left: -9}}/>
+            <CustomHandle type="source" id="No" position={Position.Right} style={{right: -9}} connectioncount={1}/>
+            <CustomHandle type="source" id="Yes" position={Position.Left} style={{left: -9}} connectioncount={1}/>
+            <CustomHandle type="target" position={Position.Top} style={{top: -9}} connectioncount={1}/>
         </div>   
       </div>
   );
