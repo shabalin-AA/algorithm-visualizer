@@ -85,12 +85,6 @@ body,
   }
 }
 
-.calc_block {
-  padding: 10px;
-  background-color: #328845;
-  color: white;
-}
-
 .context-menu {
   background: white;
   border-style: solid;
@@ -110,3 +104,17 @@ body,
 .context-menu button:hover {
   background: white;
 }
+
+.node-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  background: none;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  color: var(--text);
+}
+
