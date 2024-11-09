@@ -29,14 +29,4 @@ public class ListExpr implements Expr {
       if (next == null) next = (ListExpr)child;
     else if (value == null) value = child;
   }
-
-  public String toString() {
-    String res = this.getClass().getName() + "\t" + this.value;
-    ListExpr l = this.next;
-    while (l != null) {
-      res = res + ", " + l.value;
-      l = l.next;
-    }
-    return res;
-  }
 }

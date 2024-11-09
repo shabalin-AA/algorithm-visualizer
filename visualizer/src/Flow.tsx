@@ -1,4 +1,4 @@
-import { useCallback, useState, useRef} from "react";
+import React, { useCallback, useState, useRef} from "react";
 import {
   ReactFlow,
   useReactFlow,
@@ -15,66 +15,47 @@ import {
   useEdgesState,
   Panel,
   Controls, 
-  ControlButton
+  ControlButton,
+  reconnectEdge
 } from "@xyflow/react";
 
-import CalcBlock from "./CustomNode";
 import "@xyflow/react/dist/style.css";
-import NodeCustomPoints from "./CustomNodeBlock";
-import ButtonEdge from './ButtonEdge';
+import CustomNode from "./CustomNode";
+import CustomEdge from './CustomEdge';
 import axios from "axios"
 import Sidebar from './Sidebar';
 import { DnDProvider, useDnD } from './Context';
+import ContextMenu from './ContextMenu';
 
 // const panOnDrag = [1, 2];
 const url = "http://localhost:3000/execute"
+
+interface Menu {
+  id: string;
+  top: number;
+  left: number;
+  right?: number;
+  bottom?: number;
+}
 
 let id = 1;
 const getId = () => `${id++}`;
 
 const initialNodes: Node[] = [
-  // {
-  //   id: "1",
-  //   type: "input",
-  //   data: { label: "Node 1" },
-  //   position: { x: 250, y: 5 }
-  // },
-  // { id: "2", data: { label: "Node 2" }, position: { x: 100, y: 100 } },
-  // { id: "3", data: { label: "Node 3" }, position: { x: 400, y: 100 } },
-  // {
-  //   id: "4",
-  //   type: "CalcBlock",
-  //   data: { label: "Calc Block" },
-  //   position: { x: 400, y: 200 }
-  // },
-  // {
-  //   id: "5",
-  //   type: "NodeCustomPoints",
-  //   data: { label: "If" },
-  //   position: { x: 150, y: 250 },
-  // },
-  // { id: "6", data: { label: "Node 4" }, position: { x: 200, y: 350 } },
-  // { id: "7", data: { label: "Node 5" }, position: { x: 0, y: 350 } },
 ];
 
 const initialEdges: Edge[] = [
-  // { id: "e1-2", source: "1", target: "2", animated: true },
-  // { id: "e1-3", source: "1", target: "3" },
-  // { id: "e5-6", source: "5", target: "6", sourceHandle: "No", type: 'step'},
-  // { id: "e5-7", source: "5", target: "7", sourceHandle: "Yes", type: 'step'},
 ];
 
 const nodeTypes = {
-  CalcBlock: CalcBlock,
-  NodeCustomPoints: NodeCustomPoints
+  CustomNode: CustomNode
 };
 
 const edgeTypes = {
-  buttonedge: ButtonEdge,
+  CustomEdge: CustomEdge,
 };
 
 function AxiosPost(){
-
   axios.post(url, {
     Nodes: initialNodes,
     Edges: initialEdges
@@ -93,9 +74,21 @@ const BasicFlow = () => {
   const [type] = useDnD();
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [menu, setMenu] = useState<Menu | null>(null);
+  const ref = useRef<HTMLInputElement>(null)
+
+  const onReconnect = useCallback(
+    (oldEdge: Edge, newConnection: Connection) =>
+      setEdges((els) => reconnectEdge(oldEdge, newConnection, els)),
+    [],
+  );
+  
   const onConnect = useCallback(
-    (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges]
+    (connection: any) => {
+      const edge = { ...connection, type: 'CustomEdge' };
+      setEdges((eds) => addEdge(edge, eds));
+    },
+    [setEdges],
   );
 
   const onDragOver = useCallback((event: { preventDefault: () => void; dataTransfer: { dropEffect: string; }; }) => {
@@ -119,11 +112,27 @@ const BasicFlow = () => {
         position,
         data: { label: `Node ${id - 1}` },
       };
-
       setNodes((nds) => nds.concat(newNode));
     },
     [screenToFlowPosition, type],
   );
+
+  const onNodeContextMenu = useCallback(
+    (event: { preventDefault: () => void; clientY: number; clientX: number; }, node: Node) => {
+      event.preventDefault();
+      console.log(event.clientX, event.clientY)
+      setMenu({
+        id: node.id,
+        top: event.clientY,
+        left: 300,
+        right: 300,
+        bottom: 300
+      });
+    },
+    [setMenu],
+  );
+
+  const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
 
   return (
     <div className="BasicFlow">
@@ -134,6 +143,8 @@ const BasicFlow = () => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        snapToGrid
+        onReconnect={onReconnect}
         // panOnScroll = {true}
         // selectionOnDrag = {true}
         // panOnDrag={panOnDrag}
@@ -142,6 +153,8 @@ const BasicFlow = () => {
         edgeTypes={edgeTypes}
         onDrop={onDrop}
         onDragOver={onDragOver}
+        onPaneClick={onPaneClick}
+        onNodeContextMenu={onNodeContextMenu}
         fitView
         >
         <MiniMap
@@ -161,11 +174,12 @@ const BasicFlow = () => {
           color="#98ff98"
           variant={BackgroundVariant.Lines}
         />
-        
         <Panel>
           <h3>Оправить запрос</h3>
             <button onClick={() => AxiosPost()}>отправить</button>
-          </Panel>
+        </Panel>
+        <Background />
+        {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
       </ReactFlow>
       </div>
       <Sidebar />

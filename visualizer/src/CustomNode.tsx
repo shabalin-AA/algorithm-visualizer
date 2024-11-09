@@ -1,23 +1,26 @@
-import { Handle, Node, NodeProps, Position } from "@xyflow/react";
+import { Handle, Node, Position, NodeProps} from "@xyflow/react"
 import "./styles.css"
+import CustomHandle from "./CustomHandle"
 
+type Text = Node<{label: string}>;
 
-type CalcBlockNode = Node<{label: string}>;
-
-function CalcBlock ({data}: NodeProps<CalcBlockNode>) {
+function CustomNode ({data}: NodeProps<Text>) {
   return (
-    <div>
-      <Handle
-        type="target"
-        position={Position.Top}
-      />
-      {data?.label}
-      <Handle
-        type="source"
-        position={Position.Bottom}
-      />
-    </div>
+    <div> 
+        <div style={{
+          width: "50px", 
+          height: "50px",
+          background: '#fff',
+          border: '1px solid #777',
+          transform: "rotate(45deg)",
+          }}>
+        </div>
+        <div>
+            <Handle type="source" id="No" position={Position.Right} style={{right: -9}}/>
+            <Handle type="source" id="Yes" position={Position.Left} style={{left: -9}}/>
+        </div>   
+      </div>
   );
 };
 
-export default CalcBlock;
+export default CustomNode;

@@ -7,12 +7,6 @@ import java.util.HashMap;
 
 import org.json.*;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.ResultSet;
-
 import interpreter.Edge;
 import interpreter.Node;
 import interpreter.Interpreter;
@@ -33,7 +27,11 @@ public class ExecuteHandler extends MyHandler {
     for (int i = 0; i < eds.length(); i++) {
       edges[i] = new Edge(eds.getJSONObject(i));
     }
-    HashMap<Integer, String> results = (new Interpreter(nodes, edges)).eval();
+    //TODO: make modules not hardcoded
+    Class<?>[] modules = new Class<?>[] {
+      Math.class
+    };
+    HashMap<Integer, String> results = (new Interpreter(nodes, edges, modules)).eval();
     JSONObject response = new JSONObject(results);
     Headers headers = t.getResponseHeaders();
     headers.set("Content-Type", "application/json");
@@ -41,29 +39,8 @@ public class ExecuteHandler extends MyHandler {
     stringResponse(t, responseStr);
   }
 
-  void saveFlowchart(HttpExchange t) {
-    Connection conn = null;
-    try {
-      String url = "jdbc:sqlite:flowchart.db";
-      conn = DriverManager.getConnection(url);
-      Statement stmt = conn.createStatement();
-      /*
-      ResultSet res = stmt.executeQuery("select * from Node;");
-      while (res.next()) {
-        System.out.printf("%d\t%s\n", res.getInt(1), res.getString(2));
-      }
-      */
-      stmt.close();
-      conn.close();
-    }
-    catch (SQLException e) {
-      System.out.println("cannot save to database\n" + e.toString());
-    }
-  }
-
   void doPost(HttpExchange t) {
     executeFlowchart(t);
-    saveFlowchart(t);
   }
 
   @Override

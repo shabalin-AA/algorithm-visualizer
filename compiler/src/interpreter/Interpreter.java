@@ -3,45 +3,70 @@ package interpreter;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import interpreter.expr.*;
 
+// TODO arrays
+// TODO calling other flowcharts
+
 
 public class Interpreter {
-  boolean DEBUG = true;
+  void debug(Object msg) {
+    System.out.println(msg.toString());
+  }
   
   Node[] nds;
   Edge[] eds;
   HashMap<String, Object> scope;
-  Class<?>[] modules;
 
   void printScope() {
     for (String k : scope.keySet()) {
       Object v = scope.get(k);
       if (v != null) 
-        System.out.printf("%s\t%s\n", k, scope.get(k).toString());
+        debug(String.format("%s\t%s", k, scope.get(k).toString()));
       else
-        System.out.printf("%s\tnull\n", k);
+        debug(String.format("%s\tnull", k));
     }
   }
 
-  public Interpreter(Node[] nds, Edge[] eds) {
+  String exprToString(Expr e, int depth) {
+    String res = "";
+    res += e.getClass().getName();
+    List<Field> allFields = new ArrayList<Field>();
+    for (Field f : e.getClass().getDeclaredFields()) allFields.add(f);
+    for (Field f : e.getClass().getSuperclass().getDeclaredFields()) allFields.add(f);
+    for (Field field : allFields) {
+      res += "\n";
+      for (int i = 0; i < depth+1; i++) res += "  ";
+      field.setAccessible(true);
+      Object value = null;
+      try { value = field.get(e); }
+      catch(Exception ex) {
+        System.out.println(ex);
+      }
+      res += field.getName() + ": "; 
+      if (value == null) 
+        res += "null";
+      else if (value instanceof Expr) 
+        res += exprToString((Expr)value, depth + 1);
+      else 
+        res += value.toString();
+    }
+    return res;
+  }
+
+  public Interpreter(Node[] nds, Edge[] eds, Class<?>[] modules) {
     this.nds = nds;
     this.eds = eds;
-    this.modules = new Class<?>[] {
-      Math.class
-    };
     this.scope = new HashMap<String, Object>();
     for (Class<?> cls : modules) {
-      for (Field f : cls.getDeclaredFields()) {
-        scope.put(f.getName(), f);
-      }
-      for (Method m : cls.getDeclaredMethods()) {
-        scope.put(m.getName(), m);
-      }
+      for (Field f : cls.getDeclaredFields()) scope.put(f.getName(), f);
+      for (Method m : cls.getDeclaredMethods()) scope.put(m.getName(), m);
     }
   }
 
@@ -83,6 +108,8 @@ public class Interpreter {
       return TokenType.LEFT_PAREN;
     else if (c == ')')
       return TokenType.RIGHT_PAREN;
+    else if (c == '\"')
+      return TokenType.STRING;
     return TokenType.UNDEFINED;
   }
 
@@ -95,16 +122,26 @@ public class Interpreter {
       bt = getTokenType(code[b]);
       e = b;
       et = getTokenType(code[e]);
-      if (bt == TokenType.LEFT_PAREN ||
-          bt == TokenType.RIGHT_PAREN) {
-        e++;
-      }
-      else {
-        while (et == bt) {
+      switch (bt) {
+        case LEFT_PAREN:
+        case RIGHT_PAREN:
           e++;
-          if (e == code.length) break;
-          et = getTokenType(code[e]);
-        }
+          break;
+        case STRING:
+          et = TokenType.UNDEFINED;
+          while (et != TokenType.STRING) {
+            e++;
+            if (e == code.length) break;
+            et = getTokenType(code[e]);
+          }
+          e++;
+          break;
+        default:
+          while (et == bt) {
+            e++;
+            if (e == code.length) break;
+            et = getTokenType(code[e]);
+          }
       }
       if (bt != TokenType.SPACE)
         res.add(new Token(bt, codeStr.substring(b,e)));
@@ -167,6 +204,10 @@ public class Interpreter {
         if (t.str.equals("!=")) return new NotEqExpr();
         if (t.str.equals(",")) return new ListExpr();
         break;
+      case STRING:
+        if (chars[0] == '\"' && chars[chars.length-1] == '\"')
+          return new StringExpr(t.str.substring(1, t.str.length() - 1));
+        else return null;
       case NUM:
         for (char c : chars) {
           if (c == '.' || (c >= '0' && c <= '9')) {}
@@ -210,18 +251,16 @@ public class Interpreter {
   Object evalNode(Node n) {
     Object res = null;
     try {
+      debug(n.code);
       Token[] tokens = tokenize(n.code);
+      for (Token t : tokens)
+        debug(String.format("%s\t%s", t.str, t.type.name()));
+      debug('\n'); 
       Expr ast = parse(tokens);
       res = ast.eval(scope);
-      if (DEBUG) { 
-        System.out.println(n.code);
-        for (Token t : tokens)
-          System.out.printf("%s\t%s\n", t.str, t.type.name());
-        System.out.println(); 
-        System.out.println(ast);
-        System.out.println("result:\t" + res);
-        System.out.println('\n');
-      }
+      debug(exprToString(ast, 0));
+      debug("result:\t" + res);
+      debug('\n');
     }
     catch (Exception e) {
       System.out.println(e);

@@ -3,10 +3,10 @@ package interpreter.expr;
 import java.util.HashMap;
 
 
-public class NumExpr implements Expr {
-  double value;
+public class StringExpr implements Expr {
+  String value;
 
-  public NumExpr(double value) {
+  public StringExpr(String value) {
     this.value = value;
   }
 
