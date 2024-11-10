@@ -15,6 +15,7 @@ function CustomNode ({data}: NodeProps<Text>) {
           transform: "rotate(45deg)",
           }}>
         </div>
+        <input type="text" className="node-label" placeholder="a > b"/>
         <div>
             <CustomHandle type="source" id="No" position={Position.Right} style={{right: -9}} connectioncount={1}/>
             <CustomHandle type="source" id="Yes" position={Position.Left} style={{left: -9}} connectioncount={1}/>

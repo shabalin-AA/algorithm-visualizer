@@ -22,6 +22,8 @@ import {
 import "@xyflow/react/dist/style.css";
 import CustomNodeIf from "./CustomNodeIf";
 import CustomNodeInput from "./CustomNodeInput";
+import CustomNodeDefault from "./CustomNodeDefault";
+import CustomNodeOutput from "./CustomNodeOutput";
 import CustomEdge from './CustomEdge';
 import axios from "axios"
 import Sidebar from './Sidebar';
@@ -50,7 +52,9 @@ const initialEdges: Edge[] = [
 
 const nodeTypes = {
   CustomNodeIf: CustomNodeIf,
-  CustomNodeInput: CustomNodeInput
+  CustomNodeInput: CustomNodeInput,
+  CustomNodeDefault: CustomNodeDefault,
+  CustomNodeOutput: CustomNodeOutput
 };
 
 const edgeTypes = {
@@ -64,7 +68,6 @@ const BasicFlow = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [menu, setMenu] = useState<Menu | null>(null);
-  const ref = useRef<HTMLInputElement>(null)
 
   function AxiosPost(){
     axios.post(url, {

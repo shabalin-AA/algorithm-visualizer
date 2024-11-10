@@ -5,7 +5,7 @@ import CustomHandle from "./CustomHandle"
 
 type Text = Node<{label: string}>;
 
-function CustomNodeInput ({data}: NodeProps<Text>) {
+function CustomNodeOutput ({data}: NodeProps<Text>) {
   const [InputText, SetInputText] = useState("");
   data.label = InputText
   return (
@@ -16,13 +16,13 @@ function CustomNodeInput ({data}: NodeProps<Text>) {
           background: '#fff',
           border: '1px solid #777',
           }}>
-            <input type="text" value={InputText} className="node-label" placeholder="a = 10; b = 20" onChange={e => SetInputText(e.target.value)}/>
+            <input type="text" value={InputText} className="node-label" placeholder="c" onChange={e => SetInputText(e.target.value)}/>
         </div> 
         <div>
-            <CustomHandle type="source" position={Position.Bottom} connectioncount={1}/>
+            <CustomHandle type="target" position={Position.Top} connectioncount={1}/>
         </div>   
     </div>
   );
 };
 
-export default CustomNodeInput;
+export default CustomNodeOutput;
