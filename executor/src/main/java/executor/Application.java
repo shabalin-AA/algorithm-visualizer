@@ -15,6 +15,8 @@ import java.util.HashMap;
 @SpringBootApplication
 @RestController
 public class Application {
+  SQLiteHandler sqlite = new SQLiteHandler();
+
   @PostMapping(
     value = "/execute",
     consumes = "application/json",
@@ -41,9 +43,12 @@ public class Application {
     return response.toString();
   }
 
-	@PostMapping("/save")
-	void save(String body) {
-		return;
+	@PostMapping(
+    value = "/save",
+    consumes = "application/json"
+  )
+	void save(@RequestBody String body) {
+    sqlite.insertFlowchart(new JSONObject(body));
 	}
 
 	public static void main(String[] args) {
