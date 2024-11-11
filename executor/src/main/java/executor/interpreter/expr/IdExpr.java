@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 
 public class IdExpr implements Expr {
   protected String id;
-  protected Expr arg;
+  protected Expr arg; // if id represents field or method
 
   public IdExpr(String id) {
     this.id = id;

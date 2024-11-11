@@ -9,7 +9,7 @@ public class EqExpr extends BinaryExpr {
     try {
       Object a = this.l.eval(scope);
       Object b = this.r.eval(scope);
-      return ((double)a < (double)b);
+      return ((double)a == (double)b);
     }
     catch (Exception e) {}
     return null;

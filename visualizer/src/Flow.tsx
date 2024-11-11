@@ -5,19 +5,16 @@ import {
   ReactFlowProvider,
   Node,
   addEdge,
-  SelectionMode,
   Background,
-  BackgroundVariant,
   MiniMap,
   Edge,
   Connection,
   useNodesState,
   useEdgesState,
   Panel,
-  Controls, 
-  ControlButton,
   reconnectEdge
 } from "@xyflow/react";
+import axios from "axios"
 
 import "@xyflow/react/dist/style.css";
 import CustomNodeIf from "./CustomNodeIf";
@@ -25,12 +22,10 @@ import CustomNodeInput from "./CustomNodeInput";
 import CustomNodeDefault from "./CustomNodeDefault";
 import CustomNodeOutput from "./CustomNodeOutput";
 import CustomEdge from './CustomEdge';
-import axios from "axios"
 import Sidebar from './Sidebar';
 import { DnDProvider, useDnD } from './Context';
 import ContextMenu from './ContextMenu';
 
-const panOnDrag = [1, 2];
 const url = "http://localhost:3000/"
 
 interface Menu {
@@ -86,13 +81,14 @@ const BasicFlow = () => {
   let edgeId = 0;
   function edgeJson(edge: Edge) {
     edgeId++;
+    let branch = 'true';
+    if (edge.id.includes('false'))
+      branch = 'false';
     return {
-      //TODO: сделать нормальные id изначально
       id: String(edgeId),
       source: edge.source,
       target: edge.target,
-      //TODO: ветка исполнения зависит от плеч ифа
-      branch: "true"
+      branch: branch
     }
   }
 
@@ -102,18 +98,14 @@ const BasicFlow = () => {
       Edges: edges.map(edgeJson)
     };
     axios.post(url + "execute", jo)
-    .then(function (response) {
-      console.log(response.data);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error))
   }
   
 
   const onReconnect = useCallback(
     (oldEdge: Edge, newConnection: Connection) =>
-      setEdges((els) => reconnectEdge(oldEdge, newConnection, els)),
+      setEdges((eds) => reconnectEdge(oldEdge, newConnection, eds)),
     [],
   );
   
@@ -186,28 +178,10 @@ const BasicFlow = () => {
         onDragOver={onDragOver}
         onPaneClick={onPaneClick}
         onNodeContextMenu={onNodeContextMenu}
-        fitView
-        >
-        <MiniMap
-        pannable zoomable
-        />
-
-        <Background
-          id="1"
-          gap={25}
-          color="#f1f1f1"
-          variant={BackgroundVariant.Lines}
-        />
-  
-        <Background
-          id="2"
-          gap={100}
-          color="#98ff98"
-          variant={BackgroundVariant.Lines}
-        />
+        fitView>
+        <MiniMap pannable zoomable/>
         <Panel>
-          <h3>Оправить запрос</h3>
-            <button onClick={() => PostExecute()}>отправить</button>
+          <button onClick={() => PostExecute()}>{">"}</button>
         </Panel>
         <Background />
         {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
@@ -218,10 +192,12 @@ const BasicFlow = () => {
   );
 }
 
-export default () => (
+let flow = () => (
   <ReactFlowProvider>
     <DnDProvider>
       <BasicFlow />
     </DnDProvider>
   </ReactFlowProvider>
 );
+
+export default flow;
