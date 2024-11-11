@@ -31,7 +31,7 @@ import { DnDProvider, useDnD } from './Context';
 import ContextMenu from './ContextMenu';
 
 const panOnDrag = [1, 2];
-const url = "http://localhost:3000/execute"
+const url = "http://localhost:3000/"
 
 interface Menu {
   id: string;
@@ -44,11 +44,8 @@ interface Menu {
 let id = 1;
 const getId = () => `${id++}`;
 
-const initialNodes: Node[] = [
-];
-
-const initialEdges: Edge[] = [
-];
+const initialNodes: Node[] = [];
+const initialEdges: Edge[] = [];
 
 const nodeTypes = {
   CustomNodeIf: CustomNodeIf,
@@ -69,13 +66,44 @@ const BasicFlow = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [menu, setMenu] = useState<Menu | null>(null);
 
-  function AxiosPost(){
-    axios.post(url, {
-      Nodes: nodes,
-      Edges: edges
-    })
+  function nodeJson(node: Node) {
+    let type = "";
+    switch (node.type) {
+      case "CustomNodeIf": 
+        type = "COND";
+        break;
+      case "CustomNodeDefault":
+        type = "CALC";
+        break;
+    }
+    return {
+      id: node.id,
+      type: type,
+      code: node.data.label,
+    };
+  }
+
+  let edgeId = 0;
+  function edgeJson(edge: Edge) {
+    edgeId++;
+    return {
+      //TODO: сделать нормальные id изначально
+      id: String(edgeId),
+      source: edge.source,
+      target: edge.target,
+      //TODO: ветка исполнения зависит от плеч ифа
+      branch: "true"
+    }
+  }
+
+  function PostExecute(){
+    let jo = {
+      Nodes: nodes.map(nodeJson),
+      Edges: edges.map(edgeJson)
+    };
+    axios.post(url + "execute", jo)
     .then(function (response) {
-      console.log(response);
+      console.log(response.data);
     })
     .catch(function (error) {
       console.log(error);
@@ -105,9 +133,7 @@ const BasicFlow = () => {
   const onDrop = useCallback(
     (event: { preventDefault: () => void; clientX: any; clientY: any; }) => {
       event.preventDefault();
-      if (!type) {
-        return;
-      }
+      if (!type) return;
       const position = screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
@@ -181,7 +207,7 @@ const BasicFlow = () => {
         />
         <Panel>
           <h3>Оправить запрос</h3>
-            <button onClick={() => AxiosPost()}>отправить</button>
+            <button onClick={() => PostExecute()}>отправить</button>
         </Panel>
         <Background />
         {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
