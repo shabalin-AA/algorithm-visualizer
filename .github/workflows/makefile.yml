@@ -19,6 +19,5 @@ jobs:
     - uses: actions/setup-java@v4
       with:
         distribution: 'oracle'
-        java-version: '21'
-    - name: Run
-      run: make
+        java-version: '17'
+    - run: make build
