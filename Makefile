@@ -1,7 +1,7 @@
 build:
-	cd visualizer; npm run build
+	cd visualizer; npm install; npm run build
 	cd executor; mvn compile
 
-run: 
+run: build
 	cd executor; mvn spring-boot:run &
 	cd visualizer; npm start &
