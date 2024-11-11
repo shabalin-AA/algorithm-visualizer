@@ -42,11 +42,8 @@ export default function CustomEdge({
             fontSize: 12,
             pointerEvents: 'all',
           }}
-          className="nodrag nopan"
-        >
-          <button className="edgebutton" onClick={onEdgeClick}>
-            ×
-          </button>
+          className="nodrag nopan">
+          <button className="edgebutton" onClick={onEdgeClick}>×</button>
         </div>
       </EdgeLabelRenderer>
     </>

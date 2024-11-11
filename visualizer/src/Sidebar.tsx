@@ -12,17 +12,16 @@ const DnDComponent: FC = () => {
   return (
     <aside>
       <div className="description">Перетащите узлы, чтобы создать их на поле.</div>
-      <div className="dndnode input" onDragStart={(event) => onDragStart(event, 'input')} draggable>
+      <div className="dndnode input" onDragStart={(event) => onDragStart(event, 'CustomNodeInput')} draggable>
         Input Node
       </div>
-      <div className="dndnode" onDragStart={(event) => onDragStart(event, 'default')} draggable>
+      <div className="dndnode" onDragStart={(event) => onDragStart(event, 'CustomNodeDefault')} draggable>
         Default Node
       </div>
-      <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'output')} draggable>
+      <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'CustomNodeOutput')} draggable>
         Output Node
       </div>
-      <div className="ifnode" onDragStart={(event) => onDragStart(event, 'CustomNode')} draggable>
-        If Node
+      <div className="ifnode" onDragStart={(event) => onDragStart(event, 'CustomNodeIf')} draggable>
       </div>
     </aside>
   );

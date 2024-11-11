@@ -10,7 +10,6 @@ interface DnDProviderProps {
 
 export const DnDProvider: React.FC<DnDProviderProps> = ({ children }) => {
   const [type, setType] = useState<string | null>(null);
-
   return (
     <DnDContext.Provider value={[type, setType]}>
       {children}

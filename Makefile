@@ -1,6 +1,7 @@
 build:
-	cd visualizer; make
-	cd compiler; make build-unix
+	cd visualizer; npm run build
+	cd executor; mvn compile
 
-run: build
-	cd compiler; make run-unix
+run: 
+	cd executor; mvn spring-boot:run &
+	cd visualizer; npm start &

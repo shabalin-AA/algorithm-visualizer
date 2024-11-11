@@ -5,30 +5,28 @@ import {
   ReactFlowProvider,
   Node,
   addEdge,
-  SelectionMode,
   Background,
-  BackgroundVariant,
   MiniMap,
   Edge,
   Connection,
   useNodesState,
   useEdgesState,
   Panel,
-  Controls, 
-  ControlButton,
   reconnectEdge
 } from "@xyflow/react";
+import axios from "axios"
 
 import "@xyflow/react/dist/style.css";
-import CustomNode from "./CustomNode";
+import CustomNodeIf from "./CustomNodeIf";
+import CustomNodeInput from "./CustomNodeInput";
+import CustomNodeDefault from "./CustomNodeDefault";
+import CustomNodeOutput from "./CustomNodeOutput";
 import CustomEdge from './CustomEdge';
-import axios from "axios"
 import Sidebar from './Sidebar';
 import { DnDProvider, useDnD } from './Context';
 import ContextMenu from './ContextMenu';
 
-// const panOnDrag = [1, 2];
-const url = "http://localhost:3000/execute"
+const url = "http://localhost:3000/"
 
 interface Menu {
   id: string;
@@ -41,32 +39,19 @@ interface Menu {
 let id = 1;
 const getId = () => `${id++}`;
 
-const initialNodes: Node[] = [
-];
-
-const initialEdges: Edge[] = [
-];
+const initialNodes: Node[] = [];
+const initialEdges: Edge[] = [];
 
 const nodeTypes = {
-  CustomNode: CustomNode
+  CustomNodeIf: CustomNodeIf,
+  CustomNodeInput: CustomNodeInput,
+  CustomNodeDefault: CustomNodeDefault,
+  CustomNodeOutput: CustomNodeOutput
 };
 
 const edgeTypes = {
   CustomEdge: CustomEdge,
 };
-
-function AxiosPost(){
-  axios.post(url, {
-    Nodes: initialNodes,
-    Edges: initialEdges
-  })
-  .then(function (response) {
-    console.log(response);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
 
 const BasicFlow = () => {
   const reactFlowWrapper = useRef(null);
@@ -75,11 +60,52 @@ const BasicFlow = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [menu, setMenu] = useState<Menu | null>(null);
-  const ref = useRef<HTMLInputElement>(null)
+
+  function nodeJson(node: Node) {
+    let type = "";
+    switch (node.type) {
+      case "CustomNodeIf": 
+        type = "COND";
+        break;
+      case "CustomNodeDefault":
+        type = "CALC";
+        break;
+    }
+    return {
+      id: node.id,
+      type: type,
+      code: node.data.label,
+    };
+  }
+
+  let edgeId = 0;
+  function edgeJson(edge: Edge) {
+    edgeId++;
+    let branch = 'true';
+    if (edge.id.includes('false'))
+      branch = 'false';
+    return {
+      id: String(edgeId),
+      source: edge.source,
+      target: edge.target,
+      branch: branch
+    }
+  }
+
+  function PostExecute(){
+    let jo = {
+      Nodes: nodes.map(nodeJson),
+      Edges: edges.map(edgeJson)
+    };
+    axios.post(url + "execute", jo)
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error))
+  }
+  
 
   const onReconnect = useCallback(
     (oldEdge: Edge, newConnection: Connection) =>
-      setEdges((els) => reconnectEdge(oldEdge, newConnection, els)),
+      setEdges((eds) => reconnectEdge(oldEdge, newConnection, eds)),
     [],
   );
   
@@ -99,9 +125,7 @@ const BasicFlow = () => {
   const onDrop = useCallback(
     (event: { preventDefault: () => void; clientX: any; clientY: any; }) => {
       event.preventDefault();
-      if (!type) {
-        return;
-      }
+      if (!type) return;
       const position = screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
@@ -120,13 +144,12 @@ const BasicFlow = () => {
   const onNodeContextMenu = useCallback(
     (event: { preventDefault: () => void; clientY: number; clientX: number; }, node: Node) => {
       event.preventDefault();
-      console.log(event.clientX, event.clientY)
       setMenu({
         id: node.id,
-        top: event.clientY,
-        left: 300,
-        right: 300,
-        bottom: 300
+        top: 1,
+        left: 1,
+        right: 1,
+        bottom: 1
       });
     },
     [setMenu],
@@ -155,28 +178,10 @@ const BasicFlow = () => {
         onDragOver={onDragOver}
         onPaneClick={onPaneClick}
         onNodeContextMenu={onNodeContextMenu}
-        fitView
-        >
-        <MiniMap
-        pannable zoomable
-        />
-
-        <Background
-          id="1"
-          gap={25}
-          color="#f1f1f1"
-          variant={BackgroundVariant.Lines}
-        />
-  
-        <Background
-          id="2"
-          gap={100}
-          color="#98ff98"
-          variant={BackgroundVariant.Lines}
-        />
+        fitView>
+        <MiniMap pannable zoomable/>
         <Panel>
-          <h3>Оправить запрос</h3>
-            <button onClick={() => AxiosPost()}>отправить</button>
+          <button onClick={() => PostExecute()}>{">"}</button>
         </Panel>
         <Background />
         {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
@@ -187,10 +192,12 @@ const BasicFlow = () => {
   );
 }
 
-export default () => (
+let flow = () => (
   <ReactFlowProvider>
     <DnDProvider>
       <BasicFlow />
     </DnDProvider>
   </ReactFlowProvider>
 );
+
+export default flow;
