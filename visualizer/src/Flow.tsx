@@ -3,11 +3,11 @@ import {
   ReactFlow,
   useReactFlow,
   ReactFlowProvider,
-  Node,
+  type Node,
+  type Edge,
   addEdge,
   Background,
   MiniMap,
-  Edge,
   Connection,
   useNodesState,
   useEdgesState,
@@ -17,14 +17,13 @@ import {
 import axios from "axios"
 
 import "@xyflow/react/dist/style.css";
-import CustomNodeIf from "./CustomNodeIf";
-import CustomNodeInput from "./CustomNodeInput";
-import CustomNodeDefault from "./CustomNodeDefault";
-import CustomNodeOutput from "./CustomNodeOutput";
-import CustomEdge from './CustomEdge';
+import NodeIf from "./NodeIf";
+import NodeCalc from "./NodeCalc";
+import DeletableEdge from './DeletableEdge';
 import Sidebar from './Sidebar';
-import { DnDProvider, useDnD } from './Context';
+import { DnDProvider, useDnD } from './DnDContext';
 import ContextMenu from './ContextMenu';
+
 
 const url = "http://localhost:3000/"
 
@@ -43,14 +42,12 @@ const initialNodes: Node[] = [];
 const initialEdges: Edge[] = [];
 
 const nodeTypes = {
-  CustomNodeIf: CustomNodeIf,
-  CustomNodeInput: CustomNodeInput,
-  CustomNodeDefault: CustomNodeDefault,
-  CustomNodeOutput: CustomNodeOutput
+  NodeIf: NodeIf,
+  NodeCalc: NodeCalc,
 };
 
 const edgeTypes = {
-  CustomEdge: CustomEdge,
+  DeletableEdge: DeletableEdge,
 };
 
 const BasicFlow = () => {
@@ -64,17 +61,17 @@ const BasicFlow = () => {
   function nodeJson(node: Node) {
     let type = "";
     switch (node.type) {
-      case "CustomNodeIf": 
+      case "NodeIf": 
         type = "COND";
         break;
-      case "CustomNodeDefault":
+      case "NodeCalc":
         type = "CALC";
         break;
     }
     return {
       id: node.id,
       type: type,
-      code: node.data.label,
+      code: node.data.code,
     };
   }
 
@@ -111,7 +108,7 @@ const BasicFlow = () => {
   
   const onConnect = useCallback(
     (connection: any) => {
-      const edge = { ...connection, type: 'CustomEdge' };
+      const edge = { ...connection, type: 'DeletableEdge' };
       setEdges((eds) => addEdge(edge, eds));
     },
     [setEdges],
@@ -166,7 +163,6 @@ const BasicFlow = () => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        snapToGrid
         onReconnect={onReconnect}
         // panOnScroll = {true}
         // selectionOnDrag = {true}

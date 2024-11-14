@@ -6,7 +6,7 @@ import {
   type EdgeProps,
 } from '@xyflow/react';
 
-export default function CustomEdge({
+export default function DeletableEdge({
   id,
   sourceX,
   sourceY,
@@ -43,7 +43,7 @@ export default function CustomEdge({
             pointerEvents: 'all',
           }}
           className="nodrag nopan">
-          <button className="edgebutton" onClick={onEdgeClick}>×</button>
+          <button className="delete-edge-button" onClick={onEdgeClick}>×</button>
         </div>
       </EdgeLabelRenderer>
     </>

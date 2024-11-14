@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { useDnD } from "./Context";
+import { useDnD } from "./DnDContext";
 
 const DnDComponent: FC = () => {
   const [_, setType] = useDnD();
@@ -12,16 +12,11 @@ const DnDComponent: FC = () => {
   return (
     <aside>
       <div className="description">Перетащите узлы, чтобы создать их на поле.</div>
-      <div className="dndnode input" onDragStart={(event) => onDragStart(event, 'CustomNodeInput')} draggable>
-        Input Node
+      <div className="dndnode" onDragStart={(event) => onDragStart(event, 'NodeCalc')} draggable>
+        Узел расчета
       </div>
-      <div className="dndnode" onDragStart={(event) => onDragStart(event, 'CustomNodeDefault')} draggable>
-        Default Node
-      </div>
-      <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'CustomNodeOutput')} draggable>
-        Output Node
-      </div>
-      <div className="ifnode" onDragStart={(event) => onDragStart(event, 'CustomNodeIf')} draggable>
+      <div className="ifnode" onDragStart={(event) => onDragStart(event, 'NodeIf')} draggable>
+        Узел ветвления
       </div>
     </aside>
   );
