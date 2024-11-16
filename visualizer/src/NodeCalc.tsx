@@ -17,7 +17,7 @@ export default function NodeCalc({id, data}: NodeProps<Text>) {
         }}>
         <textarea
          value={data.code}
-         className="node-label"
+         className="node-code"
          placeholder="c = b + a"
          onChange={(evt) => updateNodeData(id, {text: evt.target.value})}
         />

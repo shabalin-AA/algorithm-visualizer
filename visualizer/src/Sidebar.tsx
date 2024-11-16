@@ -12,11 +12,11 @@ const DnDComponent: FC = () => {
   return (
     <aside>
       <div className="description">Перетащите узлы, чтобы создать их на поле.</div>
-      <div className="dndnode" onDragStart={(event) => onDragStart(event, 'NodeCalc')} draggable>
+      <div className="dndnode input" onDragStart={(event) => onDragStart(event, 'NodeCalc')} draggable>
         Узел расчета
       </div>
-      <div className="ifnode" onDragStart={(event) => onDragStart(event, 'NodeIf')} draggable>
-        Узел ветвления
+      <div className="node-if" onDragStart={(event) => onDragStart(event, 'NodeIf')} draggable>
+        <div style={{transform: "rotate(-45deg)"}}>Узел ветвления</div>
       </div>
     </aside>
   );

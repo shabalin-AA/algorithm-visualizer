@@ -18,7 +18,7 @@ export default function NodeIf({id, data}: NodeProps<Text>) {
         }}>
       </div>
       <input
-         className="node-if"
+         className="node-code"
          placeholder="a > b"
          value = {data.code}
          onChange={(evt) => updateNodeData(id, { text: evt.target.value })}
