@@ -24,6 +24,7 @@ public class Application {
   )
   String execute(@RequestBody String body) {
     JSONObject jo = new JSONObject(body);
+    System.out.println(jo);
     JSONArray nds = jo.getJSONArray("Nodes");
     Node[] nodes = new Node[nds.length()];
     for (int i = 0; i < nds.length(); i++) {

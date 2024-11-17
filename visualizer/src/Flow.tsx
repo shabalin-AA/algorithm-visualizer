@@ -95,7 +95,15 @@ const BasicFlow = () => {
       Edges: edges.map(edgeJson)
     };
     axios.post(url + "execute", jo)
-    .then((response) => console.log(response.data))
+    .then((response) => {
+      const results = response.data;
+      for (let i = 0; i < nodes.length; i++) {
+        let node = nodes[i];
+        let id: number = +node.id;
+        node.data.result = results[id];
+      }
+      setNodes((nds) => (nodes));
+    })
     .catch((error) => console.log(error))
   }
   
@@ -131,7 +139,7 @@ const BasicFlow = () => {
         id: getId(),
         type,
         position,
-        data: { label: `Node ${id - 1}` },
+        data: { code: '', result: 'null' },
       };
       setNodes((nds) => nds.concat(newNode));
     },
