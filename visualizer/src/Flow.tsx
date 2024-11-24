@@ -29,10 +29,10 @@ const url = "http://localhost:3000/"
 
 interface Menu {
   id: string;
-  top: number;
-  left: number;
-  right?: number;
-  bottom?: number;
+  top: number | boolean;
+  left: number | boolean;
+  right: number | boolean;
+  bottom: number | boolean;
 }
 
 let id = 1;
@@ -57,6 +57,7 @@ const BasicFlow = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [menu, setMenu] = useState<Menu | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
 
   function nodeJson(node: Node) {
     let type = "";
@@ -147,14 +148,15 @@ const BasicFlow = () => {
   );
 
   const onNodeContextMenu = useCallback(
-    (event: { preventDefault: () => void; clientY: number; clientX: number; }, node: Node) => {
+    (event: { preventDefault: () => void; clientY: number; clientX: number; }, node: { id: any; }) => {
       event.preventDefault();
+      const pane = ref.current!.getBoundingClientRect();
       setMenu({
         id: node.id,
-        top: 1,
-        left: 1,
-        right: 1,
-        bottom: 1
+        top: event.clientY < pane.height - 200 ? event.clientY : false,
+        left: event.clientX < pane.width - 200 ? event.clientX : false,
+        right: event.clientX >= pane.width - 200 ? pane.width - event.clientX : false,
+        bottom: event.clientY >= pane.height - 200 ? pane.height - event.clientY : false,
       });
     },
     [setMenu],
@@ -166,6 +168,7 @@ const BasicFlow = () => {
     <div className="BasicFlow">
       <div className="reactflow-wrapper" ref={reactFlowWrapper}>
       <ReactFlow
+        ref={ref}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}

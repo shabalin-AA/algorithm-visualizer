@@ -1,11 +1,12 @@
-import { Node, Position, NodeProps, Handle, useReactFlow} from "@xyflow/react"
+import { Node, Position, NodeProps, Handle, useReactFlow, NodeResizer} from "@xyflow/react"
 import { memo } from 'react';
 import "./styles.css"
 import LimitedConnectionHandle from "./LimitedConnectionHandle"
 
 type Text = Node<{code: string, result: string}>;
 
-export default function NodeCalc({id, data}: NodeProps<Text>) {
+
+export default function NodeCalc({id, data}: NodeProps<Text>, selected: boolean | undefined) {
   const { updateNodeData } = useReactFlow();
   return (
     <div>

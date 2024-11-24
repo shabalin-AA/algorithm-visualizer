@@ -1,3 +1,5 @@
+@import url(./theme.css);
+
 html,
 body,
 #root,
@@ -9,104 +11,5 @@ body,
 .App {
   font-family: sans-serif;
   text-align: center;
-}
-
-.BasicFlow {
-  flex-direction: column;
-  display: flex;
-  flex-grow: 1;
-  height: 100%;
-}
-
-.BasicFlow aside {
-  border-right: 1px solid #eee;
-  padding: 15px 10px;
-  font-size: 12px;
-  background: #fcfcfc;
-}
-
-.BasicFlow aside .description {
-  margin-bottom: 10px;
-}
-
-.BasicFlow .dndnode {
-  height: 30px;
-  padding: 4px;
-  border: 1px solid #1a192b;
-  border-radius: 2px;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: grab;
-}
-
-.BasicFlow .node-if {
-  position: relative;
-  left: 70px;
-  top: 20px;
-  width: 90px;
-  height: 90px;
-  background: #fff;
-  border: 1px solid #777;
-  transform: rotate(45deg);
-  border-radius: 2px;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: grab;
-}
-
-.BasicFlow .reactflow-wrapper {
-  flex-grow: 1;
-  height: 100%;
-}
-
-.BasicFlow .selectall {
-  margin-top: 10px;
-}
-
-@media screen and (min-width: 768px) {
-  .BasicFlow {
-    flex-direction: row;
-  }
-  .BasicFlow aside {
-    width: 20%;
-    max-width: 250px;
-  }
-}
-
-.context-menu {
-  background: white;
-  border-style: solid;
-  box-shadow: 10px 19px 20px rgba(0, 0, 0, 10%);
-  position: absolute;
-  z-index: 10;
-}
-
-.context-menu button {
-  border: none;
-  display: block;
-  padding: 0.5em;
-  text-align: left;
-  width: 100%;
-}
-
-.context-menu button:hover {
-  background: white;
-}
-
-.node-code {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  background: none;
-  border: none;
-  outline: none;
-  box-shadow: none;
-  color: var(--text);
 }
 

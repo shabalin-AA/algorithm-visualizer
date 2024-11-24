@@ -1,16 +1,16 @@
-import React, { FC, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { useReactFlow, Node, Edge } from '@xyflow/react';
 
 interface ContextMenuProps {
   id: string;
-  top: number;
-  left: number;
-  right?: number;
-  bottom?: number;
+  top: any;
+  left: any;
+  right: any;
+  bottom: any;
   [key: string]: any;
 }
 
-const ContextMenu: FC<ContextMenuProps> = ({
+const ContextMenu: React.FC<ContextMenuProps> = ({
   id,
   top,
   left,
@@ -56,6 +56,6 @@ const ContextMenu: FC<ContextMenuProps> = ({
       <button onClick={deleteNode}>delete</button>
     </div>
   );
-}
+};
 
 export default ContextMenu;
