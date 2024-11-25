@@ -24,9 +24,6 @@ import Sidebar from './Sidebar';
 import { DnDProvider, useDnD } from './DnDContext';
 import ContextMenu from './ContextMenu';
 
-
-const url = "http://localhost:3000/"
-
 interface Menu {
   id: string;
   top: number | boolean;
@@ -49,6 +46,8 @@ const nodeTypes = {
 const edgeTypes = {
   DeletableEdge: DeletableEdge,
 };
+
+const url = 'http://localhost:3000/';
 
 const BasicFlow = () => {
   const reactFlowWrapper = useRef(null);
@@ -107,7 +106,27 @@ const BasicFlow = () => {
     })
     .catch((error) => console.log(error))
   }
-  
+
+  function PostSave() {
+      let jo = {
+          Nodes : nodes.map(nodeJson),
+          Edges: edges.map(edgeJson)
+      };
+      axios.post(url + "save", jo)
+      .then((response) => {
+          //TODO успешное/не успешное сохранение
+      })
+      .catch((error) => console.log(error))
+  }
+
+  function GetFlowchart() {
+      const id = 1;
+      axios.get(url + "flowchart/" + id)
+      .then((response) => {
+          console.log(response);
+      })
+      .catch((error) => console.log(error))
+  }
 
   const onReconnect = useCallback(
     (oldEdge: Edge, newConnection: Connection) =>
@@ -189,6 +208,7 @@ const BasicFlow = () => {
         <MiniMap pannable zoomable/>
         <Panel>
           <button onClick={() => PostExecute()}>{">"}</button>
+          <button onClick={() => PostSave()}>{"save"}</button>
         </Panel>
         <Background />
         {menu && <ContextMenu onClick={onPaneClick} {...menu} />}

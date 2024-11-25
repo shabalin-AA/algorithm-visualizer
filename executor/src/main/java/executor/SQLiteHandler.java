@@ -11,7 +11,7 @@ import executor.interpreter.Edge;
 
 
 public class SQLiteHandler {
-    private static final String CON_STR = "jdbc:sqlite:../dev.db";
+    private static final String CON_STR = "jdbc:sqlite:dev.db";
     private Connection connection;
 
     public SQLiteHandler() {
