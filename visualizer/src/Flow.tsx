@@ -100,7 +100,8 @@ const BasicFlow = () => {
       for (let i = 0; i < nodes.length; i++) {
         let node = nodes[i];
         let id: number = +node.id;
-        node.data.result = results[id];
+        //TODO results[id] может быть ошибкой
+        node.data.result = results[id].result;
       }
       setNodes((nds) => (nodes));
     })
