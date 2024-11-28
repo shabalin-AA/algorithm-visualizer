@@ -245,13 +245,31 @@ public class Interpreter {
                 i++;
                 if (i >= tokens.length) break;
             }
-            int p = newExpr(tokens[i]).precedence();
+            int p = precedence(newExpr(tokens[i]));
             if (p < minPrecedence) {
                 minPrecedence = p;
                 idx = i;
             }
         }
         return idx;
+    }
+
+    static int precedence(Expr expr) {
+        if (expr instanceof NextExpr)  return 0;
+        if (expr instanceof ListExpr)  return 1;
+        if (expr instanceof AssignExpr)return 2;
+        if (expr instanceof EqExpr)    return 3;
+        if (expr instanceof NotEqExpr) return 3;
+        if (expr instanceof LsExpr)    return 4;
+        if (expr instanceof GtExpr)    return 4;
+        if (expr instanceof AddExpr)   return 5;
+        if (expr instanceof SubExpr)   return 5;
+        if (expr instanceof MulExpr)   return 6;
+        if (expr instanceof DivExpr)   return 7;
+        if (expr instanceof StringExpr)return 8;
+        if (expr instanceof NumExpr)   return 8;
+        if (expr instanceof IdExpr)    return 9;
+        return Integer.MAX_VALUE;
     }
 
     boolean checkParentheses(Token[] tokens) {
