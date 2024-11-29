@@ -1,10 +1,11 @@
 package executor.interpreter.result;
 
 import org.json.JSONObject;
+import org.json.JSONException;
 
 
 public class Ok extends Result {
-    Object value;
+    public Object value;
 
     public Ok(Object value) {
         this.value = value;
@@ -12,7 +13,11 @@ public class Ok extends Result {
 
     public JSONObject json() {
         JSONObject jo = new JSONObject();
-        jo.put("result", this.value);
+        try {
+            jo.put("result", this.value);
+        } catch (JSONException e) {
+            System.out.println(e.toString());
+        }
         return jo;
     }
 }

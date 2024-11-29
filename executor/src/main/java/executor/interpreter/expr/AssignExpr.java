@@ -12,8 +12,6 @@ public class AssignExpr extends BinaryExpr {
     return value;
   }
 
-  public int precedence() { return 2; }
-
   public void add(Expr child) {
     if (l == null) l = (IdExpr)child;
     else if (r == null) r = child;

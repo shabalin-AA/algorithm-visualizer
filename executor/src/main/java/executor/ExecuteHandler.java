@@ -1,17 +1,16 @@
 package executor;
 
-import org.json.*;
 import executor.interpreter.*;
 import executor.interpreter.result.*;
 import java.util.List;
 import javafx.util.Pair;
-
+import org.json.*;
 
 public class ExecuteHandler {
+
     public ExecuteHandler() {}
 
-    public String executeFlowchart(JSONObject jo) {
-        System.out.println(jo);
+    public String executeFlowchart(JSONObject jo) throws JSONException {
         JSONArray nds = jo.getJSONArray("Nodes");
         Node[] nodes = new Node[nds.length()];
         for (int i = 0; i < nds.length(); i++) {
@@ -23,15 +22,15 @@ public class ExecuteHandler {
             edges[i] = new Edge(eds.getJSONObject(i));
         }
         //TODO: make modules not hardcoded
-        Class<?>[] modules = new Class<?>[] {
-            Math.class
-        };
-        List<Pair<Integer, Result>> results = (new Interpreter(nodes, edges, modules)).eval();
+        Class<?>[] modules = new Class<?>[] { Math.class };
+        List<Pair<Integer, Result>> results =
+            (new Interpreter(nodes, edges, modules)).eval();
         JSONObject response = resultsJson(results);
         return response.toString();
     }
 
-    JSONObject resultsJson(List<Pair<Integer, Result>> results) {
+    JSONObject resultsJson(List<Pair<Integer, Result>> results)
+        throws JSONException {
         JSONObject resultsJo = new JSONObject();
         for (Pair<Integer, Result> pair : results) {
             Integer k = pair.getKey();
@@ -40,5 +39,4 @@ public class ExecuteHandler {
         }
         return resultsJo;
     }
-
 }

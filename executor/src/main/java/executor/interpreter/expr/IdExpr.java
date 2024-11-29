@@ -66,8 +66,6 @@ public class IdExpr implements Expr {
         }
     }
 
-    public int precedence() { return 9; }
-
     public void add(Expr child) {
         if (arg == null) arg = child;
     }
