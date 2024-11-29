@@ -1,26 +1,8 @@
-.BasicFlow {
+ .BasicFlow {
     flex-direction: column;
     display: flex;
     flex-grow: 1;
     height: 100%;
-}
-    
-.BasicFlow {
-    flex-direction: column;
-    display: flex;
-    flex-grow: 1;
-    height: 100%;
-  }
-  
-  .BasicFlow aside {
-    border-right: 1px solid #eee;
-    padding: 15px 10px;
-    font-size: 12px;
-    background: #fcfcfc;
-  }
-  
-  .BasicFlow aside .description {
-    margin-bottom: 10px;
   }
   
   .BasicFlow .dndnode {
@@ -69,91 +51,44 @@
     }
   }
 
-  .context-menu {
-    background: white;
-    border-style: solid;
-    box-shadow: 10px 19px 20px rgba(0, 0, 0, 10%);
-    position: absolute;
-    z-index: 10;
-  }
-  
-  .context-menu button {
-    border: none;
-    display: block;
-    padding: 0.5em;
-    text-align: left;
-    width: 100%;
-  }
-  
-  .context-menu button:hover {
-    background: white;
-  }
+.context-menu {
+  background: white;
+  border-style: solid;
+  box-shadow: 10px 19px 20px rgba(0, 0, 0, 10%);
+  position: absolute;
+  z-index: 10;
+}
 
-  .row 
-  {
-    display: table;
-    width: 100%;
-  }
+.context-menu button {
+  border: none;
+  display: block;
+  padding: 0.5em;
+  text-align: left;
+  width: 100%;
+}
 
-  .If
-  {
-    float: left;
-    font-size: 10px; 
-    background: #fff; 
-    color: rgb(0, 0, 0); 
-    width: 50px;
-    text-align: center;
-    height: 50px;
-    border: 1px solid #777;
-    margin-right: 20px;
-  }
-  
-  .Calc {
-    float: left;
-    font-size: 10px; 
-    background: #fff; 
-    color: rgb(0, 0, 0); 
-    width: 200px;
-    text-align: center;
-    height: 50px;
-    border: 1px solid #777;
-    margin-right: 10px;
-  }
+.context-menu button:hover {
+  background: white;
+}
 
-  .Output {
-    float: left;
-    font-size: 10px; 
-    background: #fff; 
-    color: rgb(0, 0, 0); 
-    width: 60px;
-    text-align: center;
-    height: 50px;
-    border: 1px solid #777;
-    margin-right: 10px;
-  }
-
-
-  .Output-node-code {
-    position: absolute;
-    top: 50%;
-    right: 35px;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    background: none;
-    border: none;
-    outline: none;
-    box-shadow: none;
-    color: #1a192b;
-  }
-  
-  .node-code {
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    background: none;
-    border: none;
-    outline: none;
-    box-shadow: none;
-    color: #1a192b;
+.sidebar {
+  height: 300px;
+  width: 300px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding-top: 40px;
+  background-color: rgb(255, 255, 255);
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(1, 1, 1)
+}
+.sidebar div {
+  padding: 8px;
+  font-size: 24px;
+  display: block;
+}
+.body-text {
+  margin-left: 150px;
+  font-size: 18px;
 }
