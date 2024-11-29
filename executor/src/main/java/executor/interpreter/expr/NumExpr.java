@@ -15,7 +15,5 @@ public class NumExpr implements Expr {
     return value;
   }
 
-  public int precedence() { return 8; }
-
   public void add(Expr child) {}
 }

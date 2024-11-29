@@ -10,8 +10,6 @@ public class NextExpr extends BinaryExpr {
     return r.eval(scope);
   }
 
-  public int precedence() { return 0; }
-
   public void add(Expr child) {
     if (l == null) l = child;
     else if (r == null) r = child;

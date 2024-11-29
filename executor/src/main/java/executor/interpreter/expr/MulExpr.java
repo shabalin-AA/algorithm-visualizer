@@ -15,8 +15,6 @@ public class MulExpr extends BinaryExpr {
     return null;
   }
 
-  public int precedence() { return 6; }
-
   public void add(Expr child) {
     if (l == null) l = child;
     else if (r == null) r = child;

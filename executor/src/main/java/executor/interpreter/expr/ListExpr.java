@@ -22,8 +22,6 @@ public class ListExpr implements Expr {
     return acc;
   }
 
-  public int precedence() { return 1; }
-
   public void add(Expr child) {
     if (child instanceof ListExpr)
       if (next == null) next = (ListExpr)child;
