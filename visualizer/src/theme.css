@@ -37,8 +37,6 @@
   
   .BasicFlow .node-if {
     position: relative;
-    left: 70px;
-    top: 20px;
     width: 90px;
     height: 90px;
     background: #fff;
@@ -90,15 +88,72 @@
   .context-menu button:hover {
     background: white;
   }
+
+  .row 
+  {
+    display: table;
+    width: 100%;
+  }
+
+  .If
+  {
+    float: left;
+    font-size: 10px; 
+    background: #fff; 
+    color: rgb(0, 0, 0); 
+    width: 50px;
+    text-align: center;
+    height: 50px;
+    border: 1px solid #777;
+    margin-right: 20px;
+  }
   
-  .node-code {
+  .Calc {
+    float: left;
+    font-size: 10px; 
+    background: #fff; 
+    color: rgb(0, 0, 0); 
+    width: 200px;
+    text-align: center;
+    height: 50px;
+    border: 1px solid #777;
+    margin-right: 10px;
+  }
+
+  .Output {
+    float: left;
+    font-size: 10px; 
+    background: #fff; 
+    color: rgb(0, 0, 0); 
+    width: 60px;
+    text-align: center;
+    height: 50px;
+    border: 1px solid #777;
+    margin-right: 10px;
+  }
+
+
+  .Output-node-code {
     position: absolute;
-    top: 40%;
-    left: 50%;
+    top: 50%;
+    right: 35px;
     transform: translate(-50%, -50%);
     text-align: center;
     background: none;
     border: none;
     outline: none;
     box-shadow: none;
+    color: #1a192b;
   }
+  
+  .node-code {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    color: #1a192b;
+}

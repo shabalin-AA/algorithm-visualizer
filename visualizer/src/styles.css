@@ -1,9 +1,8 @@
 @import url(./theme.css);
-
+@import url(./react-flow.css);
 html,
 body,
 #root,
-
 .App {
   height: 100%;
 }

@@ -10,16 +10,22 @@ const DnDComponent: FC = () => {
   };
 
   return (
-    <aside>
-      <div className="description">Перетащите узлы, чтобы создать их на поле.</div>
-      <div className="dndnode" onDragStart={(event) => onDragStart(event, 'NodeCalc')} draggable>
-        Узел расчета
+    <body>
+      <div className="sidebar"> Перетащите узлы, чтобы создать их на поле.
+        <div></div> 
+        <div className="dndnode" onDragStart={(event) => onDragStart(event, 'NodeCalc')} draggable>
+          Узел расчета
+        </div>  
+          <div onDragStart={(event) => onDragStart(event, 'NodeIf')} draggable>
+            <svg width="100" height="100" className="shape-svg">
+              <g transform="translate(2, 2)">
+                <path d="M0,48 L48,0 L96,48 L48,96 Z" fill="#ffffff" stroke-width="1" stroke="#000000" fill-opacity="0.8">
+                </path>
+              </g>
+            </svg>
+          </div>
       </div>
-      <div onDragStart={(event) => onDragStart(event, 'NodeIf')} draggable className='node-if'>
-      <div style={{transform: "rotate(-45deg)"}}>Узел ветвления</div>
-      </div>
-    </aside>
-
+    </body>
   );
 };
 
