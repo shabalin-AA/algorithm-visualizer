@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef} from "react";
+import React, { useCallback, useState, useRef } from "react";
 import {
   ReactFlow,
   useReactFlow,
@@ -12,18 +12,17 @@ import {
   useNodesState,
   useEdgesState,
   Panel,
-  reconnectEdge
+  reconnectEdge,
 } from "@xyflow/react";
-import axios from "axios"
+import axios from "axios";
 
 import "@xyflow/react/dist/style.css";
 import NodeIf from "./NodeIf";
 import NodeCalc from "./NodeCalc";
-import DeletableEdge from './DeletableEdge';
-import Sidebar from './Sidebar';
-import { DnDProvider, useDnD } from './DnDContext';
-import ContextMenu from './ContextMenu';
-
+import DeletableEdge from "./DeletableEdge";
+import Sidebar from "./Sidebar";
+import { DnDProvider, useDnD } from "./DnDContext";
+import ContextMenu from "./ContextMenu";
 
 interface Menu {
   id: string;
@@ -36,7 +35,7 @@ interface Menu {
 let id = 1;
 const getId = () => `${id++}`;
 
-const initialNodes: Node[] = [  ];
+const initialNodes: Node[] = [];
 const initialEdges: Edge[] = [];
 
 const nodeTypes = {
@@ -48,7 +47,7 @@ const edgeTypes = {
   DeletableEdge: DeletableEdge,
 };
 
-const url = 'http://localhost:3000/';
+const url = "http://localhost:3000/";
 
 const BasicFlow = () => {
   const reactFlowWrapper = useRef(null);
@@ -62,7 +61,7 @@ const BasicFlow = () => {
   function nodeJson(node: Node) {
     let type = "";
     switch (node.type) {
-      case "NodeIf": 
+      case "NodeIf":
         type = "COND";
         break;
       case "NodeCalc":
@@ -79,78 +78,89 @@ const BasicFlow = () => {
   let edgeId = 0;
   function edgeJson(edge: Edge) {
     edgeId++;
-    let branch = 'true';
-    if (edge.id.includes('false'))
-      branch = 'false';
+    let branch = "true";
+    if (edge.id.includes("false")) branch = "false";
     return {
       id: String(edgeId),
       source: edge.source,
       target: edge.target,
-      branch: branch
-    }
+      branch: branch,
+    };
   }
 
-  function PostExecute(){
+  function PostExecute() {
     let jo = {
       Nodes: nodes.map(nodeJson),
-      Edges: edges.map(edgeJson)
+      Edges: edges.map(edgeJson),
     };
-    axios.post(url + "execute", jo)
-    .then((response) => {
-      const results = response.data;
-      for (let i = 0; i < nodes.length; i++) {
-        let node = nodes[i];
-        let id: number = +node.id;
-        //TODO results[id] может быть ошибкой
-        node.data.result = results[id].result;
-      }
-      setNodes((nds) => (nodes));
-    })
-    .catch((error) => console.log(error))
+    function newResult(node: Node, newResult: string) {
+      // TODO newResult может быть ошибкой
+      node.data.result = newResult;
+      return node;
+    }
+    axios
+      .post(url + "execute", jo)
+      .then((response) => {
+        const results = response.data;
+        setNodes((nodes) =>
+          nodes.map((node) =>
+            newResult(node, results[+node.id].result.toString()),
+          ),
+        );
+      })
+      .catch((error) => console.log(error));
   }
 
   function PostSave() {
-      let jo = {
-          Nodes : nodes.map(nodeJson),
-          Edges: edges.map(edgeJson)
-      };
-      axios.post(url + "save", jo)
+    let jo = {
+      Nodes: nodes.map(nodeJson),
+      Edges: edges.map(edgeJson),
+    };
+    axios
+      .post(url + "save", jo)
       .then((response) => {
-          //TODO успешное/не успешное сохранение
+        //TODO успешное/не успешное сохранение
       })
-      .catch((error) => console.log(error))
+      .catch((error) => console.log(error));
   }
 
   function GetFlowchart() {
-      const id = 1;
-      axios.get(url + "flowchart/" + id)
+    const id = 1;
+    axios
+      .get(url + "flowchart/" + id)
       .then((response) => {
-          console.log(response);
+        console.log(response);
       })
-      .catch((error) => console.log(error))
+      .catch((error) => console.log(error));
   }
 
   const onReconnect = useCallback(
     (oldEdge: Edge, newConnection: Connection) =>
       setEdges((eds) => reconnectEdge(oldEdge, newConnection, eds)),
-    [],
+    [setEdges],
   );
-  
+
   const onConnect = useCallback(
     (connection: any) => {
-      const edge = { ...connection, type: 'DeletableEdge' };
+      const edge = { ...connection, type: "DeletableEdge" };
       setEdges((eds) => addEdge(edge, eds));
     },
     [setEdges],
   );
 
-  const onDragOver = useCallback((event: { preventDefault: () => void; dataTransfer: { dropEffect: string; }; }) => {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
-  }, []);
+  const onDragOver = useCallback(
+    (event: {
+      preventDefault: () => void;
+      dataTransfer: { dropEffect: string };
+    }) => {
+      event.preventDefault();
+      event.dataTransfer.dropEffect = "move";
+    },
+    [],
+  );
 
   const onDrop = useCallback(
-    (event: { preventDefault: () => void; clientX: any; clientY: any; }) => {
+    (event: { preventDefault: () => void; clientX: any; clientY: any }) => {
       event.preventDefault();
       if (!type) return;
       const position = screenToFlowPosition({
@@ -161,23 +171,32 @@ const BasicFlow = () => {
         id: getId(),
         type,
         position,
-        data: { code: '', result: 'null' },
+        data: { code: "", result: "null" },
       };
       setNodes((nds) => nds.concat(newNode));
     },
-    [screenToFlowPosition, type],
+    [screenToFlowPosition, type, setNodes],
   );
 
   const onNodeContextMenu = useCallback(
-    (event: { preventDefault: () => void; clientY: number; clientX: number; }, node: { id: any; }) => {
+    (
+      event: { preventDefault: () => void; clientY: number; clientX: number },
+      node: { id: any },
+    ) => {
       event.preventDefault();
       const pane = ref.current!.getBoundingClientRect();
       setMenu({
         id: node.id,
         top: event.clientY < pane.height - 200 ? event.clientY : false,
         left: event.clientX < pane.width - 200 ? event.clientX : false,
-        right: event.clientX >= pane.width - 200 ? pane.width - event.clientX : false,
-        bottom: event.clientY >= pane.height - 200 ? pane.height - event.clientY : false,
+        right:
+          event.clientX >= pane.width - 200
+            ? pane.width - event.clientX
+            : false,
+        bottom:
+          event.clientY >= pane.height - 200
+            ? pane.height - event.clientY
+            : false,
       });
     },
     [setMenu],
@@ -188,38 +207,39 @@ const BasicFlow = () => {
   return (
     <div className="BasicFlow">
       <div className="reactflow-wrapper" ref={reactFlowWrapper}>
-      <ReactFlow
-        ref={ref}
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onReconnect={onReconnect}
-        // panOnScroll = {true}
-        // selectionOnDrag = {true}
-        // panOnDrag={panOnDrag}
-        // selectionMode={SelectionMode.Partial}
-        nodeTypes={nodeTypes}
-        edgeTypes={edgeTypes}
-        onDrop={onDrop}
-        onDragOver={onDragOver}
-        onPaneClick={onPaneClick}
-        onNodeContextMenu={onNodeContextMenu}
-        fitView>
-        <MiniMap pannable zoomable/>
-        <Panel>
-          <button onClick={() => PostExecute()}>{">"}</button>
-          <button onClick={() => PostSave()}>{"save"}</button>
-        </Panel>
-        <Background />
-        {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
-      </ReactFlow>
+        <ReactFlow
+          ref={ref}
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onReconnect={onReconnect}
+          // panOnScroll = {true}
+          // selectionOnDrag = {true}
+          // panOnDrag={panOnDrag}
+          // selectionMode={SelectionMode.Partial}
+          nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+          onPaneClick={onPaneClick}
+          onNodeContextMenu={onNodeContextMenu}
+          fitView
+        >
+          <MiniMap pannable zoomable />
+          <Panel>
+            <button onClick={() => PostExecute()}>{">"}</button>
+            <button onClick={() => PostSave()}>{"save"}</button>
+          </Panel>
+          <Background />
+          {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
+        </ReactFlow>
       </div>
       <Sidebar />
     </div>
   );
-}
+};
 
 let flow = () => (
   <ReactFlowProvider>

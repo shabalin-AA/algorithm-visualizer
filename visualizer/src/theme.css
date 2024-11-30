@@ -1,11 +1,11 @@
- .BasicFlow {
+.BasicFlow {
     flex-direction: column;
     display: flex;
     flex-grow: 1;
     height: 100%;
-  }
-  
-  .BasicFlow .dndnode {
+}
+
+.BasicFlow .dndnode {
     height: 30px;
     padding: 4px;
     border: 1px solid #1a192b;
@@ -15,9 +15,9 @@
     justify-content: center;
     align-items: center;
     cursor: grab;
-  }
-  
-  .BasicFlow .node-if {
+}
+
+.BasicFlow .node-if {
     position: relative;
     width: 90px;
     height: 90px;
@@ -30,65 +30,65 @@
     justify-content: center;
     align-items: center;
     cursor: grab;
-  }
-  
-  .BasicFlow .reactflow-wrapper {
+}
+
+.BasicFlow .reactflow-wrapper {
     flex-grow: 1;
     height: 100%;
-  }
-  
-  .BasicFlow .selectall {
+}
+
+.BasicFlow .selectall {
     margin-top: 10px;
-  }
-  
-  @media screen and (min-width: 768px) {
+}
+
+@media screen and (min-width: 768px) {
     .BasicFlow {
-      flex-direction: row;
+        flex-direction: row;
     }
     .BasicFlow aside {
-      width: 20%;
-      max-width: 250px;
+        width: 20%;
+        max-width: 250px;
     }
-  }
+}
 
 .context-menu {
-  background: white;
-  border-style: solid;
-  box-shadow: 10px 19px 20px rgba(0, 0, 0, 10%);
-  position: absolute;
-  z-index: 10;
+    background: white;
+    border-style: solid;
+    box-shadow: 10px 19px 20px rgba(0, 0, 0, 10%);
+    position: absolute;
+    z-index: 10;
 }
 
 .context-menu button {
-  border: none;
-  display: block;
-  padding: 0.5em;
-  text-align: left;
-  width: 100%;
+    border: none;
+    display: block;
+    padding: 0.5em;
+    text-align: left;
+    width: 100%;
 }
 
 .context-menu button:hover {
-  background: white;
+    background: white;
 }
 
 .sidebar {
-  height: 300px;
-  width: 300px;
-  position: fixed;
-  top: 0;
-  right: 0;
-  padding-top: 40px;
-  background-color: rgb(255, 255, 255);
-  border-width: 1px;
-  border-style: solid;
-  border-color: rgb(1, 1, 1)
+    height: 300px;
+    width: 300px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding-top: 40px;
+    background-color: rgb(255, 255, 255);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(1, 1, 1);
 }
 .sidebar div {
-  padding: 8px;
-  font-size: 24px;
-  display: block;
+    padding: 8px;
+    font-size: 24px;
+    display: block;
 }
 .body-text {
-  margin-left: 150px;
-  font-size: 18px;
+    margin-left: 150px;
+    font-size: 18px;
 }
