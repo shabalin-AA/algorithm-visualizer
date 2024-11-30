@@ -8,26 +8,27 @@ type Text = Node<{code: string, result: string, selected: boolean}>;
 export default function NodeIf({id, data, selected}: NodeProps<Text> ) {
   const { updateNodeData } = useReactFlow();
   return (
-    <div>
-      <body>
-      <div className="row">
-      <div className="If" style={{transform: "rotate(45deg)"}}></div>
-          <input
-            className="node-code"
-            style={{left: 34}}
+    <>
+      <NodeResizer 
+        minHeight={50}
+        minWidth={50}
+        isVisible = {selected}
+      />
+      <div className="react-flow__node1 nodrag">
+        <input
+            value={data.code}
+            style={{transform: "rotate(-45dg)"}}
+            className="text-input-node__input1"
             placeholder="a > b"
-            value = {data.code}
-            onChange={(evt) => updateNodeData(id, { code: evt.target.value })}
-          />
-          <div className="Output"><div className="Output-node-code">{data.result}</div></div>
-          <div>
-            <Handle type="target" position={Position.Top} style={{left: 34, transform: "translate(-50%, -50%)"}}/>
-            <LimitedConnectionHandle type="source" position={Position.Left}  style={{transform: "translate(-50%, -50%)"}}  connectioncount={1} id="false"/>
-            <LimitedConnectionHandle type="source" position={Position.Right} style={{left: 60, transform: "translate(50%, -50%)"}} connectioncount={1} id="true"/>
-          </div>
+            onChange={(evt) => updateNodeData(id, {code: evt.target.value})}>
+          </input>
         </div>
-      </body>
-    </div>
+        <br></br>
+          <Handle type="target" position={Position.Top}/>
+          <LimitedConnectionHandle type="source" position={Position.Left} connectioncount={1} id="false"/>
+          <LimitedConnectionHandle type="source" position={Position.Right} connectioncount={1} id="true"/>
+        <div className="text-input-node__input2"> Вывод: {data.result}</div>
+    </>
   );
 };
 

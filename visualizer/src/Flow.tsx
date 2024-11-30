@@ -24,6 +24,7 @@ import Sidebar from './Sidebar';
 import { DnDProvider, useDnD } from './DnDContext';
 import ContextMenu from './ContextMenu';
 
+
 interface Menu {
   id: string;
   top: number | boolean;
@@ -35,7 +36,7 @@ interface Menu {
 let id = 1;
 const getId = () => `${id++}`;
 
-const initialNodes: Node[] = [];
+const initialNodes: Node[] = [  ];
 const initialEdges: Edge[] = [];
 
 const nodeTypes = {
