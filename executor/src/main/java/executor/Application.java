@@ -1,8 +1,8 @@
 package executor;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.json.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Application {
 
-    private static final Logger logger = LogManager.getLogger(
-        Application.class
-    );
+    Logger logger = LoggerFactory.getLogger(executor.Application.class);
 
     SQLiteHandler sqliteHandler = new SQLiteHandler();
     ExecuteHandler executeHandler = new ExecuteHandler();
@@ -28,11 +26,11 @@ public class Application {
         produces = "application/json"
     )
     String execute(@RequestBody String body) {
-        logger.debug(body);
+        logger.info("[request_body]\t" + body);
         try {
             return executeHandler.executeFlowchart(new JSONObject(body));
         } catch (JSONException e) {
-            logger.debug("Wrong flowchart json\n" + e.toString());
+            logger.warn("Wrong flowchart json\n" + e.toString());
         }
         return "";
     }
@@ -42,7 +40,7 @@ public class Application {
         try {
             sqliteHandler.insertFlowchart(new JSONObject(body));
         } catch (JSONException e) {
-            logger.debug("Wrong flowchart json\n" + e.toString());
+            logger.warn("Wrong flowchart json\n" + e.toString());
         }
     }
 

@@ -1,23 +1,19 @@
 package executor.interpreter.result;
 
-import org.json.JSONObject;
 import org.json.JSONException;
-
+import org.json.JSONObject;
 
 public class Ok extends Result {
+
     public Object value;
 
     public Ok(Object value) {
         this.value = value;
     }
 
-    public JSONObject json() {
+    public JSONObject json() throws JSONException {
         JSONObject jo = new JSONObject();
-        try {
-            jo.put("result", this.value);
-        } catch (JSONException e) {
-            System.out.println(e.toString());
-        }
+        jo.put("result", this.value);
         return jo;
     }
 }

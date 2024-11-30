@@ -9,14 +9,17 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import javafx.util.Pair;
-import org.apache.logging.log4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // TODO arrays
 // TODO calling other flowcharts
 
 public class Interpreter {
 
-    private static final Logger logger = LogManager.getLogger("main");
+    Logger logger = LoggerFactory.getLogger(
+        executor.interpreter.Interpreter.class
+    );
 
     Node[] nds;
     Edge[] eds;
@@ -68,14 +71,10 @@ public class Interpreter {
             }
             Expr ast = parse(tokens);
             res = ast.eval(scope);
-            logger.debug(n.code);
-            String tokensStr = "";
-            for (Token t : tokens) {
-                tokensStr += String.format("%s\t%s\n", t.str, t.type.name());
-            }
-            logger.debug("[tokens]\t" + tokensStr);
-            logger.debug("[ast]\t" + exprToString(ast, 0));
-            logger.debug("[result]\t" + res);
+            logger.info("[node {} code]\n{}", n.id, n.code);
+            logger.info("[node {} tokens]\n{}", n.id, tokensStr(tokens));
+            logger.info("[node {} ast]\n{}", n.id, exprToString(ast, 0));
+            logger.info("[node {} result]\n{}", n.id, res.toString());
         } catch (Exception e) {
             return new Err(e);
         }
@@ -310,7 +309,7 @@ public class Interpreter {
             try {
                 value = field.get(expr);
             } catch (Exception e) {
-                logger.debug("Cannot get field valuei\n" + e.toString());
+                logger.warn("Cannot get field value\n{}", e.toString());
             }
             res += field.getName() + ": ";
             if (value == null) res += "null";
@@ -323,15 +322,22 @@ public class Interpreter {
         return res;
     }
 
+    String tokensStr(Token[] tokens) {
+        String res = "";
+        for (Token t : tokens) {
+            res += String.format("%s\t%s\n", t.str, t.type.name());
+        }
+        return res;
+    }
+
     class UnmatchedParenthesesException extends Exception {
 
         public UnmatchedParenthesesException(Token[] tokens) {
             super();
-            String tokensStr = "";
-            for (Token t : tokens) {
-                tokensStr += String.format("%s\t%s\n", t.str, t.type.name());
-            }
-            System.out.println(tokensStr);
+            logger.warn(
+                "[UnmatchedParenthesesException] [tokens]\n{}",
+                tokensStr(tokens)
+            );
         }
     }
 
@@ -339,6 +345,10 @@ public class Interpreter {
 
         public UndefinedTokenException(Token[] tokens) {
             super();
+            logger.warn(
+                "[UndefinedTokenException] [tokens]\n{}",
+                tokensStr(tokens)
+            );
         }
     }
 }

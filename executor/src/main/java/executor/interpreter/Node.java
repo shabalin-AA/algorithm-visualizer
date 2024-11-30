@@ -1,14 +1,13 @@
 package executor.interpreter;
 
-import org.apache.logging.log4j.*;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Node {
 
-    private static final Logger logger = LogManager.getLogger(
-        executor.Application.class
-    );
+    Logger logger = LoggerFactory.getLogger(executor.interpreter.Node.class);
 
     public int id;
     public NodeType type;
@@ -33,7 +32,7 @@ public class Node {
                 }
             }
         } catch (JSONException e) {
-            logger.debug("Wrong Node json\n" + e.toString());
+            logger.warn("Wrong Node json\n" + e.toString());
         }
     }
 }
