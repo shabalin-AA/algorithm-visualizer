@@ -228,9 +228,17 @@ const BasicFlow = () => {
           fitView
         >
           <MiniMap pannable zoomable />
-          <Panel>
-            <button onClick={() => PostExecute()}>{">"}</button>
-            <button onClick={() => PostSave()}>{"save"}</button>
+          <Panel className="inline-container" position="top-center">
+            <div className="inline-item">
+              <button className="play-button" onClick={PostExecute}>
+                <span className="play-icon">▶</span>
+              </button>
+            </div>
+            <div className="inline-item">
+              <button className="save-button" onClick={PostSave}>
+                <span className="save-icon">💾</span>
+              </button>
+            </div>
           </Panel>
           <Background />
           {menu && <ContextMenu onClick={onPaneClick} {...menu} />}

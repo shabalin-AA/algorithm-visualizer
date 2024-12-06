@@ -92,3 +92,57 @@
     margin-left: 150px;
     font-size: 18px;
 }
+
+.play-button {
+    background-color: #28a745; /* Зеленый цвет */
+    border: none;
+    border-radius: 50%; /* Круглая форма */
+    width: 60px; /* Ширина кнопки */
+    height: 60px; /* Высота кнопки */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition:
+        background-color 0.3s,
+        transform 0.2s; /* Плавные переходы */
+}
+
+.play-button:hover {
+    background-color: #218838; /* Темнее при наведении */
+    transform: scale(1.1); /* Увеличение при наведении */
+}
+
+.play-icon {
+    font-size: 24px; /* Размер иконки */
+    color: white; /* Цвет иконки */
+}
+
+.save-button {
+    background-color: #007bff; /* Синий цвет */
+    border: none;
+    border-radius: 5px; /* Скругленные углы */
+    padding: 10px 15px; /* Отступы */
+    color: white; /* Цвет текста */
+    font-size: 16px; /* Размер шрифта */
+    cursor: pointer;
+    transition:
+        background-color 0.3s,
+        transform 0.2s; /* Плавные переходы */
+}
+
+.save-button:hover {
+    background-color: #0056b3; /* Темнее при наведении */
+    transform: scale(1.05); /* Увеличение при наведении */
+}
+
+.save-icon {
+    margin-right: 5px; /* Отступ между иконкой и текстом */
+}
+
+.inline-item {
+    display: inline-block; /* Элементы будут располагаться в строку */
+    margin: 10px; /* Отступы между элементами */
+    padding: 20px;
+    color: white;
+}
