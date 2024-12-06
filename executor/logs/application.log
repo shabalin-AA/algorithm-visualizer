@@ -1055,3 +1055,195 @@ true
 2024-12-06T11:54:40.683+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json]
 2024-12-06T11:54:40.684+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Writing ["{}"]
 2024-12-06T11:54:40.684+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2024-12-06T12:14:51.740+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : POST "/execute", parameters={}
+2024-12-06T12:14:51.741+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to executor.Application#execute(String)
+2024-12-06T12:14:51.742+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to ["{"Nodes":[],"Edges":[]}"]
+2024-12-06T12:14:51.742+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-6] executor.Application                     : [request_body]	{"Nodes":[],"Edges":[]}
+2024-12-06T12:14:51.742+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json]
+2024-12-06T12:14:51.742+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] m.m.a.RequestResponseBodyMethodProcessor : Writing ["{}"]
+2024-12-06T12:14:51.743+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2024-12-06T12:14:52.508+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : POST "/save", parameters={}
+2024-12-06T12:14:52.509+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to executor.Application#save(String)
+2024-12-06T12:14:52.511+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to ["{"Nodes":[],"Edges":[]}"]
+2024-12-06T12:14:52.512+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-7] executor.SQLiteHandler                   : [sql] insert into flowchart (json) values ('{"Edges":[],"Nodes":[]}');
+2024-12-06T12:14:52.527+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2024-12-06T12:14:52.527+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] m.m.a.RequestResponseBodyMethodProcessor : Nothing to write: null body
+2024-12-06T12:14:52.527+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2024-12-06T12:14:52.678+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : POST "/save", parameters={}
+2024-12-06T12:14:52.678+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to executor.Application#save(String)
+2024-12-06T12:14:52.679+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to ["{"Nodes":[],"Edges":[]}"]
+2024-12-06T12:14:52.679+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-8] executor.SQLiteHandler                   : [sql] insert into flowchart (json) values ('{"Edges":[],"Nodes":[]}');
+2024-12-06T12:14:52.686+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2024-12-06T12:14:52.686+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] m.m.a.RequestResponseBodyMethodProcessor : Nothing to write: null body
+2024-12-06T12:14:52.687+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2024-12-06T12:14:52.854+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : POST "/save", parameters={}
+2024-12-06T12:14:52.854+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to executor.Application#save(String)
+2024-12-06T12:14:52.855+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-9] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to ["{"Nodes":[],"Edges":[]}"]
+2024-12-06T12:14:52.855+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-9] executor.SQLiteHandler                   : [sql] insert into flowchart (json) values ('{"Edges":[],"Nodes":[]}');
+2024-12-06T12:14:52.863+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-9] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2024-12-06T12:14:52.863+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-9] m.m.a.RequestResponseBodyMethodProcessor : Nothing to write: null body
+2024-12-06T12:14:52.863+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2024-12-06T12:14:53.059+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : POST "/save", parameters={}
+2024-12-06T12:14:53.059+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to executor.Application#save(String)
+2024-12-06T12:14:53.059+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to ["{"Nodes":[],"Edges":[]}"]
+2024-12-06T12:14:53.060+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-10] executor.SQLiteHandler                   : [sql] insert into flowchart (json) values ('{"Edges":[],"Nodes":[]}');
+2024-12-06T12:14:53.066+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2024-12-06T12:14:53.067+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Nothing to write: null body
+2024-12-06T12:14:53.067+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2024-12-06T12:14:53.223+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : POST "/save", parameters={}
+2024-12-06T12:14:53.224+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to executor.Application#save(String)
+2024-12-06T12:14:53.224+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to ["{"Nodes":[],"Edges":[]}"]
+2024-12-06T12:14:53.224+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-1] executor.SQLiteHandler                   : [sql] insert into flowchart (json) values ('{"Edges":[],"Nodes":[]}');
+2024-12-06T12:14:53.231+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2024-12-06T12:14:53.232+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Nothing to write: null body
+2024-12-06T12:14:53.232+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2024-12-06T12:14:53.383+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : POST "/save", parameters={}
+2024-12-06T12:14:53.384+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to executor.Application#save(String)
+2024-12-06T12:14:53.384+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to ["{"Nodes":[],"Edges":[]}"]
+2024-12-06T12:14:53.384+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-2] executor.SQLiteHandler                   : [sql] insert into flowchart (json) values ('{"Edges":[],"Nodes":[]}');
+2024-12-06T12:14:53.386+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2024-12-06T12:14:53.386+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Nothing to write: null body
+2024-12-06T12:14:53.386+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2024-12-06T12:14:53.547+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : POST "/save", parameters={}
+2024-12-06T12:14:53.548+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to executor.Application#save(String)
+2024-12-06T12:14:53.549+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to ["{"Nodes":[],"Edges":[]}"]
+2024-12-06T12:14:53.549+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-3] executor.SQLiteHandler                   : [sql] insert into flowchart (json) values ('{"Edges":[],"Nodes":[]}');
+2024-12-06T12:14:53.556+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2024-12-06T12:14:53.556+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Nothing to write: null body
+2024-12-06T12:14:53.556+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2024-12-06T12:14:53.701+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : POST "/save", parameters={}
+2024-12-06T12:14:53.702+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to executor.Application#save(String)
+2024-12-06T12:14:53.702+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-4] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to ["{"Nodes":[],"Edges":[]}"]
+2024-12-06T12:14:53.703+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-4] executor.SQLiteHandler                   : [sql] insert into flowchart (json) values ('{"Edges":[],"Nodes":[]}');
+2024-12-06T12:14:53.709+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-4] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2024-12-06T12:14:53.710+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-4] m.m.a.RequestResponseBodyMethodProcessor : Nothing to write: null body
+2024-12-06T12:14:53.710+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2024-12-06T12:14:53.857+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : POST "/save", parameters={}
+2024-12-06T12:14:53.858+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to executor.Application#save(String)
+2024-12-06T12:14:53.859+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to ["{"Nodes":[],"Edges":[]}"]
+2024-12-06T12:14:53.859+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-5] executor.SQLiteHandler                   : [sql] insert into flowchart (json) values ('{"Edges":[],"Nodes":[]}');
+2024-12-06T12:14:53.866+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2024-12-06T12:14:53.866+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Nothing to write: null body
+2024-12-06T12:14:53.866+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2024-12-06T12:27:42.969+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/manifest.json", parameters={}
+2024-12-06T12:27:42.970+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2024-12-06T12:27:42.971+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2024-12-06T12:27:42.971+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource manifest.json.]
+2024-12-06T12:27:42.971+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
+2024-12-06T12:27:42.972+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2024-12-06T12:27:42.972+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#error(HttpServletRequest)
+2024-12-06T12:27:42.975+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2024-12-06T12:27:42.975+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{timestamp=Fri Dec 06 12:27:42 GMT+05:00 2024, status=404, error=Not Found, path=/manifest.json}]
+2024-12-06T12:27:42.977+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
+2024-12-06T12:42:46.671+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/manifest.json", parameters={}
+2024-12-06T12:42:46.672+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2024-12-06T12:42:46.674+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2024-12-06T12:42:46.674+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource manifest.json.]
+2024-12-06T12:42:46.674+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
+2024-12-06T12:42:46.675+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2024-12-06T12:42:46.675+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#error(HttpServletRequest)
+2024-12-06T12:42:46.676+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2024-12-06T12:42:46.677+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{timestamp=Fri Dec 06 12:42:46 GMT+05:00 2024, status=404, error=Not Found, path=/manifest.json}]
+2024-12-06T12:42:46.678+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
+2024-12-06T12:44:16.190+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/manifest.json", parameters={}
+2024-12-06T12:44:16.191+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2024-12-06T12:44:16.192+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2024-12-06T12:44:16.192+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource manifest.json.]
+2024-12-06T12:44:16.192+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
+2024-12-06T12:44:16.193+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2024-12-06T12:44:16.193+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#error(HttpServletRequest)
+2024-12-06T12:44:16.194+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2024-12-06T12:44:16.194+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{timestamp=Fri Dec 06 12:44:16 GMT+05:00 2024, status=404, error=Not Found, path=/manifest.json}]
+2024-12-06T12:44:16.195+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
+2024-12-06T13:01:13.498+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : POST "/execute", parameters={}
+2024-12-06T13:01:13.500+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to executor.Application#execute(String)
+2024-12-06T13:01:13.503+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-9] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to ["{"Nodes":[],"Edges":[]}"]
+2024-12-06T13:01:13.506+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-9] executor.Application                     : [request_body]	{"Nodes":[],"Edges":[]}
+2024-12-06T13:01:13.507+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-9] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json]
+2024-12-06T13:01:13.508+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-9] m.m.a.RequestResponseBodyMethodProcessor : Writing ["{}"]
+2024-12-06T13:01:13.509+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2024-12-06T13:01:13.966+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : POST "/execute", parameters={}
+2024-12-06T13:01:13.967+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to executor.Application#execute(String)
+2024-12-06T13:01:13.968+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to ["{"Nodes":[],"Edges":[]}"]
+2024-12-06T13:01:13.968+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-10] executor.Application                     : [request_body]	{"Nodes":[],"Edges":[]}
+2024-12-06T13:01:13.969+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json]
+2024-12-06T13:01:13.969+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Writing ["{}"]
+2024-12-06T13:01:13.969+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2024-12-06T13:01:14.140+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : POST "/execute", parameters={}
+2024-12-06T13:01:14.141+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to executor.Application#execute(String)
+2024-12-06T13:01:14.141+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to ["{"Nodes":[],"Edges":[]}"]
+2024-12-06T13:01:14.142+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-1] executor.Application                     : [request_body]	{"Nodes":[],"Edges":[]}
+2024-12-06T13:01:14.142+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json]
+2024-12-06T13:01:14.142+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Writing ["{}"]
+2024-12-06T13:01:14.143+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2024-12-06T13:01:14.593+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : POST "/execute", parameters={}
+2024-12-06T13:01:14.594+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to executor.Application#execute(String)
+2024-12-06T13:01:14.595+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to ["{"Nodes":[],"Edges":[]}"]
+2024-12-06T13:01:14.595+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-2] executor.Application                     : [request_body]	{"Nodes":[],"Edges":[]}
+2024-12-06T13:01:14.595+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json]
+2024-12-06T13:01:14.596+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Writing ["{}"]
+2024-12-06T13:01:14.599+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2024-12-06T13:02:17.395+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : POST "/execute", parameters={}
+2024-12-06T13:02:17.396+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to executor.Application#execute(String)
+2024-12-06T13:02:17.398+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to ["{"Nodes":[],"Edges":[]}"]
+2024-12-06T13:02:17.398+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-3] executor.Application                     : [request_body]	{"Nodes":[],"Edges":[]}
+2024-12-06T13:02:17.398+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json]
+2024-12-06T13:02:17.399+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Writing ["{}"]
+2024-12-06T13:02:17.400+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2024-12-06T13:02:17.808+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : POST "/execute", parameters={}
+2024-12-06T13:02:17.808+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to executor.Application#execute(String)
+2024-12-06T13:02:17.809+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-4] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to ["{"Nodes":[],"Edges":[]}"]
+2024-12-06T13:02:17.809+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-4] executor.Application                     : [request_body]	{"Nodes":[],"Edges":[]}
+2024-12-06T13:02:17.809+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-4] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json]
+2024-12-06T13:02:17.809+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-4] m.m.a.RequestResponseBodyMethodProcessor : Writing ["{}"]
+2024-12-06T13:02:17.810+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2024-12-06T13:02:18.299+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : POST "/execute", parameters={}
+2024-12-06T13:02:18.299+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to executor.Application#execute(String)
+2024-12-06T13:02:18.300+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to ["{"Nodes":[],"Edges":[]}"]
+2024-12-06T13:02:18.300+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-5] executor.Application                     : [request_body]	{"Nodes":[],"Edges":[]}
+2024-12-06T13:02:18.300+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json]
+2024-12-06T13:02:18.301+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Writing ["{}"]
+2024-12-06T13:02:18.301+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2024-12-06T13:02:20.225+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/manifest.json", parameters={}
+2024-12-06T13:02:20.226+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2024-12-06T13:02:20.227+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2024-12-06T13:02:20.228+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource manifest.json.]
+2024-12-06T13:02:20.228+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
+2024-12-06T13:02:20.229+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2024-12-06T13:02:20.229+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#error(HttpServletRequest)
+2024-12-06T13:02:20.231+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2024-12-06T13:02:20.231+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{timestamp=Fri Dec 06 13:02:20 GMT+05:00 2024, status=404, error=Not Found, path=/manifest.json}]
+2024-12-06T13:02:20.236+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
+2024-12-06T13:05:06.146+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/manifest.json", parameters={}
+2024-12-06T13:05:06.147+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2024-12-06T13:05:06.148+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2024-12-06T13:05:06.148+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource manifest.json.]
+2024-12-06T13:05:06.149+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
+2024-12-06T13:05:06.149+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2024-12-06T13:05:06.149+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#error(HttpServletRequest)
+2024-12-06T13:05:06.150+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2024-12-06T13:05:06.151+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{timestamp=Fri Dec 06 13:05:06 GMT+05:00 2024, status=404, error=Not Found, path=/manifest.json}]
+2024-12-06T13:05:06.152+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
+2024-12-06T13:05:56.737+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : POST "/execute", parameters={}
+2024-12-06T13:05:56.744+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to executor.Application#execute(String)
+2024-12-06T13:05:56.744+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to ["{"Nodes":[{"id":"1","type":"CALC","code":"x = 100"}],"Edges":[]}"]
+2024-12-06T13:05:56.744+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-8] executor.Application                     : [request_body]	{"Nodes":[{"id":"1","type":"CALC","code":"x = 100"}],"Edges":[]}
+2024-12-06T13:05:56.745+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-8] executor.interpreter.Interpreter         : [node 1 code]
+x = 100
+2024-12-06T13:05:56.745+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-8] executor.interpreter.Interpreter         : [node 1 tokens]
+x	ID
+=	OP
+100	NUM
+
+2024-12-06T13:05:56.745+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-8] executor.interpreter.Interpreter         : [node 1 ast]
+executor.interpreter.expr.AssignExpr
+  l: executor.interpreter.expr.IdExpr
+    id: x
+    arg: null
+  r: executor.interpreter.expr.NumExpr
+    value: 100.0
+2024-12-06T13:05:56.746+05:00  INFO 19973 --- [executor] [http-nio-8080-exec-8] executor.interpreter.Interpreter         : [node 1 result]
+100.0
+2024-12-06T13:05:56.746+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json]
+2024-12-06T13:05:56.746+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] m.m.a.RequestResponseBodyMethodProcessor : Writing ["{"1":{"result":100}}"]
+2024-12-06T13:05:56.747+05:00 DEBUG 19973 --- [executor] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
