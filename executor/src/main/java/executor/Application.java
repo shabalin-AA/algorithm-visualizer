@@ -38,10 +38,15 @@ public class Application {
     @PostMapping(value = "/save", consumes = "application/json")
     void save(@RequestBody String body) {
         try {
-            sqliteHandler.insertFlowchart(new JSONObject(body));
+            sqliteHandler.insertFlowchart(new JSONObject(body), "userFlow");
         } catch (JSONException e) {
             logger.warn("Wrong flowchart json\n" + e.toString());
         }
+    }
+
+    @GetMapping(value = "/flowchart-list", produces = "application/json")
+    String flowchartList() {
+        return sqliteHandler.getFlowchartList();
     }
 
     @GetMapping("/flowchart/{id}")

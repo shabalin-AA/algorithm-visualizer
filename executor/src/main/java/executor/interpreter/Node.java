@@ -12,6 +12,7 @@ public class Node {
     public int id;
     public NodeType type;
     public String code;
+    String fullJson;
 
     public Node(int id, NodeType type, String code) {
         this.id = id;
@@ -31,6 +32,7 @@ public class Node {
                     break;
                 }
             }
+            this.fullJson = jo.getString("fullJson");
         } catch (JSONException e) {
             logger.warn("Wrong Node json\n" + e.toString());
         }

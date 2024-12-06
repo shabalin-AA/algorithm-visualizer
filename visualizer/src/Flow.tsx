@@ -73,6 +73,7 @@ const BasicFlow = () => {
             id: node.id,
             type: type,
             code: node.data.code,
+            fullJson: JSON.stringify(node),
         };
     }
 
@@ -86,6 +87,7 @@ const BasicFlow = () => {
             source: edge.source,
             target: edge.target,
             branch: branch,
+            fullJson: JSON.stringify(edge),
         };
     }
 
@@ -214,6 +216,18 @@ const BasicFlow = () => {
         setIsLeftSidebarOpen(!isLeftSidebarOpen);
     };
 
+    const fromJson = function (obj: any) {
+        const fullObj = JSON.parse(obj["fullJson"]);
+        console.log(fullObj, typeof fullObj);
+        return fullObj;
+    };
+
+    const handleSelectItem = (json: string) => {
+        const flowchart = JSON.parse(json);
+        setNodes((_) => flowchart.Nodes.map(fromJson));
+        setEdges((_) => flowchart.Edges.map(fromJson));
+    };
+
     return (
         <div className="BasicFlow">
             <button className="hamburger-btn" onClick={toggleLeftSidebar}>
@@ -230,6 +244,7 @@ const BasicFlow = () => {
             <LeftSidebar
                 isOpen={isLeftSidebarOpen}
                 onClose={toggleLeftSidebar}
+                onSelectItem={handleSelectItem}
             />
             <div className="reactflow-wrapper" ref={reactFlowWrapper}>
                 <ReactFlow

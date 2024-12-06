@@ -13,6 +13,7 @@ public class Edge {
     public int source;
     public int id;
     public boolean branch;
+    String fullJson;
 
     public Edge(int id, int source, int target) {
         this.id = id;
@@ -36,6 +37,7 @@ public class Edge {
             String branch = jo.getString("branch");
             if (branch.equals("false")) this.branch = false;
             else this.branch = true;
+            this.fullJson = jo.getString("fullJson");
         } catch (JSONException e) {
             logger.warn("Wrong Edge json\n" + e.toString());
         }
