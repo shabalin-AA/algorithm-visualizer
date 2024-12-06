@@ -24,6 +24,7 @@ import RightSidebar from "./RightSidebar";
 import { DnDProvider, useDnD } from "./DnDContext";
 import ContextMenu from "./ContextMenu";
 import LeftSidebar from "./LeftSidebar";
+import SaveFlowchart from "./SaveProject";
 
 interface Menu {
     id: string;
@@ -96,9 +97,12 @@ const BasicFlow = () => {
             Nodes: nodes.map(nodeJson),
             Edges: edges.map(edgeJson),
         };
-        function newResult(node: Node, newResult: string) {
-            // TODO newResult может быть ошибкой
-            node.data.result = newResult;
+        function newResult(node: Node, resultJson: any) {
+            try {
+                node.data.result = resultJson.result.toString();
+            } catch {
+                node.data.result = resultJson.err.toString();
+            }
             return node;
         }
         axios
@@ -106,21 +110,19 @@ const BasicFlow = () => {
             .then((response) => {
                 const results = response.data;
                 setNodes((nodes) =>
-                    nodes.map((node) =>
-                        newResult(node, results[+node.id].result.toString()),
-                    ),
+                    nodes.map((node) => newResult(node, results[+node.id])),
                 );
             })
             .catch((error) => console.log(error));
     }
 
-    function PostSave() {
+    function PostSave(name: string) {
         let jo = {
             Nodes: nodes.map(nodeJson),
             Edges: edges.map(edgeJson),
         };
         axios
-            .post(url + "save", jo)
+            .post(url + "save/" + name, jo)
             .then((response) => {
                 //TODO успешное/не успешное сохранение
             })
@@ -278,9 +280,7 @@ const BasicFlow = () => {
                             </button>
                         </div>
                         <div className="inline-item">
-                            <button className="save-button" onClick={PostSave}>
-                                <span className="save-icon">💾</span>
-                            </button>
+                            <SaveFlowchart onSave={PostSave} />
                         </div>
                     </Panel>
                     <Background />
