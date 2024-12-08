@@ -1,58 +1,106 @@
 package executor;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sqlite.JDBC;
 
-import java.sql.*;
-import java.util.*;
-import org.json.*;
-
-import executor.interpreter.Node;
-import executor.interpreter.Edge;
-
-
 public class SQLiteHandler {
-  private static final String CON_STR = "jdbc:sqlite:../dev.db";
-  private Connection connection;
 
-  public SQLiteHandler() {
-    try {
-      DriverManager.registerDriver(new JDBC());
-      this.connection = DriverManager.getConnection(CON_STR);
-    } catch (SQLException e) {
-      System.out.println("unable connect to database");
-    }
-  }
+    Logger logger = LoggerFactory.getLogger(executor.SQLiteHandler.class);
 
-  void insertNode(Node node, int flowchart_id) {
-    try {
-      Statement st = connection.createStatement();
-      String sql = String.format(
-        "insert into node (node_id, flowchart, code, type) " + 
-                    "values (%d, %d, \"%s\", %d);", 
-        flowchart_id, 
-        node.code, 
-        node.type.ordinal()
-      );
-      st.execute(sql);
-      st.close();
-    } catch (Exception e) {
-      System.out.println("cannot insert node\n" + e.toString());
-    }
-  }
+    private static final String CON_STR = "jdbc:sqlite:dev.db";
+    private Connection connection;
 
-  void insertEdge(Edge edge, int flowchart_id) {
-  }
+    public SQLiteHandler() {
+        try {
+            DriverManager.registerDriver(new JDBC());
+            this.connection = DriverManager.getConnection(CON_STR);
+        } catch (SQLException e) {
+            logger.error(
+                "Unable connect to database {}\n{}",
+                CON_STR,
+                e.toString()
+            );
+        }
+    }
 
-  public void insertFlowchart(JSONObject flowchart) {
-    JSONArray nds = flowchart.getJSONArray("Nodes");
-    for (int i = 0; i < nds.length(); i++) {
-      Node node = new Node(nds.getJSONObject(i));
-      insertNode(node, 1);
+    public String getFlowchartList() {
+        String sql = "select * from flowchart;";
+        logger.info("[sql] {}", sql);
+        ArrayList<Long> ids = new ArrayList<Long>();
+        ArrayList<String> names = new ArrayList<String>();
+        ArrayList<String> jsons = new ArrayList<String>();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                long id = rs.getInt("id");
+                String name = rs.getString("name");
+                String json = rs.getString("json");
+                ids.add(id);
+                names.add(name);
+                jsons.add(json);
+            }
+            stmt.close();
+        } catch (Exception e) {
+            logger.warn("[sql]\t{}", e.toString());
+        }
+        try {
+            JSONArray list = new JSONArray();
+            for (int i = 0; i < ids.size(); i++) {
+                JSONObject item = new JSONObject();
+                item.put("id", ids.get(i));
+                item.put("name", names.get(i));
+                item.put("json", jsons.get(i));
+                list.put(item);
+            }
+            return list.toString();
+        } catch (JSONException e) {
+            logger.warn("[json]\t{}", e.toString());
+        }
+        return "{}";
     }
-    JSONArray eds = flowchart.getJSONArray("Edges");
-    for (int i = 0; i < eds.length(); i++) {
-      Edge edge = new Edge(eds.getJSONObject(i));
-      insertEdge(edge, 1);
+
+    public void insertFlowchart(JSONObject flowchart, String name) {
+        String sql = String.format(
+            "insert into flowchart (name, json) values (\'%s\', \'%s\');",
+            name,
+            flowchart.toString()
+        );
+        logger.info("[sql] {}", sql);
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.execute(sql);
+            stmt.close();
+        } catch (Exception e) {
+            logger.warn("[sql]\t{}", e.toString());
+        }
     }
-  }
+
+    public String getFlowchart(long id) {
+        String json = "";
+        String sql = String.format(
+            "select json from flowchart where id=%d;",
+            id
+        );
+        logger.info("[sql] {}", sql);
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            json = rs.getString("json");
+            stmt.close();
+        } catch (Exception e) {
+            logger.warn("[sql]\t{}", e.toString());
+        }
+        return json;
+    }
 }

@@ -5,3 +5,7 @@ build:
 run: build
 	cd executor; mvn spring-boot:run &
 	cd visualizer; npm start &
+
+stop:
+	killall node
+	killall java

@@ -1,0 +1,54 @@
+.app-container {
+    display: flex;
+    position: relative;
+}
+
+.hamburger-btn {
+    position: absolute; /* Фиксированное позиционирование */
+    top: 20px; /* Отступ сверху */
+    left: 5px; /* Отступ слева */
+    background: none; /* Убираем фон */
+    border: none; /* Убираем рамку */
+    cursor: pointer; /* Курсор в виде указателя */
+    z-index: 1001; /* Чтобы кнопка была поверх боковой панели */
+    display: flex;
+    flex-direction: column; /* Вертикальное расположение линий */
+    justify-content: space-around; /* Распределяем пространство между линиями */
+    width: 30px; /* Ширина кнопки */
+    height: 25px; /* Высота кнопки */
+}
+
+.line {
+    width: 100%; /* Ширина линии */
+    height: 2px; /* Высота линии */
+    background-color: rgb(0, 177, 117); /* Цвет линии */
+    transition: all 0.3s ease; /* Плавный переход */
+}
+
+.left-sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px; /* Скрываем панель за пределами экрана */
+    width: 250px;
+    height: 100%;
+    background-color: white;
+    color: black;
+    transition: left 0.3s ease; /* Плавный переход */
+    padding: 20px;
+    z-index: 1000; /* Чтобы панель была поверх других элементов */
+    border: 2px solid white;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Тень для эффекта */
+}
+
+.left-sidebar.open {
+    left: 0; /* Выдвигаем панель */
+}
+
+ul {
+    list-style-type: none; /* Убираем маркеры списка */
+    padding: 0; /* Убираем отступы */
+}
+
+li {
+    margin: 5px 0; /* Добавляем отступы между элементами списка */
+}

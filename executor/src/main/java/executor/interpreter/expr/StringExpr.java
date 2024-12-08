@@ -15,7 +15,5 @@ public class StringExpr implements Expr {
     return value;
   }
 
-  public int precedence() { return 8; }
-
   public void add(Expr child) {}
 }
