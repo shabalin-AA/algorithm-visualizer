@@ -22,19 +22,17 @@ const LeftSidebar: React.FC<SidebarProps> = ({
     const [items, setItems] = useState<Item[]>([]);
 
     useEffect(() => {
-        // Функция для получения данных из API
         const fetchData = async () => {
             axios
                 .get("http://localhost:3000/flowchart-list")
                 .then((response) => {
                     const data: Item[] = response.data;
-                    setItems(data); // Устанавливаем полученные данные в состояние
+                    setItems(data);
                 })
                 .catch((error) => console.log(error));
         };
-
-        fetchData(); // Вызов функции для получения данных
-    }, []); // Пустой массив зависимостей, чтобы выполнить только один раз при монтировании
+        fetchData();
+    }, []);
 
     const handleItemClick = (json: string) => {
         onSelectItem(json);
@@ -50,7 +48,7 @@ const LeftSidebar: React.FC<SidebarProps> = ({
                         onClick={() => handleItemClick(item.json)}
                     >
                         {item.name}
-                    </li> // Предполагаем, что у каждого элемента есть уникальный id и имя
+                    </li>
                 ))}
             </ul>
         </div>

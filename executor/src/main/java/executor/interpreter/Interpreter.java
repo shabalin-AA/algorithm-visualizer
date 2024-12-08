@@ -166,7 +166,7 @@ public class Interpreter {
     }
 
     TokenType tokenType(char c) {
-        if (c >= '0' && c <= '9') return TokenType.NUM;
+        if ((c >= '0' && c <= '9') || c == '.') return TokenType.NUM;
         else if (
             c == '=' ||
             c == '+' ||

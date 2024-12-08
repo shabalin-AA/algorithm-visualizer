@@ -1,8 +1,6 @@
 import React, { useCallback, useState, useRef } from "react";
 import {
     ReactFlow,
-    useReactFlow,
-    ReactFlowProvider,
     type Node,
     type Edge,
     addEdge,
@@ -13,6 +11,7 @@ import {
     useEdgesState,
     Panel,
     reconnectEdge,
+    useReactFlow,
 } from "@xyflow/react";
 import axios from "axios";
 
@@ -20,45 +19,47 @@ import "@xyflow/react/dist/style.css";
 import NodeIf from "./NodeIf";
 import NodeCalc from "./NodeCalc";
 import DeletableEdge from "./DeletableEdge";
-import RightSidebar from "./RightSidebar";
-import { DnDProvider, useDnD } from "./DnDContext";
-import ContextMenu from "./ContextMenu";
+import NodeContextMenu from "./NodeContextMenu";
+import { NodeContextMenuProps } from "./NodeContextMenu";
+import NewNodeMenu, { NewNodeMenuProps } from "./NewNodeMenu";
 import LeftSidebar from "./LeftSidebar";
 import SaveFlowchart from "./SaveProject";
 
-interface Menu {
-    id: string;
-    top: number | boolean;
-    left: number | boolean;
-    right: number | boolean;
-    bottom: number | boolean;
-}
-
 let id = 1;
 const getId = () => `${id++}`;
-
-const initialNodes: Node[] = [];
-const initialEdges: Edge[] = [];
-
-const nodeTypes = {
-    NodeIf: NodeIf,
-    NodeCalc: NodeCalc,
-};
-
-const edgeTypes = {
-    DeletableEdge: DeletableEdge,
-};
 
 const url = "http://localhost:3000/";
 
 const BasicFlow = () => {
     const reactFlowWrapper = useRef(null);
-    const { screenToFlowPosition } = useReactFlow();
-    const [type] = useDnD();
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-    const [menu, setMenu] = useState<Menu | null>(null);
+    const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+    const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+    const [nodeContextMenu, setNodeContextMenu] = useState<NodeContextMenuProps | null>(null);
     const ref = useRef<HTMLDivElement | null>(null);
+    const [flowResult, setFlowResult] = useState<object>();
+
+    const newNode = useCallback(
+        (type: string, x: number, y: number) => {
+            const newNode = {
+                id: getId(),
+                type,
+                position: { x: x, y: y },
+                data: { code: "", result: "null" },
+                measured: { width: 150, height: 150 },
+            };
+            setNodes((nds) => nds.concat(newNode));
+            setNewNodeMenu((menu) => {
+                return { ...menu, visible: false };
+            });
+        },
+        [setNodes],
+    );
+
+    const [newNodeMenu, setNewNodeMenu] = useState<NewNodeMenuProps>({
+        visible: false,
+        position: { x: 0, y: 0 },
+        newNode: newNode,
+    });
 
     function nodeJson(node: Node) {
         let type = "";
@@ -101,7 +102,7 @@ const BasicFlow = () => {
             try {
                 node.data.result = resultJson.result.toString();
             } catch {
-                node.data.result = resultJson.err.toString();
+                //node.data.result = resultJson.err.toString();
             }
             return node;
         }
@@ -109,9 +110,7 @@ const BasicFlow = () => {
             .post(url + "execute", jo)
             .then((response) => {
                 const results = response.data;
-                setNodes((nodes) =>
-                    nodes.map((node) => newResult(node, results[+node.id])),
-                );
+                setNodes((nodes) => nodes.map((node) => newResult(node, results[+node.id])));
             })
             .catch((error) => console.log(error));
     }
@@ -125,16 +124,6 @@ const BasicFlow = () => {
             .post(url + "save/" + name, jo)
             .then((response) => {
                 //TODO успешное/не успешное сохранение
-            })
-            .catch((error) => console.log(error));
-    }
-
-    function GetFlowchart() {
-        const id = 1;
-        axios
-            .get(url + "flowchart/" + id)
-            .then((response) => {
-                console.log(response);
             })
             .catch((error) => console.log(error));
     }
@@ -154,33 +143,11 @@ const BasicFlow = () => {
     );
 
     const onDragOver = useCallback(
-        (event: {
-            preventDefault: () => void;
-            dataTransfer: { dropEffect: string };
-        }) => {
+        (event: { preventDefault: () => void; dataTransfer: { dropEffect: string } }) => {
             event.preventDefault();
             event.dataTransfer.dropEffect = "move";
         },
         [],
-    );
-
-    const onDrop = useCallback(
-        (event: { preventDefault: () => void; clientX: any; clientY: any }) => {
-            event.preventDefault();
-            if (!type) return;
-            const position = screenToFlowPosition({
-                x: event.clientX,
-                y: event.clientY,
-            });
-            const newNode = {
-                id: getId(),
-                type,
-                position,
-                data: { code: "", result: "null" },
-            };
-            setNodes((nds) => nds.concat(newNode));
-        },
-        [screenToFlowPosition, type, setNodes],
     );
 
     const onNodeContextMenu = useCallback(
@@ -193,34 +160,44 @@ const BasicFlow = () => {
             node: { id: any },
         ) => {
             event.preventDefault();
-            const pane = ref.current!.getBoundingClientRect();
-            setMenu({
+            setNodeContextMenu({
                 id: node.id,
-                top: event.clientY < pane.height - 200 ? event.clientY : false,
-                left: event.clientX < pane.width - 200 ? event.clientX : false,
-                right:
-                    event.clientX >= pane.width - 200
-                        ? pane.width - event.clientX
-                        : false,
-                bottom:
-                    event.clientY >= pane.height - 200
-                        ? pane.height - event.clientY
-                        : false,
+                left: event.clientX,
+                right: event.clientX + 200,
+                top: event.clientY,
+                bottom: event.clientY + 300,
             });
         },
-        [setMenu],
+        [setNodeContextMenu],
     );
 
-    const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
+    const handleContextMenu = (event: React.MouseEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setNewNodeMenu((menu) => {
+            return {
+                ...menu,
+                visible: true,
+                position: { x: event.pageX, y: event.pageY },
+            };
+        });
+    };
 
     const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(false);
     const toggleLeftSidebar = () => {
         setIsLeftSidebarOpen(!isLeftSidebarOpen);
     };
 
+    const onPaneClick = useCallback(() => {
+        setNewNodeMenu((menu) => {
+            return { ...menu, visible: false };
+        });
+        setNodeContextMenu(null);
+        setIsLeftSidebarOpen(false);
+    }, [setNodeContextMenu, setIsLeftSidebarOpen]);
+
     const fromJson = function (obj: any) {
         const fullObj = JSON.parse(obj["fullJson"]);
-        console.log(fullObj, typeof fullObj);
         return fullObj;
     };
 
@@ -231,17 +208,11 @@ const BasicFlow = () => {
     };
 
     return (
-        <div className="BasicFlow">
+        <div className="BasicFlow" style={{ height: "100vh", position: "relative" }}>
             <button className="hamburger-btn" onClick={toggleLeftSidebar}>
-                <div
-                    className={`line ${isLeftSidebarOpen ? "open" : ""}`}
-                ></div>
-                <div
-                    className={`line ${isLeftSidebarOpen ? "open" : ""}`}
-                ></div>
-                <div
-                    className={`line ${isLeftSidebarOpen ? "open" : ""}`}
-                ></div>
+                <div className={`line ${isLeftSidebarOpen ? "open" : ""}`}></div>
+                <div className={`line ${isLeftSidebarOpen ? "open" : ""}`}></div>
+                <div className={`line ${isLeftSidebarOpen ? "open" : ""}`}></div>
             </button>
             <LeftSidebar
                 isOpen={isLeftSidebarOpen}
@@ -257,47 +228,39 @@ const BasicFlow = () => {
                     onEdgesChange={onEdgesChange}
                     onConnect={onConnect}
                     onReconnect={onReconnect}
-                    // panOnScroll = {true}
-                    // selectionOnDrag = {true}
-                    // panOnDrag={panOnDrag}
-                    // selectionMode={SelectionMode.Partial}
-                    nodeTypes={nodeTypes}
-                    edgeTypes={edgeTypes}
-                    onDrop={onDrop}
+                    nodeTypes={{
+                        NodeIf: NodeIf,
+                        NodeCalc: NodeCalc,
+                    }}
+                    edgeTypes={{
+                        DeletableEdge: DeletableEdge,
+                    }}
                     onDragOver={onDragOver}
                     onPaneClick={onPaneClick}
                     onNodeContextMenu={onNodeContextMenu}
+                    onContextMenu={handleContextMenu}
                     fitView
                 >
                     <MiniMap pannable zoomable />
-                    <Panel className="inline-container" position="top-center">
+                    <Panel className="inline-container" position="top-right">
                         <div className="inline-item">
-                            <button
-                                className="play-button"
-                                onClick={PostExecute}
-                            >
+                            <button className="play-button" onClick={PostExecute}>
                                 <span className="play-icon">▶</span>
                             </button>
                         </div>
                         <div className="inline-item">
                             <SaveFlowchart onSave={PostSave} />
                         </div>
+                        {nodeContextMenu && <NodeContextMenu {...nodeContextMenu} />}
                     </Panel>
                     <Background />
-                    {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
                 </ReactFlow>
             </div>
-            <RightSidebar />
+            {newNodeMenu.visible && !nodeContextMenu && <NewNodeMenu {...newNodeMenu} />}
         </div>
     );
 };
 
-let flow = () => (
-    <ReactFlowProvider>
-        <DnDProvider>
-            <BasicFlow />
-        </DnDProvider>
-    </ReactFlowProvider>
-);
+let flow = () => <BasicFlow />;
 
 export default flow;

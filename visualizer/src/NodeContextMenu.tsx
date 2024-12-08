@@ -1,20 +1,19 @@
 import React, { useCallback } from "react";
 import { useReactFlow, Node, Edge } from "@xyflow/react";
 
-interface ContextMenuProps {
+export interface NodeContextMenuProps {
     id: string;
-    top: any;
-    left: any;
-    right: any;
-    bottom: any;
-    [key: string]: any;
+    left: number;
+    right: number;
+    top: number;
+    bottom: number;
 }
 
-const ContextMenu: React.FC<ContextMenuProps> = ({
+const NodeContextMenu: React.FC<NodeContextMenuProps> = ({
     id,
-    top,
     left,
     right,
+    top,
     bottom,
     ...props
 }) => {
@@ -27,29 +26,24 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
                 x: node.position.x + 50,
                 y: node.position.y + 50,
             };
-
             addNodes({
                 ...node,
                 selected: false,
                 dragging: false,
-                id: `${node.id}-copy`,
+                id: `${node.id + 1000}`,
                 position,
             });
         }
     }, [id, getNode, addNodes]);
 
     const deleteNode = useCallback(() => {
-        setNodes((nodes: Node[]) =>
-            nodes.filter((node: Node) => node.id !== id),
-        );
-        setEdges((edges: Edge[]) =>
-            edges.filter((edge: Edge) => edge.source !== id),
-        );
+        setNodes((nodes: Node[]) => nodes.filter((node: Node) => node.id !== id));
+        setEdges((edges: Edge[]) => edges.filter((edge: Edge) => edge.source !== id));
     }, [id, setNodes, setEdges]);
 
     return (
-        <div className="context-menu" {...props}>
-            <p style={{ margin: "0.5em" }}>
+        <div style={{ top, left, right, bottom }} {...props}>
+            <p>
                 <small>node: {id}</small>
             </p>
             <button onClick={duplicateNode}>duplicate</button>
@@ -58,4 +52,4 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
     );
 };
 
-export default ContextMenu;
+export default NodeContextMenu;
