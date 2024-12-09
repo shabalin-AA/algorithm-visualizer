@@ -15,16 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Application {
 
-    Logger logger = LoggerFactory.getLogger(executor.Application.class);
+    Logger logger = LoggerFactory.getLogger(Application.class);
 
     SQLiteHandler sqliteHandler = new SQLiteHandler();
     ExecuteHandler executeHandler = new ExecuteHandler();
 
-    @PostMapping(
-        value = "/execute",
-        consumes = "application/json",
-        produces = "application/json"
-    )
+    @PostMapping(value = "/execute", consumes = "application/json", produces = "application/json")
     String execute(@RequestBody String body) {
         logger.info("[request_body]\t" + body);
         try {

@@ -15,7 +15,7 @@ import org.sqlite.JDBC;
 
 public class SQLiteHandler {
 
-    Logger logger = LoggerFactory.getLogger(executor.SQLiteHandler.class);
+    Logger logger = LoggerFactory.getLogger(SQLiteHandler.class);
 
     private static final String CON_STR = "jdbc:sqlite:dev.db";
     private Connection connection;
@@ -25,11 +25,7 @@ public class SQLiteHandler {
             DriverManager.registerDriver(new JDBC());
             this.connection = DriverManager.getConnection(CON_STR);
         } catch (SQLException e) {
-            logger.error(
-                "Unable connect to database {}\n{}",
-                CON_STR,
-                e.toString()
-            );
+            logger.error("Unable connect to database {}\n{}", CON_STR, e.toString());
         }
     }
 
@@ -88,10 +84,7 @@ public class SQLiteHandler {
 
     public String getFlowchart(long id) {
         String json = "";
-        String sql = String.format(
-            "select json from flowchart where id=%d;",
-            id
-        );
+        String sql = String.format("select json from flowchart where id=%d;", id);
         logger.info("[sql] {}", sql);
         try {
             Statement stmt = connection.createStatement();

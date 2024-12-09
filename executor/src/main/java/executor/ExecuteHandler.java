@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 public class ExecuteHandler {
 
-    Logger logger = LoggerFactory.getLogger(executor.ExecuteHandler.class);
+    Logger logger = LoggerFactory.getLogger(ExecuteHandler.class);
 
     public ExecuteHandler() {}
 
@@ -32,11 +32,7 @@ public class ExecuteHandler {
             Class<?>[] modules = new Class<?>[] { Math.class };
             results = (new Interpreter(nodes, edges, modules)).eval();
         } catch (JSONException e) {
-            logger.error(
-                "[json] Wrong flowchart json\n{}\n{}",
-                jo.toString(),
-                e.toString()
-            );
+            logger.error("[json] Wrong flowchart json\n{}\n{}", jo.toString(), e.toString());
             return "";
         }
         try {
@@ -48,8 +44,7 @@ public class ExecuteHandler {
         return "";
     }
 
-    JSONObject resultsJson(List<Pair<Integer, Result>> results)
-        throws JSONException {
+    JSONObject resultsJson(List<Pair<Integer, Result>> results) throws JSONException {
         JSONObject resultsJo = new JSONObject();
         for (Pair<Integer, Result> pair : results) {
             Integer k = pair.getKey();
