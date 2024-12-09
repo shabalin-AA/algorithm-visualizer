@@ -28,8 +28,6 @@ import SaveFlowchart from "./SaveProject";
 let id = 1;
 const getId = () => `${id++}`;
 
-const url = "http://localhost:3000/";
-
 const BasicFlow = () => {
     const reactFlowWrapper = useRef(null);
     const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
@@ -107,7 +105,7 @@ const BasicFlow = () => {
             return node;
         }
         axios
-            .post(url + "execute", jo)
+            .post("http://localhost:8080/executor/execute", jo)
             .then((response) => {
                 const results = response.data;
                 setNodes((nodes) => nodes.map((node) => newResult(node, results[+node.id])));
@@ -121,7 +119,7 @@ const BasicFlow = () => {
             Edges: edges.map(edgeJson),
         };
         axios
-            .post(url + "save/" + name, jo)
+            .post("http://localhost:8080/executor/save/" + name, jo)
             .then((response) => {
                 //TODO успешное/не успешное сохранение
             })

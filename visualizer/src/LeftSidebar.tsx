@@ -14,17 +14,13 @@ interface Item {
     json: string;
 }
 
-const LeftSidebar: React.FC<SidebarProps> = ({
-    isOpen,
-    onClose,
-    onSelectItem,
-}) => {
+const LeftSidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onSelectItem }) => {
     const [items, setItems] = useState<Item[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             axios
-                .get("http://localhost:3000/flowchart-list")
+                .get("http://localhost:8080/executor/flowchart-list")
                 .then((response) => {
                     const data: Item[] = response.data;
                     setItems(data);
@@ -43,10 +39,7 @@ const LeftSidebar: React.FC<SidebarProps> = ({
             <h2>Ваши схемы</h2>
             <ul>
                 {items.map((item) => (
-                    <li
-                        key={item.id}
-                        onClick={() => handleItemClick(item.json)}
-                    >
+                    <li key={item.id} onClick={() => handleItemClick(item.json)}>
                         {item.name}
                     </li>
                 ))}
