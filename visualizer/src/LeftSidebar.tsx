@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./LeftSidebar.css"; // Импортируем CSS файл
+import "./LeftSidebar.css";
 
 interface SidebarProps {
     isOpen: boolean;
@@ -20,7 +20,7 @@ const LeftSidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onSelectItem }) 
     useEffect(() => {
         const fetchData = async () => {
             axios
-                .get("http://localhost:8080/executor/flowchart-list")
+                .get("http://localhost:8080/flowchart-list")
                 .then((response) => {
                     const data: Item[] = response.data;
                     setItems(data);

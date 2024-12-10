@@ -1,23 +1,31 @@
 import React, { useCallback } from "react";
 import { useReactFlow, Node, Edge } from "@xyflow/react";
+import "./NodeContextMenu.css";
 
 export interface NodeContextMenuProps {
     id: string;
-    left: number;
-    right: number;
-    top: number;
-    bottom: number;
+    visible: boolean;
+    position: { x: number; y: number };
 }
 
-const NodeContextMenu: React.FC<NodeContextMenuProps> = ({
-    id,
-    left,
-    right,
-    top,
-    bottom,
-    ...props
-}) => {
-    const { getNode, setNodes, addNodes, setEdges } = useReactFlow();
+const NodeContextMenu: React.FC<NodeContextMenuProps> = ({ id, position, visible, ...props }) => {
+    const { getNode, getNodes, setNodes, addNodes, setEdges } = useReactFlow();
+
+    const getId = useCallback(() => {
+        const nodes = getNodes();
+        if (nodes.length === 0) {
+            return "1";
+        }
+        return (
+            Math.max(
+                ...nodes.map((node) => {
+                    const matches = node.id.match(/\d+/);
+                    if (matches === null) return 0;
+                    return +matches[0];
+                }),
+            ) + 1
+        ).toString();
+    }, [getNodes]);
 
     const duplicateNode = useCallback(() => {
         const node: Node | undefined = getNode(id);
@@ -30,11 +38,11 @@ const NodeContextMenu: React.FC<NodeContextMenuProps> = ({
                 ...node,
                 selected: false,
                 dragging: false,
-                id: `${node.id + 1000}`,
+                id: getId(),
                 position,
             });
         }
-    }, [id, getNode, addNodes]);
+    }, [id, getNode, addNodes, getId]);
 
     const deleteNode = useCallback(() => {
         setNodes((nodes: Node[]) => nodes.filter((node: Node) => node.id !== id));
@@ -42,13 +50,25 @@ const NodeContextMenu: React.FC<NodeContextMenuProps> = ({
     }, [id, setNodes, setEdges]);
 
     return (
-        <div style={{ top, left, right, bottom }} {...props}>
-            <p>
-                <small>node: {id}</small>
-            </p>
-            <button onClick={duplicateNode}>duplicate</button>
-            <button onClick={deleteNode}>delete</button>
-        </div>
+        <>
+            {visible && (
+                <div
+                    style={{ top: position.y, left: position.x }}
+                    className="nodeContextMenu"
+                    {...props}
+                >
+                    <div>Узел {id}</div>
+                    <ul>
+                        <li className="nodeContextMenu-item" onClick={deleteNode}>
+                            Удалить
+                        </li>
+                        <li className="nodeContextMenu-item" onClick={duplicateNode}>
+                            Дублировать
+                        </li>
+                    </ul>
+                </div>
+            )}
+        </>
     );
 };
 

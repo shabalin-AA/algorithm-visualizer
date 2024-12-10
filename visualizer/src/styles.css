@@ -105,3 +105,60 @@ body,
     padding: 20px;
     color: white;
 }
+
+.delete-edge-button {
+    background-color: rgba(200, 200, 200, 0.3);
+    color: white; /* Белый текст */
+    border: 1px;
+    border-radius: 10px; /* Закругленные углы */
+    font-size: 4px; /* Размер шрифта */
+    cursor: pointer; /* Указатель при наведении */
+    transition:
+        background-color 0.3s,
+        transform 0.2s; /* Плавные переходы */
+}
+
+.delete-edge-button:hover {
+    background-color: #ff4d4d; /* Более темный красный при наведении */
+    transform: scale(1.2); /* Увеличение кнопки при наведении */
+}
+
+.delete-edge-button:focus {
+    outline: none; /* Убираем обводку при фокусе */
+}
+
+.node-result {
+    text-align: center;
+    font-size: 12px;
+}
+
+.NodeCalc-code {
+    border: 1px solid #ededed;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    textalign: left;
+    resize: none;
+}
+
+.NodeCalc-code:focus {
+    outline: none;
+}
+
+.NodeIf-code {
+    position: absolute;
+    top: 40%;
+    left: 26%;
+    width: 50%;
+    height: 20%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px;
+    box-sizing: border-box;
+    z-index: 1;
+    text-align: center;
+}
+
+.NodeIf-code:focus {
+    outline: none;
+}

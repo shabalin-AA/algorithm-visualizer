@@ -11,7 +11,6 @@ import {
     useEdgesState,
     Panel,
     reconnectEdge,
-    useReactFlow,
 } from "@xyflow/react";
 import axios from "axios";
 
@@ -25,38 +24,20 @@ import NewNodeMenu, { NewNodeMenuProps } from "./NewNodeMenu";
 import LeftSidebar from "./LeftSidebar";
 import SaveFlowchart from "./SaveProject";
 
-let id = 1;
-const getId = () => `${id++}`;
-
 const BasicFlow = () => {
     const reactFlowWrapper = useRef(null);
     const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-    const [nodeContextMenu, setNodeContextMenu] = useState<NodeContextMenuProps | null>(null);
+    const [nodeContextMenu, setNodeContextMenu] = useState<NodeContextMenuProps>({
+        id: "",
+        position: { x: 0, y: 0 },
+        visible: false,
+    });
     const ref = useRef<HTMLDivElement | null>(null);
-    const [flowResult, setFlowResult] = useState<object>();
-
-    const newNode = useCallback(
-        (type: string, x: number, y: number) => {
-            const newNode = {
-                id: getId(),
-                type,
-                position: { x: x, y: y },
-                data: { code: "", result: "null" },
-                measured: { width: 150, height: 150 },
-            };
-            setNodes((nds) => nds.concat(newNode));
-            setNewNodeMenu((menu) => {
-                return { ...menu, visible: false };
-            });
-        },
-        [setNodes],
-    );
 
     const [newNodeMenu, setNewNodeMenu] = useState<NewNodeMenuProps>({
         visible: false,
         position: { x: 0, y: 0 },
-        newNode: newNode,
     });
 
     function nodeJson(node: Node) {
@@ -105,7 +86,7 @@ const BasicFlow = () => {
             return node;
         }
         axios
-            .post("http://localhost:8080/executor/execute", jo)
+            .post("http://localhost:8080/execute", jo)
             .then((response) => {
                 const results = response.data;
                 setNodes((nodes) => nodes.map((node) => newResult(node, results[+node.id])));
@@ -119,7 +100,7 @@ const BasicFlow = () => {
             Edges: edges.map(edgeJson),
         };
         axios
-            .post("http://localhost:8080/executor/save/" + name, jo)
+            .post("http://localhost:8080/save/" + name, jo)
             .then((response) => {
                 //TODO успешное/не успешное сохранение
             })
@@ -149,27 +130,19 @@ const BasicFlow = () => {
     );
 
     const onNodeContextMenu = useCallback(
-        (
-            event: {
-                preventDefault: () => void;
-                clientY: number;
-                clientX: number;
-            },
-            node: { id: any },
-        ) => {
+        (event: React.MouseEvent, node: Node) => {
             event.preventDefault();
             setNodeContextMenu({
+                ...nodeContextMenu,
                 id: node.id,
-                left: event.clientX,
-                right: event.clientX + 200,
-                top: event.clientY,
-                bottom: event.clientY + 300,
+                position: { x: event.clientX, y: event.clientY },
+                visible: true,
             });
         },
-        [setNodeContextMenu],
+        [setNodeContextMenu, nodeContextMenu],
     );
 
-    const handleContextMenu = (event: React.MouseEvent<HTMLDivElement>) => {
+    const onContextMenu = (event: React.MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
         event.stopPropagation();
         setNewNodeMenu((menu) => {
@@ -190,9 +163,11 @@ const BasicFlow = () => {
         setNewNodeMenu((menu) => {
             return { ...menu, visible: false };
         });
-        setNodeContextMenu(null);
+        setNodeContextMenu((menu) => {
+            return { ...menu, visible: false };
+        });
         setIsLeftSidebarOpen(false);
-    }, [setNodeContextMenu, setIsLeftSidebarOpen]);
+    }, [setNodeContextMenu, setIsLeftSidebarOpen, setNewNodeMenu]);
 
     const fromJson = function (obj: any) {
         const fullObj = JSON.parse(obj["fullJson"]);
@@ -236,9 +211,10 @@ const BasicFlow = () => {
                     onDragOver={onDragOver}
                     onPaneClick={onPaneClick}
                     onNodeContextMenu={onNodeContextMenu}
-                    onContextMenu={handleContextMenu}
+                    onContextMenu={onContextMenu}
                     fitView
                 >
+                    <NodeContextMenu {...nodeContextMenu} />
                     <MiniMap pannable zoomable />
                     <Panel className="inline-container" position="top-right">
                         <div className="inline-item">
@@ -249,12 +225,11 @@ const BasicFlow = () => {
                         <div className="inline-item">
                             <SaveFlowchart onSave={PostSave} />
                         </div>
-                        {nodeContextMenu && <NodeContextMenu {...nodeContextMenu} />}
                     </Panel>
                     <Background />
+                    {!nodeContextMenu.visible && <NewNodeMenu {...newNodeMenu} />}
                 </ReactFlow>
             </div>
-            {newNodeMenu.visible && !nodeContextMenu && <NewNodeMenu {...newNodeMenu} />}
         </div>
     );
 };

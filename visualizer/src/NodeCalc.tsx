@@ -1,32 +1,41 @@
 import { Node, Position, NodeProps, Handle, useReactFlow, NodeResizer } from "@xyflow/react";
 import "./styles.css";
 import LimitedConnectionHandle from "./LimitedConnectionHandle";
+import { useEffect, useState } from "react";
 
 type Text = Node<{ code: string; result: string; selected: boolean }>;
 
 export default function NodeCalc({ id, data, selected }: NodeProps<Text>) {
     const { updateNodeData } = useReactFlow();
+    const [code, setCode] = useState(data.code);
+
+    const handleCodeChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setCode(event.target.value);
+    };
+
+    useEffect(() => {
+        setCode(data.code);
+    }, [data.code]);
+
     return (
         <>
             <NodeResizer minHeight={40} minWidth={100} isVisible={selected} />
-            <div style={{ width: "100%", height: "100%" }}>
+            <div style={{ width: "100%", height: "100%", minWidth: "100px", minHeight: "40px" }}>
                 <textarea
-                    style={{
-                        border: "1px solid #ededed",
-                        boxSizing: "border-box",
-                        width: "100%",
-                        height: "100%",
-                        textAlign: "left",
-                        resize: "none",
-                    }}
-                    value={data.code}
+                    className="NodeCalc-code"
+                    value={code}
                     placeholder="c = b + a"
-                    onChange={(evt) => updateNodeData(id, { code: evt.target.value })}
+                    onChange={handleCodeChange}
+                    onBlur={() => {
+                        updateNodeData(id, { code: code });
+                    }}
                 ></textarea>
             </div>
-            <div className="node-result" onChange={(evt) => updateNodeData(id, {})}>
-                Результат: {data.result}
-            </div>
+            {data.result !== "" && (
+                <div className="node-result" onChange={(evt) => updateNodeData(id, {})}>
+                    {data.result}
+                </div>
+            )}
             <Handle type="target" position={Position.Top} />
             <LimitedConnectionHandle type="source" position={Position.Bottom} connectioncount={1} />
         </>

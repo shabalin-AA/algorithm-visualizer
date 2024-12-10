@@ -1,15 +1,26 @@
 import { Node, Position, NodeProps, Handle, useReactFlow, NodeResizer } from "@xyflow/react";
 import "./styles.css";
 import LimitedConnectionHandle from "./LimitedConnectionHandle";
+import { useEffect, useState } from "react";
 
 type Text = Node<{ code: string; result: string; selected: boolean }>;
 
 export default function NodeIf({ id, data, selected }: NodeProps<Text>) {
     const { updateNodeData } = useReactFlow();
+    const [code, setCode] = useState(data.code);
+
+    const handleCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setCode(event.target.value);
+    };
+
+    useEffect(() => {
+        setCode(data.code);
+    }, [data.code]);
+
     return (
         <>
             <NodeResizer minHeight={100} minWidth={100} isVisible={selected} />
-            <div style={{ width: "100%", height: "100%" }}>
+            <div style={{ width: "100%", height: "100%", minWidth: "100px", minHeight: "100px" }}>
                 <svg
                     viewBox="0 0 100 100"
                     style={{
@@ -23,28 +34,20 @@ export default function NodeIf({ id, data, selected }: NodeProps<Text>) {
                     <polygon points="0,50 50,0 100,50 50,100" fill="white" stroke="black" />
                 </svg>
                 <input
-                    value={data.code}
+                    value={code}
                     placeholder="a > b"
-                    onChange={(evt) => updateNodeData(id, { code: evt.target.value })}
-                    style={{
-                        position: "absolute",
-                        top: "50%",
-                        left: "50%",
-                        transform: "translate(-50%, -50%)",
-                        width: "50%",
-                        height: "20%",
-                        border: "1px solid #ccc",
-                        borderRadius: "4px",
-                        padding: "5px",
-                        boxSizing: "border-box",
-                        zIndex: 1,
-                        textAlign: "center",
+                    onChange={handleCodeChange}
+                    className="NodeIf-code"
+                    onBlur={() => {
+                        updateNodeData(id, { code: code });
                     }}
                 />
             </div>
-            <div className="node-result" onChange={(evt) => updateNodeData(id, {})}>
-                Результат: {data.result}
-            </div>
+            {data.result !== "" && (
+                <div className="node-result" onChange={(evt) => updateNodeData(id, {})}>
+                    {data.result}
+                </div>
+            )}
             <Handle type="target" position={Position.Top} />
             <LimitedConnectionHandle
                 type="source"

@@ -1,0 +1,22 @@
+.newNodeMenu-list {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 1);
+    font-size: 12px;
+    width: 150px; /* Ширина меню */
+    border: 1px solid #ccc; /* Граница */
+    overflow: hidden; /* Скрыть переполнение */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Легкая тень */
+    z-index: 10;
+}
+
+/* Стили для элементов списка */
+.newNodeMenu-element {
+    padding: 5px 5px; /* Отступы */
+    cursor: pointer; /* Указатель при наведении */
+    text-align: left;
+    margin: 0px;
+}
+
+.newNodeMenu-element:hover {
+    background-color: #f0f0f0; /* Цвет фона при наведении */
+}

@@ -6,11 +6,13 @@ run:
 	cd executor; mvn spring-boot:run &
 	cd visualizer; npm start &
 
-war:
-	cd visualizer; npm run build
-	cp -r visualizer/build/* executor/src/main/resources/static/
+war: static
 	cd executor; mvn clean package
 	cp executor/target/executor.war /usr/local/Cellar/tomcat/10.1.33/libexec/webapps
+
+static:
+	cd visualizer; npm run build
+	cp -r visualizer/build/* executor/src/main/resources/static/
 
 stop:
 	killall node
