@@ -11,3 +11,7 @@ $ make run
 - getId
 - курсор textarea перескакивает в конец в каждом изменении
 - добавить к war бд
+
+- help
+- fonts
+- success

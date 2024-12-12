@@ -5,7 +5,7 @@
 
 .hamburger-btn {
     position: absolute; /* Фиксированное позиционирование */
-    top: 20px; /* Отступ сверху */
+    top: 0px; /* Отступ сверху */
     left: 5px; /* Отступ слева */
     background: none; /* Убираем фон */
     border: none; /* Убираем рамку */
@@ -27,7 +27,7 @@
 
 .left-sidebar {
     position: fixed;
-    top: 0;
+    top: 0px;
     left: -250px; /* Скрываем панель за пределами экрана */
     width: 250px;
     height: 100%;
@@ -47,8 +47,10 @@
 ul {
     list-style-type: none; /* Убираем маркеры списка */
     padding: 0; /* Убираем отступы */
+    left: 50px;
 }
 
 li {
+    text-align: left;
     margin: 5px 0; /* Добавляем отступы между элементами списка */
 }

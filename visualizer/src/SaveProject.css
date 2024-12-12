@@ -3,6 +3,8 @@
     margin: 0 auto;
     padding: 20px;
     border: none;
+    display: flex;
+    flex-flow: column;
 }
 
 .save-project-title {
@@ -11,18 +13,21 @@
 }
 
 .save-project-button {
-    background-color: #007bff;
+    background-color: rgba(0, 100, 255, 0.8);
     color: white;
     border: none;
     border-radius: 4px;
     padding: 10px 15px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s;
+    transition:
+        background-color 0.3s,
+        transform 0.3s;
 }
 
 .save-project-button:hover {
-    background-color: #0056b3;
+    background-color: rgba(0, 100, 255, 1);
+    transform: scale(1.1);
 }
 
 .save-project-form {
@@ -36,16 +41,10 @@
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 16px;
+    font-size: 12px;
 }
 
 .save-project-input:focus {
     border-color: #007bff;
     outline: none;
-}
-
-.save-project-error {
-    color: red;
-    text-align: center;
-    margin-top: 10px;
 }

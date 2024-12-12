@@ -26,7 +26,7 @@ const SaveProject: React.FC<SaveProjectProps> = ({ onSave }) => {
 
     return (
         <div className="save-project-container">
-            <button className="save-button" onClick={handleSaveClick}>
+            <button className="save-project-button" onClick={handleSaveClick}>
                 <span className="save-icon">💾</span>
             </button>
             {isFormVisible && (
@@ -36,7 +36,7 @@ const SaveProject: React.FC<SaveProjectProps> = ({ onSave }) => {
                         type="text"
                         value={projectName}
                         onChange={handleInputChange}
-                        placeholder="Введите название проекта"
+                        placeholder="Название проекта"
                         required
                     />
                     <button type="submit" className="save-project-button">

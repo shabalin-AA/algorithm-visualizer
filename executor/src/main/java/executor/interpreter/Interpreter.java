@@ -29,6 +29,8 @@ public class Interpreter {
     Edge[] eds;
     HashMap<String, Object> scope;
 
+    public boolean halt;
+
     public Interpreter(Node[] nds, Edge[] eds, Class<?>[] modules) {
         this.nds = nds;
         this.eds = eds;
@@ -39,12 +41,13 @@ public class Interpreter {
         }
         this.lexer = new Lexer();
         this.parser = new Parser();
+        this.halt = false;
     }
 
     public List<Pair<Integer, Result>> eval() {
         Node crnt = firstNode();
         List<Pair<Integer, Result>> results = new ArrayList<Pair<Integer, Result>>();
-        while (crnt != null) {
+        while (crnt != null && !halt) {
             Result result = evalNode(crnt);
             results.add(new Pair<Integer, Result>(crnt.id, result));
             crnt = nextNode(crnt);

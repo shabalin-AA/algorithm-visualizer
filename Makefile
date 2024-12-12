@@ -13,6 +13,7 @@ war: static
 static:
 	cd visualizer; npm run build
 	cp -r visualizer/build/* executor/src/main/resources/static/
+	cd executor; make run
 
 stop:
 	killall node

@@ -9,7 +9,7 @@ interface SidebarProps {
 }
 
 interface Item {
-    id: number; // или string, в зависимости от вашего API
+    id: number;
     name: string;
     json: string;
 }
@@ -20,7 +20,7 @@ const LeftSidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onSelectItem }) 
     useEffect(() => {
         const fetchData = async () => {
             axios
-                .get("http://localhost:8080/flowchart-list")
+                .get(process.env.REACT_APP_API_URL + "/flowchart-list")
                 .then((response) => {
                     const data: Item[] = response.data;
                     setItems(data);

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 public class ExecuteHandler {
 
     Logger logger = LoggerFactory.getLogger(ExecuteHandler.class);
+    Interpreter currentInterpreter;
 
     public ExecuteHandler() {}
 
@@ -30,7 +31,8 @@ public class ExecuteHandler {
             }
             //TODO: make modules not hardcoded
             Class<?>[] modules = new Class<?>[] { Math.class };
-            results = (new Interpreter(nodes, edges, modules)).eval();
+            currentInterpreter = new Interpreter(nodes, edges, modules);
+            results = currentInterpreter.eval();
         } catch (JSONException e) {
             logger.error("[json] Wrong flowchart json\n{}\n{}", jo.toString(), e.toString());
             return "";
@@ -42,6 +44,10 @@ public class ExecuteHandler {
             logger.error("[json] Wrong result json\n{}", e.toString());
         }
         return "";
+    }
+
+    void haltExecution() {
+        currentInterpreter.halt = true;
     }
 
     JSONObject resultsJson(List<Pair<Integer, Result>> results) throws JSONException {

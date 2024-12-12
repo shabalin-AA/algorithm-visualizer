@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
+@CrossOrigin
 public class Application {
 
     Logger logger = LoggerFactory.getLogger(Application.class);
@@ -38,6 +40,11 @@ public class Application {
         } catch (JSONException e) {
             logger.warn("Wrong flowchart json\n" + e.toString());
         }
+    }
+
+    @GetMapping(value = "/halt")
+    void halt() {
+        executeHandler.haltExecution();
     }
 
     @GetMapping(value = "/flowchart-list", produces = "application/json")

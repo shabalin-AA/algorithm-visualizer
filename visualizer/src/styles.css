@@ -53,11 +53,11 @@ body,
 }
 
 .play-button {
-    background-color: #28a745; /* Зеленый цвет */
+    background-color: rgba(0, 170, 50, 0.8); /* Зеленый цвет */
     border: none;
     border-radius: 50%; /* Круглая форма */
-    width: 60px; /* Ширина кнопки */
-    height: 60px; /* Высота кнопки */
+    width: 50px; /* Ширина кнопки */
+    height: 50px; /* Высота кнопки */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -68,7 +68,7 @@ body,
 }
 
 .play-button:hover {
-    background-color: #218838; /* Темнее при наведении */
+    background-color: rgba(0, 170, 50, 1); /* Зеленый цвет */
     transform: scale(1.1); /* Увеличение при наведении */
 }
 
@@ -77,32 +77,35 @@ body,
     color: white; /* Цвет иконки */
 }
 
-.save-button {
-    background-color: #007bff; /* Синий цвет */
+.stop-button {
+    background-color: rgba(240, 40, 40, 0.8);
     border: none;
-    border-radius: 5px; /* Скругленные углы */
-    padding: 10px 15px; /* Отступы */
-    color: white; /* Цвет текста */
-    font-size: 16px; /* Размер шрифта */
+    border-radius: 50%; /* Круглая форма */
+    width: 50px; /* Ширина кнопки */
+    height: 50px; /* Высота кнопки */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     transition:
         background-color 0.3s,
         transform 0.2s; /* Плавные переходы */
 }
 
-.save-button:hover {
-    background-color: #0056b3; /* Темнее при наведении */
-    transform: scale(1.05); /* Увеличение при наведении */
+.stop-button:hover {
+    background-color: rgba(240, 40, 40, 1);
+    transform: scale(1.1); /* Увеличение при наведении */
 }
 
-.save-icon {
-    margin-right: 5px; /* Отступ между иконкой и текстом */
+.stop-icon {
+    font-size: 24px; /* Размер иконки */
+    color: white; /* Цвет иконки */
 }
 
 .inline-item {
     display: inline-block; /* Элементы будут располагаться в строку */
     margin: 10px; /* Отступы между элементами */
-    padding: 20px;
+    padding: 0px;
     color: white;
 }
 

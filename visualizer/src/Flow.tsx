@@ -33,12 +33,12 @@ const BasicFlow = () => {
         position: { x: 0, y: 0 },
         visible: false,
     });
-    const ref = useRef<HTMLDivElement | null>(null);
-
     const [newNodeMenu, setNewNodeMenu] = useState<NewNodeMenuProps>({
         visible: false,
         position: { x: 0, y: 0 },
     });
+    const [executing, setExecuting] = useState(false);
+    const ref = useRef<HTMLDivElement | null>(null);
 
     function nodeJson(node: Node) {
         let type = "";
@@ -72,7 +72,21 @@ const BasicFlow = () => {
         };
     }
 
-    function PostExecute() {
+    function clearResults() {
+        nodes.map((node) => {
+            return { ...node, data: { ...node.data, result: "" } };
+        });
+    }
+
+    function haltExecution() {
+        setExecuting(false);
+        axios.get(process.env.REACT_APP_API_URL + "/halt").catch((error) => console.log(error));
+        return;
+    }
+
+    async function PostExecute() {
+        setExecuting(true);
+        clearResults();
         let jo = {
             Nodes: nodes.map(nodeJson),
             Edges: edges.map(edgeJson),
@@ -85,13 +99,16 @@ const BasicFlow = () => {
             }
             return node;
         }
-        axios
-            .post("http://localhost:8080/execute", jo)
+        await axios
+            .post(process.env.REACT_APP_API_URL + "/execute", jo)
             .then((response) => {
                 const results = response.data;
                 setNodes((nodes) => nodes.map((node) => newResult(node, results[+node.id])));
             })
-            .catch((error) => console.log(error));
+            .catch((error) => {
+                console.log(error);
+            });
+        setExecuting(false);
     }
 
     function PostSave(name: string) {
@@ -100,7 +117,7 @@ const BasicFlow = () => {
             Edges: edges.map(edgeJson),
         };
         axios
-            .post("http://localhost:8080/save/" + name, jo)
+            .post(process.env.REACT_APP_API_URL + "/save/" + name, jo)
             .then((response) => {
                 //TODO успешное/не успешное сохранение
             })
@@ -218,9 +235,15 @@ const BasicFlow = () => {
                     <MiniMap pannable zoomable />
                     <Panel className="inline-container" position="top-right">
                         <div className="inline-item">
-                            <button className="play-button" onClick={PostExecute}>
-                                <span className="play-icon">▶</span>
-                            </button>
+                            {executing ? (
+                                <button className="stop-button" onClick={haltExecution}>
+                                    <span className="stop-icon">■</span>
+                                </button>
+                            ) : (
+                                <button className="play-button" onClick={PostExecute}>
+                                    <span className="play-icon">▶</span>
+                                </button>
+                            )}
                         </div>
                         <div className="inline-item">
                             <SaveFlowchart onSave={PostSave} />
