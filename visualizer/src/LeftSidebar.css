@@ -4,8 +4,8 @@
 }
 
 .hamburger-btn {
-    position: absolute; /* Фиксированное позиционирование */
-    top: 0px; /* Отступ сверху */
+    position: fixed; /* Фиксированное позиционирование */
+    top: 60px; /* Отступ сверху */
     left: 5px; /* Отступ слева */
     background: none; /* Убираем фон */
     border: none; /* Убираем рамку */
@@ -27,30 +27,19 @@
 
 .left-sidebar {
     position: fixed;
-    top: 0px;
+    top: 20px;
     left: -250px; /* Скрываем панель за пределами экрана */
     width: 250px;
-    height: 100%;
+    height: 100vh;
     background-color: white;
     color: black;
     transition: left 0.3s ease; /* Плавный переход */
     padding: 20px;
-    z-index: 1000; /* Чтобы панель была поверх других элементов */
+    z-index: 500; /* Чтобы панель была поверх других элементов */
     border: 2px solid white;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Тень для эффекта */
 }
 
 .left-sidebar.open {
     left: 0; /* Выдвигаем панель */
-}
-
-ul {
-    list-style-type: none; /* Убираем маркеры списка */
-    padding: 0; /* Убираем отступы */
-    left: 50px;
-}
-
-li {
-    text-align: left;
-    margin: 5px 0; /* Добавляем отступы между элементами списка */
 }

@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useRef } from "react";
+import axios from "axios";
 import {
     ReactFlow,
     type Node,
@@ -9,10 +10,8 @@ import {
     Connection,
     useNodesState,
     useEdgesState,
-    Panel,
     reconnectEdge,
 } from "@xyflow/react";
-import axios from "axios";
 
 import "@xyflow/react/dist/style.css";
 import NodeIf from "./NodeIf";
@@ -22,10 +21,12 @@ import NodeContextMenu from "./NodeContextMenu";
 import { NodeContextMenuProps } from "./NodeContextMenu";
 import NewNodeMenu, { NewNodeMenuProps } from "./NewNodeMenu";
 import LeftSidebar from "./LeftSidebar";
-import SaveFlowchart from "./SaveProject";
+import PlaySavePanel from "./PlaySavePanel";
 
 const BasicFlow = () => {
     const reactFlowWrapper = useRef(null);
+    const [executing, setExecuting] = useState(false);
+    const ref = useRef<HTMLDivElement | null>(null);
     const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
     const [nodeContextMenu, setNodeContextMenu] = useState<NodeContextMenuProps>({
@@ -37,8 +38,28 @@ const BasicFlow = () => {
         visible: false,
         position: { x: 0, y: 0 },
     });
-    const [executing, setExecuting] = useState(false);
-    const ref = useRef<HTMLDivElement | null>(null);
+
+    const onReconnect = useCallback(
+        (oldEdge: Edge, newConnection: Connection) =>
+            setEdges((eds) => reconnectEdge(oldEdge, newConnection, eds)),
+        [setEdges],
+    );
+
+    const onConnect = useCallback(
+        (connection: any) => {
+            const edge = { ...connection, type: "DeletableEdge" };
+            setEdges((eds) => addEdge(edge, eds));
+        },
+        [setEdges],
+    );
+
+    const onDragOver = useCallback(
+        (event: { preventDefault: () => void; dataTransfer: { dropEffect: string } }) => {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = "move";
+        },
+        [],
+    );
 
     function nodeJson(node: Node) {
         let type = "";
@@ -72,21 +93,14 @@ const BasicFlow = () => {
         };
     }
 
-    function clearResults() {
-        nodes.map((node) => {
-            return { ...node, data: { ...node.data, result: "" } };
-        });
-    }
-
-    function haltExecution() {
+    function halt() {
         setExecuting(false);
         axios.get(process.env.REACT_APP_API_URL + "/halt").catch((error) => console.log(error));
         return;
     }
 
-    async function PostExecute() {
+    async function execute() {
         setExecuting(true);
-        clearResults();
         let jo = {
             Nodes: nodes.map(nodeJson),
             Edges: edges.map(edgeJson),
@@ -103,7 +117,7 @@ const BasicFlow = () => {
             .post(process.env.REACT_APP_API_URL + "/execute", jo)
             .then((response) => {
                 const results = response.data;
-                setNodes((nodes) => nodes.map((node) => newResult(node, results[+node.id])));
+                setNodes(nodes.map((node) => newResult(node, results[+node.id])));
             })
             .catch((error) => {
                 console.log(error);
@@ -111,40 +125,18 @@ const BasicFlow = () => {
         setExecuting(false);
     }
 
-    function PostSave(name: string) {
+    async function save(name: string) {
         let jo = {
             Nodes: nodes.map(nodeJson),
             Edges: edges.map(edgeJson),
         };
-        axios
+        await axios
             .post(process.env.REACT_APP_API_URL + "/save/" + name, jo)
             .then((response) => {
                 //TODO успешное/не успешное сохранение
             })
             .catch((error) => console.log(error));
     }
-
-    const onReconnect = useCallback(
-        (oldEdge: Edge, newConnection: Connection) =>
-            setEdges((eds) => reconnectEdge(oldEdge, newConnection, eds)),
-        [setEdges],
-    );
-
-    const onConnect = useCallback(
-        (connection: any) => {
-            const edge = { ...connection, type: "DeletableEdge" };
-            setEdges((eds) => addEdge(edge, eds));
-        },
-        [setEdges],
-    );
-
-    const onDragOver = useCallback(
-        (event: { preventDefault: () => void; dataTransfer: { dropEffect: string } }) => {
-            event.preventDefault();
-            event.dataTransfer.dropEffect = "move";
-        },
-        [],
-    );
 
     const onNodeContextMenu = useCallback(
         (event: React.MouseEvent, node: Node) => {
@@ -198,10 +190,8 @@ const BasicFlow = () => {
     };
 
     return (
-        <div className="BasicFlow" style={{ height: "100vh", position: "relative" }}>
+        <div className="BasicFlow" style={{ top: "-10px", height: "95vh", position: "relative" }}>
             <button className="hamburger-btn" onClick={toggleLeftSidebar}>
-                <div className={`line ${isLeftSidebarOpen ? "open" : ""}`}></div>
-                <div className={`line ${isLeftSidebarOpen ? "open" : ""}`}></div>
                 <div className={`line ${isLeftSidebarOpen ? "open" : ""}`}></div>
             </button>
             <LeftSidebar
@@ -233,22 +223,12 @@ const BasicFlow = () => {
                 >
                     <NodeContextMenu {...nodeContextMenu} />
                     <MiniMap pannable zoomable />
-                    <Panel className="inline-container" position="top-right">
-                        <div className="inline-item">
-                            {executing ? (
-                                <button className="stop-button" onClick={haltExecution}>
-                                    <span className="stop-icon">■</span>
-                                </button>
-                            ) : (
-                                <button className="play-button" onClick={PostExecute}>
-                                    <span className="play-icon">▶</span>
-                                </button>
-                            )}
-                        </div>
-                        <div className="inline-item">
-                            <SaveFlowchart onSave={PostSave} />
-                        </div>
-                    </Panel>
+                    <PlaySavePanel
+                        halt={halt}
+                        execute={execute}
+                        save={save}
+                        isExecuting={() => executing}
+                    />
                     <Background />
                     {!nodeContextMenu.visible && <NewNodeMenu {...newNodeMenu} />}
                 </ReactFlow>
