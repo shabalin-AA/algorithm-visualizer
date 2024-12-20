@@ -43,8 +43,8 @@ const NewNodeMenu: React.FC<NewNodeMenuProps> = ({ visible, position }) => {
     return (
         <>
             {visible && (
-                <ul
-                    className="newNodeMenu-list"
+                <div
+                    className="newNodeMenu"
                     style={{
                         position: "absolute",
                         top: position.y,
@@ -52,19 +52,15 @@ const NewNodeMenu: React.FC<NewNodeMenuProps> = ({ visible, position }) => {
                     }}
                 >
                     <div>Добавить</div>
-                    <li
-                        className="newNodeMenu-element"
-                        onClick={(e) => newNode("NodeCalc", e.clientX, e.clientY)}
-                    >
-                        Узел расчета
-                    </li>
-                    <li
-                        className="newNodeMenu-element"
-                        onClick={(e) => newNode("NodeIf", e.clientX, e.clientY)}
-                    >
-                        Узел ветвления
-                    </li>
-                </ul>
+                    <ul>
+                        <li onClick={(e) => newNode("NodeCalc", e.clientX, e.clientY)}>
+                            Узел расчета
+                        </li>
+                        <li onClick={(e) => newNode("NodeIf", e.clientX, e.clientY)}>
+                            Узел ветвления
+                        </li>
+                    </ul>
+                </div>
             )}
         </>
     );

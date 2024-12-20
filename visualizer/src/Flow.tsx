@@ -14,6 +14,7 @@ import {
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
+import "./Static.css";
 import NodeIf from "./NodeIf";
 import NodeCalc from "./NodeCalc";
 import DeletableEdge from "./DeletableEdge";
@@ -131,10 +132,8 @@ const BasicFlow = () => {
             Edges: edges.map(edgeJson),
         };
         await axios
-            .post(process.env.REACT_APP_API_URL + "/save/" + name, jo)
-            .then((response) => {
-                //TODO успешное/не успешное сохранение
-            })
+            .post(process.env.REACT_APP_API_URL + "/save" + name, jo)
+            .then()
             .catch((error) => console.log(error));
     }
 
@@ -192,6 +191,8 @@ const BasicFlow = () => {
     return (
         <div className="BasicFlow" style={{ top: "-10px", height: "95vh", position: "relative" }}>
             <button className="hamburger-btn" onClick={toggleLeftSidebar}>
+                <div className={`line ${isLeftSidebarOpen ? "open" : ""}`}></div>
+                <div className={`line ${isLeftSidebarOpen ? "open" : ""}`}></div>
                 <div className={`line ${isLeftSidebarOpen ? "open" : ""}`}></div>
             </button>
             <LeftSidebar

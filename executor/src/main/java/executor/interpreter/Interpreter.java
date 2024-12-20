@@ -47,11 +47,13 @@ public class Interpreter {
     public List<Pair<Integer, Result>> eval() {
         Node crnt = firstNode();
         List<Pair<Integer, Result>> results = new ArrayList<Pair<Integer, Result>>();
+        Result result = null;
         while (crnt != null && !halt) {
-            Result result = evalNode(crnt);
+            result = evalNode(crnt);
             results.add(new Pair<Integer, Result>(crnt.id, result));
             crnt = nextNode(crnt);
         }
+        results.add(new Pair<Integer, Result>(0, result)); // result of flowchart
         return results;
     }
 
