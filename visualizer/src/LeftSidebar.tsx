@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./LeftSidebar.css";
+import "./Static.css";
 
 interface SidebarProps {
     isOpen: boolean;
@@ -36,7 +37,7 @@ const LeftSidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onSelectItem }) 
 
     return (
         <div className={`left-sidebar ${isOpen ? "open" : ""}`}>
-            <h2>Ваши схемы</h2>
+            <h2 style={{ marginLeft: "40px" }}>Ваши схемы</h2>
             <ul>
                 {items.map((item) => (
                     <li key={item.id} onClick={() => handleItemClick(item.json)}>

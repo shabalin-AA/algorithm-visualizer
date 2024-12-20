@@ -1,0 +1,12 @@
+.footer p {
+    text-align: center;
+    color: rgb(180, 180, 180);
+    font-size: 14px;
+}
+
+.footer a {
+    text-align: center;
+    color: rgb(180, 180, 180);
+    padding: 20px;
+    font-size: 14px;
+}

@@ -1,0 +1,94 @@
+.page {
+    background-color: #f0f0f0; /* Серый фон только для страницы About */
+    min-height: 100vh; /* Занимает всю высоту экрана */
+    display: flex;
+    justify-content: center; /* Центрируем содержимое по горизонтали */
+    align-items: center; /* Центрируем содержимое по вертикали */
+    flex-flow: column;
+}
+
+.container {
+    width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: white; /* Белый фон для текстовой области */
+}
+
+h1 {
+    position: relative; /* Устанавливаем относительное позиционирование */
+    color: #444; /* Цвет текста */
+    padding-bottom: 5px; /* Отступ снизу для пространства между текстом и линией */
+    text-align: left;
+}
+
+h1::after {
+    content: ""; /* Создаем псевдоэлемент */
+    position: absolute; /* Абсолютное позиционирование */
+    left: 0px; /* Выравнивание по левому краю */
+    bottom: 0; /* Выравнивание по нижнему краю */
+    width: 100%; /* Ширина линии на всю ширину заголовка */
+    height: 2px; /* Высота линии */
+    background-color: #5caf60; /* Цвет линии */
+    color: #444;
+}
+
+h2 {
+    color: #444;
+    margin-top: 18px;
+    text-align: left;
+}
+
+h3 {
+    color: #555;
+    margin-top: 30px;
+    text-align: left;
+}
+
+p {
+    line-height: 1.6;
+    color: #555;
+    text-align: left;
+}
+
+pre {
+    line-height: 1.6;
+    color: #555;
+    text-align: left;
+}
+
+ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    text-align: left;
+    color: #555;
+}
+
+a {
+    color: #555;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.footer {
+    text-align: center;
+    width: 100%;
+    background-color: #333;
+    height: 100px;
+}
+
+code {
+    background-color: #f5f5f5; /* Светлый фон для выделения кода */
+    color: #333; /* Темный цвет текста */
+    font-family: "Courier New", Courier, monospace; /* Моноширинный шрифт */
+    padding: 4px 8px; /* Отступы вокруг текста */
+    border-radius: 4px; /* Закругленные углы */
+    border: 1px solid #ccc; /* Светлая рамка */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Легкая тень */
+    font-size: 0.9em; /* Немного уменьшенный размер шрифта */
+    white-space: nowrap; /* Запрет на перенос строк */
+    text-align: left;
+}
