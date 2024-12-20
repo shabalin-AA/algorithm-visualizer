@@ -15,6 +15,7 @@ import {
 import axios from "axios";
 
 import "@xyflow/react/dist/style.css";
+import "./Static.css";
 import NodeIf from "./NodeIf";
 import NodeCalc from "./NodeCalc";
 import DeletableEdge from "./DeletableEdge";
@@ -111,7 +112,7 @@ const BasicFlow = () => {
         setExecuting(false);
     }
 
-    function PostSave(name: string) {
+    async function PostSave(name: string) {
         let jo = {
             Nodes: nodes.map(nodeJson),
             Edges: edges.map(edgeJson),
@@ -121,6 +122,9 @@ const BasicFlow = () => {
             .then((response) => {
                 //TODO успешное/не успешное сохранение
             })
+        await axios
+            .post(process.env.REACT_APP_API_URL + "/save" + name, jo)
+            .then()
             .catch((error) => console.log(error));
     }
 

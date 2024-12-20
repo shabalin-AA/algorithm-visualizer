@@ -46,10 +46,6 @@ public class ExecuteHandler {
         return "";
     }
 
-    void haltExecution() {
-        currentInterpreter.halt = true;
-    }
-
     JSONObject resultsJson(List<Pair<Integer, Result>> results) throws JSONException {
         JSONObject resultsJo = new JSONObject();
         for (Pair<Integer, Result> pair : results) {
@@ -59,4 +55,9 @@ public class ExecuteHandler {
         }
         return resultsJo;
     }
+
+    void haltExecution() {
+        currentInterpreter.halt = true;
+    }
+
 }

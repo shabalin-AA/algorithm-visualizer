@@ -1,6 +1,7 @@
 import React, { useCallback } from "react";
 import { useReactFlow, Node, Edge } from "@xyflow/react";
 import "./NodeContextMenu.css";
+import "./Static.css";
 
 export interface NodeContextMenuProps {
     id: string;
@@ -59,12 +60,8 @@ const NodeContextMenu: React.FC<NodeContextMenuProps> = ({ id, position, visible
                 >
                     <div>Узел {id}</div>
                     <ul>
-                        <li className="nodeContextMenu-item" onClick={deleteNode}>
-                            Удалить
-                        </li>
-                        <li className="nodeContextMenu-item" onClick={duplicateNode}>
-                            Дублировать
-                        </li>
+                        <li onClick={deleteNode}>Удалить</li>
+                        <li onClick={duplicateNode}>Дублировать</li>
                     </ul>
                 </div>
             )}
