@@ -1,14 +1,31 @@
 import "./NewNodeMenu.css";
 import { useReactFlow } from "@xyflow/react";
-import React, { useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import axios from "axios";
 
 export interface NewNodeMenuProps {
     visible: boolean;
     position: { x: number; y: number };
 }
+interface Item {
+    id: number;
+    name: string;
+    json: string;
+}
 
 const NewNodeMenu: React.FC<NewNodeMenuProps> = ({ visible, position }) => {
     const { setNodes, getNodes } = useReactFlow();
+    const [items, setItems] = useState<Item[]>([]);
+
+    useEffect(() => {
+        axios
+            .get(process.env.REACT_APP_API_URL + "/flowchart-list")
+            .then((response) => {
+                const data: Item[] = response.data;
+                setItems(data);
+            })
+            .catch((error) => console.log(error));
+    }, []);
 
     const getId = useCallback(() => {
         const nodes = getNodes();
@@ -27,13 +44,13 @@ const NewNodeMenu: React.FC<NewNodeMenuProps> = ({ visible, position }) => {
     }, [getNodes]);
 
     const newNode = useCallback(
-        (type: string, x: number, y: number) => {
+        (type: string, x: number, y: number, code?: string) => {
             const newNode = {
                 id: getId(),
                 type,
                 position: { x: x, y: y },
-                data: { code: "", result: "" },
                 measured: { width: 150, height: 150 },
+                data: { code: code, result: "" },
             };
             setNodes((nds) => nds.concat(newNode));
         },
@@ -59,6 +76,19 @@ const NewNodeMenu: React.FC<NewNodeMenuProps> = ({ visible, position }) => {
                         <li onClick={(e) => newNode("NodeIf", e.clientX, e.clientY)}>
                             Узел ветвления
                         </li>
+                        <li onClick={(e) => newNode("NodeSubflow", e.clientX, e.clientY)}>
+                            Подсхема
+                        </li>
+                        {items.map((item) => (
+                            <li
+                                key={item.id}
+                                onClick={(e) =>
+                                    newNode("NodeSubflow", e.clientX, e.clientY, item.name)
+                                }
+                            >
+                                {item.name}
+                            </li>
+                        ))}
                     </ul>
                 </div>
             )}

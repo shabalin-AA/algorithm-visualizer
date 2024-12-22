@@ -1,5 +1,5 @@
 import "./TopBar.css";
-import { NavLink } from "react-router-dom"; // Импортируем Link для навигации
+import { NavLink } from "react-router-dom";
 
 const TopBar = () => {
     return (

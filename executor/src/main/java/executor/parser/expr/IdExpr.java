@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
+import org.json.JSONObject;
 
 public class IdExpr implements Expr {
 
@@ -41,6 +42,10 @@ public class IdExpr implements Expr {
         return null;
     }
 
+    Object evalFlowchart(JSONObject flowchart) {
+        return null;
+    }
+
     @Override
     public Object eval(HashMap<String, Object> scope) {
         String varName = id;
@@ -50,6 +55,8 @@ public class IdExpr implements Expr {
                 return evalField((Field) value);
             } else if (value instanceof Method) {
                 return evalMethod((Method) value, scope);
+            } else if (value instanceof JSONObject) {
+                return evalFlowchart((JSONObject) value);
             } else {
                 return value;
             }

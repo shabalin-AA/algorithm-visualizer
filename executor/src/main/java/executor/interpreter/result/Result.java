@@ -5,5 +5,7 @@ import org.json.JSONObject;
 
 public abstract class Result {
 
+    public Object value;
+
     public abstract JSONObject json() throws JSONException;
 }

@@ -16,4 +16,8 @@ public class Ok extends Result {
         jo.put("result", this.value);
         return jo;
     }
+
+    public String toString() {
+        return String.format("Ok : %s\n", value.toString());
+    }
 }

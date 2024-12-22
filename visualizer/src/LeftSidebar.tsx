@@ -19,16 +19,13 @@ const LeftSidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onSelectItem }) 
     const [items, setItems] = useState<Item[]>([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            axios
-                .get(process.env.REACT_APP_API_URL + "/flowchart-list")
-                .then((response) => {
-                    const data: Item[] = response.data;
-                    setItems(data);
-                })
-                .catch((error) => console.log(error));
-        };
-        fetchData();
+        axios
+            .get(process.env.REACT_APP_API_URL + "/flowchart-list")
+            .then((response) => {
+                const data: Item[] = response.data;
+                setItems(data);
+            })
+            .catch((error) => console.log(error));
     }, []);
 
     const handleItemClick = (json: string) => {

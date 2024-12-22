@@ -17,4 +17,8 @@ public class Err extends Result {
         jo.put("err", this.value.toString());
         return jo;
     }
+
+    public String toString() {
+        return String.format("Err : %s\n", value.toString());
+    }
 }

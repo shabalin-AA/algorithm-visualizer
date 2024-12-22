@@ -1,5 +1,7 @@
 package executor.interpreter;
 
+import executor.ExecuteHandler;
+import executor.SQLiteHandler;
 import executor.interpreter.result.*;
 import executor.lexer.Lexer;
 import executor.lexer.Token;
@@ -11,7 +13,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import javafx.util.Pair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,19 +26,22 @@ public class Interpreter {
 
     Logger logger = LoggerFactory.getLogger(executor.interpreter.Interpreter.class);
 
+    SQLiteHandler sqliteHandler = new SQLiteHandler();
+    ExecuteHandler executeHandler = new ExecuteHandler();
+
     Lexer lexer;
     Parser parser;
 
     Node[] nds;
     Edge[] eds;
     HashMap<String, Object> scope;
-
+    Class<?>[] modules;
     public boolean halt;
 
-    public Interpreter(Node[] nds, Edge[] eds, Class<?>[] modules) {
+    public Interpreter(Node[] nds, Edge[] eds, Class<?>[] modules, HashMap<String, Object> scope) {
         this.nds = nds;
         this.eds = eds;
-        this.scope = new HashMap<String, Object>();
+        this.modules = modules;
         for (Class<?> cls : modules) {
             for (Field f : cls.getDeclaredFields()) scope.put(f.getName(), f);
             for (Method m : cls.getDeclaredMethods()) scope.put(m.getName(), m);
@@ -42,18 +49,61 @@ public class Interpreter {
         this.lexer = new Lexer();
         this.parser = new Parser();
         this.halt = false;
+        this.scope = scope;
     }
 
-    public List<Pair<Integer, Result>> eval() {
+    public Interpreter(JSONObject flowchart, Class<?>[] modules, HashMap<String, Object> scope) {
+        this.nds = flowchartNodes(flowchart);
+        this.eds = flowchartEdges(flowchart);
+        this.modules = modules;
+        for (Class<?> cls : modules) {
+            for (Field f : cls.getDeclaredFields()) scope.put(f.getName(), f);
+            for (Method m : cls.getDeclaredMethods()) scope.put(m.getName(), m);
+        }
+        this.lexer = new Lexer();
+        this.parser = new Parser();
+        this.halt = false;
+        this.scope = scope;
+    }
+
+    Node[] flowchartNodes(JSONObject flowchart) {
+        try {
+            JSONArray nds = flowchart.getJSONArray("Nodes");
+            Node[] nodes = new Node[nds.length()];
+            for (int i = 0; i < nds.length(); i++) {
+                nodes[i] = new Node(nds.getJSONObject(i));
+            }
+            return nodes;
+        } catch (JSONException e) {
+            logger.error("[json] Wrong flowchart json\n{}\n{}", flowchart.toString(), e.toString());
+            return null;
+        }
+    }
+
+    Edge[] flowchartEdges(JSONObject flowchart) {
+        try {
+            JSONArray eds = flowchart.getJSONArray("Edges");
+            Edge[] edges = new Edge[eds.length()];
+            for (int i = 0; i < eds.length(); i++) {
+                edges[i] = new Edge(eds.getJSONObject(i));
+            }
+            return edges;
+        } catch (JSONException e) {
+            logger.error("[json] Wrong flowchart json\n{}\n{}", flowchart.toString(), e.toString());
+            return null;
+        }
+    }
+
+    public HashMap<Integer, Result> eval() {
         Node crnt = firstNode();
-        List<Pair<Integer, Result>> results = new ArrayList<Pair<Integer, Result>>();
+        HashMap<Integer, Result> results = new HashMap<Integer, Result>();
         Result result = null;
         while (crnt != null && !halt) {
             result = evalNode(crnt);
-            results.add(new Pair<Integer, Result>(crnt.id, result));
+            results.put(crnt.id, result);
             crnt = nextNode(crnt);
         }
-        results.add(new Pair<Integer, Result>(0, result)); // result of flowchart
+        results.put(0, result);
         return results;
     }
 
@@ -72,24 +122,46 @@ public class Interpreter {
     }
 
     Result evalNode(Node n) {
+        logger.info("[node {} code]\n{}", n.id, n.code);
+        if (n.type == NodeType.SUBFLOW) {
+            return evalSubflowNode(n);
+        } else {
+            return evalCodeNode(n);
+        }
+    }
+
+    Result evalSubflowNode(Node n) {
+        String flowJson = sqliteHandler.getFlowchart(n.code);
+        JSONObject flow = null;
+        HashMap<Integer, Result> results = null;
+        try {
+            flow = new JSONObject(flowJson);
+            Interpreter tmpInt = new Interpreter(flow, this.modules, this.scope);
+            results = tmpInt.eval();
+            Result res = results.get(0);
+            logger.info("[flowchart {} results]\n{}", n.code, results.toString());
+            logger.info("[node {} result]\n{}", n.id, res.toString());
+            return res;
+        } catch (JSONException e) {
+            logger.error("[json] Wrong flowchart results json\n{}", e.toString());
+            return new Err(e);
+        }
+    }
+
+    Result evalCodeNode(Node n) {
         Object res = null;
         try {
             Token[] tokens = lexer.tokenize(n.code);
             Expr ast = parser.parse(tokens);
             res = ast.eval(scope);
-            logger.info("[node {} code]\n{}", n.id, n.code);
             logger.info("[node {} tokens]\n{}", n.id, Arrays.toString(tokens));
             logger.info("[node {} ast]\n{}", n.id, exprToString(ast, 0));
             logger.info("[node {} result]\n{}", n.id, res.toString());
         } catch (Exception e) {
             return new Err(e);
         }
-        switch (n.type) {
-            case COND:
-                scope.put("_if_value", (boolean) res);
-                break;
-            default:
-                break;
+        if (n.type == NodeType.COND) {
+            scope.put("_if_value", (boolean) res);
         }
         return new Ok(res);
     }

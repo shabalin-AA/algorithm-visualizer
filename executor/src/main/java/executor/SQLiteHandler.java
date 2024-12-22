@@ -96,4 +96,19 @@ public class SQLiteHandler {
         }
         return json;
     }
+
+    public String getFlowchart(String name) {
+        String json = "";
+        String sql = String.format("select json from flowchart where name=\"%s\";", name);
+        logger.info("[sql] {}", sql);
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            json = rs.getString("json");
+            stmt.close();
+        } catch (Exception e) {
+            logger.warn("[sql]\t{}", e.toString());
+        }
+        return json;
+    }
 }

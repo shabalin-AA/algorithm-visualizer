@@ -17,6 +17,7 @@ import "@xyflow/react/dist/style.css";
 import "./Static.css";
 import NodeIf from "./NodeIf";
 import NodeCalc from "./NodeCalc";
+import NodeSubflow from "./NodeSubflow";
 import DeletableEdge from "./DeletableEdge";
 import NodeContextMenu from "./NodeContextMenu";
 import { NodeContextMenuProps } from "./NodeContextMenu";
@@ -70,6 +71,9 @@ const BasicFlow = () => {
                 break;
             case "NodeCalc":
                 type = "CALC";
+                break;
+            case "NodeSubflow":
+                type = "SUBFLOW";
                 break;
         }
         return {
@@ -132,7 +136,7 @@ const BasicFlow = () => {
             Edges: edges.map(edgeJson),
         };
         await axios
-            .post(process.env.REACT_APP_API_URL + "/save" + name, jo)
+            .post(process.env.REACT_APP_API_URL + "/save/" + name, jo)
             .then()
             .catch((error) => console.log(error));
     }
@@ -212,6 +216,7 @@ const BasicFlow = () => {
                     nodeTypes={{
                         NodeIf: NodeIf,
                         NodeCalc: NodeCalc,
+                        NodeSubflow: NodeSubflow,
                     }}
                     edgeTypes={{
                         DeletableEdge: DeletableEdge,
