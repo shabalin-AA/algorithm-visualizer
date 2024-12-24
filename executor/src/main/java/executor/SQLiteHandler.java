@@ -82,6 +82,22 @@ public class SQLiteHandler {
         }
     }
 
+    public void updateFlowchart(JSONObject flowchart, String name) {
+        String sql = String.format(
+            "update flowchart set json=\'%s\' where name=\'%s\' ;",
+            flowchart.toString(),
+            name
+        );
+        logger.info("[sql] {}", sql);
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.execute(sql);
+            stmt.close();
+        } catch (Exception e) {
+            logger.warn("[sql]\t{}", e.toString());
+        }
+    }
+
     public String getFlowchart(long id) {
         String json = "";
         String sql = String.format("select json from flowchart where id=%d;", id);
@@ -98,17 +114,17 @@ public class SQLiteHandler {
     }
 
     public String getFlowchart(String name) {
-        String json = "";
         String sql = String.format("select json from flowchart where name=\"%s\";", name);
         logger.info("[sql] {}", sql);
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            json = rs.getString("json");
+            String json = rs.getString("json");
             stmt.close();
+            return json;
         } catch (Exception e) {
             logger.warn("[sql]\t{}", e.toString());
+            return "";
         }
-        return json;
     }
 }

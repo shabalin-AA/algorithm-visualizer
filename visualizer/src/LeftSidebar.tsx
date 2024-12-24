@@ -1,48 +1,56 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
 import "./LeftSidebar.css";
 import "./Static.css";
+import React, { useState } from "react";
 
-interface SidebarProps {
-    isOpen: boolean;
-    onClose: () => void;
-    onSelectItem: (json: string) => void;
-}
-
-interface Item {
+export interface FlowchartListItem {
     id: number;
     name: string;
     json: string;
 }
 
-const LeftSidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onSelectItem }) => {
-    const [items, setItems] = useState<Item[]>([]);
+export interface LeftSidebarProps {
+    visible: boolean;
+    flowchartList: FlowchartListItem[];
+    updateFlowchartList: () => void;
+    onSelectItem: (name: string, json: string) => void;
+}
 
-    useEffect(() => {
-        axios
-            .get(process.env.REACT_APP_API_URL + "/flowchart-list")
-            .then((response) => {
-                const data: Item[] = response.data;
-                setItems(data);
-            })
-            .catch((error) => console.log(error));
-    }, []);
+const LeftSidebar: React.FC<LeftSidebarProps> = ({
+    flowchartList,
+    updateFlowchartList,
+    onSelectItem,
+}) => {
+    const [visible, setVisible] = useState(false);
 
-    const handleItemClick = (json: string) => {
-        onSelectItem(json);
+    async function toggleLeftSidebar() {
+        if (!visible) {
+            updateFlowchartList();
+        }
+        setVisible(!visible);
+    }
+
+    const handleItemClick = (name: string, json: string) => {
+        onSelectItem(name, json);
     };
 
     return (
-        <div className={`left-sidebar ${isOpen ? "open" : ""}`}>
-            <h2 style={{ marginLeft: "40px" }}>Ваши схемы</h2>
-            <ul>
-                {items.map((item) => (
-                    <li key={item.id} onClick={() => handleItemClick(item.json)}>
-                        {item.name}
-                    </li>
-                ))}
-            </ul>
-        </div>
+        <>
+            <button className="hamburger-btn" onClick={toggleLeftSidebar}>
+                <div className="line"></div>
+                <div className="line"></div>
+                <div className="line"></div>
+            </button>
+            <div className={`left-sidebar ${visible ? "open" : ""}`}>
+                <h2 style={{ marginLeft: "40px" }}>Ваши схемы</h2>
+                <ul>
+                    {flowchartList.map((item) => (
+                        <li key={item.id} onClick={() => handleItemClick(item.name, item.json)}>
+                            {item.name}
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </>
     );
 };
 

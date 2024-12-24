@@ -20,7 +20,15 @@ export default function NodeCalc({ id, data, selected }: NodeProps<Text>) {
     return (
         <>
             <NodeResizer minHeight={40} minWidth={100} isVisible={selected} />
-            <div style={{ width: "100%", height: "100%", minWidth: "100px", minHeight: "40px" }}>
+            <div
+                style={{
+                    width: "100%",
+                    height: "100%",
+                    minWidth: "100px",
+                    minHeight: "40px",
+                    border: "1px solid black",
+                }}
+            >
                 <textarea
                     className="NodeCalc-code"
                     value={code}

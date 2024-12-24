@@ -35,8 +35,13 @@ public class Application {
 
     @PostMapping(value = "/save/{name}", consumes = "application/json")
     void save(@RequestBody String body, @PathVariable String name) {
+        String existingFlowchart = sqliteHandler.getFlowchart(name);
         try {
-            sqliteHandler.insertFlowchart(new JSONObject(body), name);
+            if (existingFlowchart == null) {
+                sqliteHandler.insertFlowchart(new JSONObject(body), name);
+            } else {
+                sqliteHandler.updateFlowchart(new JSONObject(body), name);
+            }
         } catch (JSONException e) {
             logger.warn("Wrong flowchart json\n" + e.toString());
         }

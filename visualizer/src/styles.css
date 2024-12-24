@@ -11,6 +11,7 @@ body {
 .App {
     font-family: sans-serif;
     text-align: center;
+    font-size: 18px;
 }
 
 .BasicFlow {
@@ -18,21 +19,6 @@ body {
     display: flex;
     flex-grow: 1;
     height: 100%;
-}
-
-.BasicFlow .node-if {
-    position: relative;
-    width: 90px;
-    height: 90px;
-    background: #fff;
-    border: 1px solid #777;
-    transform: rotate(45deg);
-    border-radius: 2px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: grab;
 }
 
 .BasicFlow .reactflow-wrapper {
@@ -55,28 +41,28 @@ body {
 }
 
 .play-button {
-    background-color: rgba(0, 170, 50, 0.8); /* Зеленый цвет */
+    background-color: rgba(0, 170, 50, 0.8);
     border: none;
-    border-radius: 50%; /* Круглая форма */
-    width: 50px; /* Ширина кнопки */
-    height: 50px; /* Высота кнопки */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition:
         background-color 0.3s,
-        transform 0.2s; /* Плавные переходы */
+        transform 0.2s;
 }
 
 .play-button:hover {
-    background-color: rgba(0, 170, 50, 1); /* Зеленый цвет */
-    transform: scale(1.1); /* Увеличение при наведении */
+    background-color: rgba(0, 170, 50, 1);
+    transform: scale(1.1);
 }
 
 .play-icon {
-    font-size: 22px; /* Размер иконки */
-    color: white; /* Цвет иконки */
+    font-size: 22px;
+    color: white;
     padding-top: 2px;
     padding-left: 4px;
 }
@@ -84,60 +70,55 @@ body {
 .stop-button {
     background-color: rgba(240, 40, 40, 0.8);
     border: none;
-    border-radius: 50%; /* Круглая форма */
-    width: 50px; /* Ширина кнопки */
-    height: 50px; /* Высота кнопки */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition:
         background-color 0.3s,
-        transform 0.2s; /* Плавные переходы */
+        transform 0.2s;
 }
 
 .stop-button:hover {
     background-color: rgba(240, 40, 40, 1);
-    transform: scale(1.1); /* Увеличение при наведении */
+    transform: scale(1.1);
 }
 
 .stop-icon {
-    font-size: 24px; /* Размер иконки */
-    color: white; /* Цвет иконки */
+    font-size: 24px;
+    color: white;
     padding-bottom: 4px;
 }
 
 .inline-item {
-    display: inline-block; /* Элементы будут располагаться в строку */
-    margin: 10px; /* Отступы между элементами */
+    display: inline-block;
+    margin: 10px;
     padding: 0px;
     color: white;
 }
 
 .delete-edge-button {
     background-color: rgba(200, 200, 200, 0.3);
-    color: white; /* Белый текст */
+    color: white;
     border: 1px;
-    border-radius: 10px; /* Закругленные углы */
-    font-size: 4px; /* Размер шрифта */
-    cursor: pointer; /* Указатель при наведении */
+    border-radius: 10px;
+    font-size: 4px;
+    cursor: pointer;
     transition:
         background-color 0.3s,
-        transform 0.2s; /* Плавные переходы */
+        transform 0.2s;
 }
 
 .delete-edge-button:hover {
-    background-color: #ff4d4d; /* Более темный красный при наведении */
-    transform: scale(1.2); /* Увеличение кнопки при наведении */
+    background-color: #ff4d4d;
+    transform: scale(1.2);
 }
 
 .delete-edge-button:focus {
-    outline: none; /* Убираем обводку при фокусе */
-}
-
-.node-result {
-    text-align: center;
-    font-size: 12px;
+    outline: none;
 }
 
 .NodeCalc-code {
@@ -178,4 +159,15 @@ body {
 
 .NodeIf-code:focus {
     outline: none;
+}
+
+.node-result {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 2px 0px;
+    border-radius: 3px;
+    border: 1px solid #ededed;
+    font-size: 12px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.8);
 }

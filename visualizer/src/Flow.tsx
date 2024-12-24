@@ -21,21 +21,49 @@ import NodeSubflow from "./NodeSubflow";
 import DeletableEdge from "./DeletableEdge";
 import NodeContextMenu from "./NodeContextMenu";
 import { NodeContextMenuProps } from "./NodeContextMenu";
+import { FlowchartListItem, LeftSidebarProps } from "./LeftSidebar";
 import NewNodeMenu, { NewNodeMenuProps } from "./NewNodeMenu";
 import LeftSidebar from "./LeftSidebar";
 import PlaySavePanel from "./PlaySavePanel";
 
 const BasicFlow = () => {
     const reactFlowWrapper = useRef(null);
-    const [executing, setExecuting] = useState(false);
     const ref = useRef<HTMLDivElement | null>(null);
+
     const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+
+    const [executing, setExecuting] = useState(false);
+
     const [nodeContextMenu, setNodeContextMenu] = useState<NodeContextMenuProps>({
         id: "",
         position: { x: 0, y: 0 },
         visible: false,
     });
+
+    const selectFlowchartListItem = (name: string, json: string) => {
+        const flowchart = JSON.parse(json);
+        setNodes((_) => flowchart.Nodes.map(fromJson));
+        setEdges((_) => flowchart.Edges.map(fromJson));
+        setFlowchartName(name);
+    };
+    async function flowchart_list() {
+        await axios
+            .get(process.env.REACT_APP_API_URL + "/flowchart-list")
+            .then((response) => {
+                const data: FlowchartListItem[] = response.data;
+                setLeftSidebar({ ...leftSidebar, flowchartList: data });
+            })
+            .catch((error) => console.log(error));
+    }
+    const [leftSidebar, setLeftSidebar] = useState<LeftSidebarProps>({
+        visible: false,
+        flowchartList: [],
+        updateFlowchartList: flowchart_list,
+        onSelectItem: selectFlowchartListItem,
+    });
+    const [flowchartName, setFlowchartName] = useState("");
+
     const [newNodeMenu, setNewNodeMenu] = useState<NewNodeMenuProps>({
         visible: false,
         position: { x: 0, y: 0 },
@@ -166,11 +194,6 @@ const BasicFlow = () => {
         });
     };
 
-    const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(false);
-    const toggleLeftSidebar = () => {
-        setIsLeftSidebarOpen(!isLeftSidebarOpen);
-    };
-
     const onPaneClick = useCallback(() => {
         setNewNodeMenu((menu) => {
             return { ...menu, visible: false };
@@ -178,32 +201,19 @@ const BasicFlow = () => {
         setNodeContextMenu((menu) => {
             return { ...menu, visible: false };
         });
-        setIsLeftSidebarOpen(false);
-    }, [setNodeContextMenu, setIsLeftSidebarOpen, setNewNodeMenu]);
+        setLeftSidebar((sidebar) => {
+            return { ...sidebar, visible: false };
+        });
+    }, [setNodeContextMenu, setNewNodeMenu, setLeftSidebar]);
 
     const fromJson = function (obj: any) {
         const fullObj = JSON.parse(obj["fullJson"]);
         return fullObj;
     };
 
-    const handleSelectItem = (json: string) => {
-        const flowchart = JSON.parse(json);
-        setNodes((_) => flowchart.Nodes.map(fromJson));
-        setEdges((_) => flowchart.Edges.map(fromJson));
-    };
-
     return (
         <div className="BasicFlow" style={{ top: "-10px", height: "95vh", position: "relative" }}>
-            <button className="hamburger-btn" onClick={toggleLeftSidebar}>
-                <div className={`line ${isLeftSidebarOpen ? "open" : ""}`}></div>
-                <div className={`line ${isLeftSidebarOpen ? "open" : ""}`}></div>
-                <div className={`line ${isLeftSidebarOpen ? "open" : ""}`}></div>
-            </button>
-            <LeftSidebar
-                isOpen={isLeftSidebarOpen}
-                onClose={toggleLeftSidebar}
-                onSelectItem={handleSelectItem}
-            />
+            <LeftSidebar {...leftSidebar} />
             <div className="reactflow-wrapper" ref={reactFlowWrapper}>
                 <ReactFlow
                     ref={ref}
@@ -233,6 +243,8 @@ const BasicFlow = () => {
                         halt={halt}
                         execute={execute}
                         save={save}
+                        flowchartName={() => flowchartName}
+                        setFlowchartName={setFlowchartName}
                         isExecuting={() => executing}
                     />
                     <Background />

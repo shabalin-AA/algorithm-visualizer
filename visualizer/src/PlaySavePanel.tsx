@@ -6,26 +6,37 @@ interface PlaySavePanelProps {
     execute: () => void;
     halt: () => void;
     save: (name: string) => void;
+    flowchartName: () => string;
+    setFlowchartName: (name: string) => void;
     isExecuting: () => boolean;
 }
 
-const PlaySavePanel: React.FC<PlaySavePanelProps> = ({ execute, halt, isExecuting, save }) => {
+const PlaySavePanel: React.FC<PlaySavePanelProps> = ({
+    execute,
+    halt,
+    save,
+    flowchartName,
+    setFlowchartName,
+    isExecuting,
+}) => {
     const [isFormVisible, setIsFormVisible] = useState<boolean>(false);
-    const [projectName, setProjectName] = useState<string>("");
 
     const handleSaveClick = () => {
-        setIsFormVisible((prev) => !prev);
+        if (flowchartName() === "") {
+            setIsFormVisible((prev) => !prev);
+        } else {
+            save(flowchartName());
+        }
     };
 
     const handleInputChange = (event: any) => {
-        setProjectName(event.target.value);
+        setFlowchartName(event.target.value);
     };
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
-        save(projectName);
+        save(flowchartName());
         setIsFormVisible(false);
-        setProjectName("");
     };
 
     return (
@@ -51,7 +62,7 @@ const PlaySavePanel: React.FC<PlaySavePanelProps> = ({ execute, halt, isExecutin
                     <input
                         className="save-project-input"
                         type="text"
-                        value={projectName}
+                        value={flowchartName()}
                         onChange={handleInputChange}
                         placeholder="Название проекта"
                         required
