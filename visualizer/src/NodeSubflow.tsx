@@ -9,8 +9,22 @@ export default function NodeSubflow({ id, data, selected }: NodeProps<Subflow>) 
     return (
         <>
             <NodeResizer minHeight={40} minWidth={100} isVisible={selected} />
-            <div style={{ width: "100%", height: "100%", minWidth: "100px", minHeight: "40px" }}>
-                <textarea className="NodeSubflow-code" value={data.code}></textarea>
+            <div
+                style={{
+                    width: "100%",
+                    height: "100%",
+                    minWidth: "100px",
+                    minHeight: "40px",
+                    border: "1px solid black",
+                }}
+            >
+                <textarea
+                    className="NodeSubflow-code"
+                    value={data.code}
+                    style={{ textAlign: "center" }}
+                ></textarea>
+                <div className="subflow-line" style={{ left: "10px" }}></div>
+                <div className="subflow-line" style={{ right: "8px" }}></div>
             </div>
             {data.result !== "" && (
                 <div className="node-result" onChange={(evt) => updateNodeData(id, {})}>

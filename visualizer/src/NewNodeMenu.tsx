@@ -76,9 +76,6 @@ const NewNodeMenu: React.FC<NewNodeMenuProps> = ({ visible, position }) => {
                         <li onClick={(e) => newNode("NodeIf", e.clientX, e.clientY)}>
                             Узел ветвления
                         </li>
-                        <li onClick={(e) => newNode("NodeSubflow", e.clientX, e.clientY)}>
-                            Подсхема
-                        </li>
                         {items.map((item) => (
                             <li
                                 key={item.id}
