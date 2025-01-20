@@ -1,5 +1,6 @@
 package executor.parser.expr;
 
+import executor.interpreter.result.*;
 import java.util.HashMap;
 
 public class StringExpr implements Expr {
@@ -11,8 +12,8 @@ public class StringExpr implements Expr {
     }
 
     @Override
-    public Object eval(HashMap<String, Object> scope) {
-        return value;
+    public Result eval(HashMap<String, Object> scope) {
+        return new Ok(value);
     }
 
     public void add(Expr child) {}

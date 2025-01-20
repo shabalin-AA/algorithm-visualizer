@@ -1,9 +1,10 @@
 package executor.parser.expr;
 
+import executor.interpreter.result.*;
 import java.util.HashMap;
 
 public interface Expr {
-    public Object eval(HashMap<String, Object> scope);
+    public Result eval(HashMap<String, Object> scope);
 
     public void add(Expr child);
 }

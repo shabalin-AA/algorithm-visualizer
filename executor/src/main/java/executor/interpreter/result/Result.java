@@ -5,7 +5,11 @@ import org.json.JSONObject;
 
 public abstract class Result {
 
-    public Object value;
+    Object value;
+
+    public Object unwrap() {
+        return this.value;
+    }
 
     public abstract JSONObject json() throws JSONException;
 }

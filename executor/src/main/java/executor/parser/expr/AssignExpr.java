@@ -1,15 +1,18 @@
 package executor.parser.expr;
 
+import executor.interpreter.result.*;
 import java.util.HashMap;
 
 public class AssignExpr extends BinaryExpr {
 
     @Override
-    public Object eval(HashMap<String, Object> scope) {
+    public Result eval(HashMap<String, Object> scope) {
         String id = ((IdExpr) l).id;
-        Object value = r.eval(scope);
+        Result valueRes = r.eval(scope);
+        if (valueRes instanceof Err) return valueRes;
+        Object value = valueRes.unwrap();
         scope.put(id, value);
-        return value;
+        return new Ok(value);
     }
 
     public void add(Expr child) {

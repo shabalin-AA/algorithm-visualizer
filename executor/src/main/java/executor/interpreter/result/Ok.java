@@ -5,15 +5,16 @@ import org.json.JSONObject;
 
 public class Ok extends Result {
 
-    public Object value;
-
     public Ok(Object value) {
         this.value = value;
     }
 
     public JSONObject json() throws JSONException {
         JSONObject jo = new JSONObject();
-        jo.put("result", this.value);
+        while (value instanceof Result) {
+            this.value = ((Result) value).unwrap();
+        }
+        jo.put("ok", this.value);
         return jo;
     }
 

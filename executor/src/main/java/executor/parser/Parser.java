@@ -19,10 +19,7 @@ public class Parser {
         if (tokens.length == 1) {
             return newExpr(tokens[0]);
         }
-        if (
-            tokens[0].type == TokenType.LEFT_PAREN &&
-            tokens[tokens.length - 1].type == TokenType.RIGHT_PAREN
-        ) {
+        if (tokens[0].type == TokenType.LEFT_PAREN && tokens[tokens.length - 1].type == TokenType.RIGHT_PAREN) {
             Token[] inner = Arrays.copyOfRange(tokens, 1, tokens.length - 1);
             if (checkParentheses(inner)) return parse(inner);
         }
@@ -55,9 +52,7 @@ public class Parser {
                 if (t.str.equals(",")) return new ListExpr();
                 break;
             case STRING:
-                if (chars[0] == '\"' && chars[chars.length - 1] == '\"') return new StringExpr(
-                    t.str.substring(1, t.str.length() - 1)
-                );
+                if (chars[0] == '\"' && chars[chars.length - 1] == '\"') return new StringExpr(t.str.substring(1, t.str.length() - 1));
                 else return null;
             case NUM:
                 for (char c : chars) {
@@ -66,9 +61,7 @@ public class Parser {
                 return new NumExpr(Double.parseDouble(t.str));
             case ID:
                 for (char c : chars) {
-                    if (
-                        c == '_' || (c >= '0' && c <= '9') || (c >= 'A' && c <= 'z')
-                    ) {} else return null;
+                    if (c == '_' || (c >= '0' && c <= '9') || (c >= 'A' && c <= 'z')) {} else return null;
                 }
                 return new IdExpr(t.str);
             default:

@@ -70,8 +70,7 @@ const BasicFlow = () => {
     });
 
     const onReconnect = useCallback(
-        (oldEdge: Edge, newConnection: Connection) =>
-            setEdges((eds) => reconnectEdge(oldEdge, newConnection, eds)),
+        (oldEdge: Edge, newConnection: Connection) => setEdges((eds) => reconnectEdge(oldEdge, newConnection, eds)),
         [setEdges],
     );
 
@@ -83,13 +82,10 @@ const BasicFlow = () => {
         [setEdges],
     );
 
-    const onDragOver = useCallback(
-        (event: { preventDefault: () => void; dataTransfer: { dropEffect: string } }) => {
-            event.preventDefault();
-            event.dataTransfer.dropEffect = "move";
-        },
-        [],
-    );
+    const onDragOver = useCallback((event: { preventDefault: () => void; dataTransfer: { dropEffect: string } }) => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move";
+    }, []);
 
     function nodeJson(node: Node) {
         let type = "";
@@ -139,10 +135,12 @@ const BasicFlow = () => {
             Edges: edges.map(edgeJson),
         };
         function newResult(node: Node, resultJson: any) {
-            try {
-                node.data.result = resultJson.result.toString();
-            } catch {
-                //node.data.result = resultJson.err.toString();
+            if (resultJson.ok !== undefined) {
+                node.data.result = resultJson.ok.toString();
+            } else if (resultJson.err) {
+                node.data.result = resultJson.err.toString();
+            } else {
+                node.data.result = "";
             }
             return node;
         }

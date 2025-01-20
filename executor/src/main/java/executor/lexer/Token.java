@@ -11,6 +11,6 @@ public class Token {
     }
 
     public String toString() {
-        return String.format("%s\t%s\n", this.str, this.type.name());
+        return String.format("\n%s\t%s", this.str, this.type.name());
     }
 }

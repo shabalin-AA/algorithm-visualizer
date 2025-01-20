@@ -19,9 +19,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO arrays
-// TODO calling other flowcharts
-
 public class Interpreter {
 
     Logger logger = LoggerFactory.getLogger(executor.interpreter.Interpreter.class);
@@ -136,8 +133,8 @@ public class Interpreter {
         HashMap<Integer, Result> results = null;
         try {
             flow = new JSONObject(flowJson);
-            Interpreter tmpInt = new Interpreter(flow, this.modules, this.scope);
-            results = tmpInt.eval();
+            Interpreter subflowInt = new Interpreter(flow, this.modules, this.scope);
+            results = subflowInt.eval();
             Result res = results.get(0);
             logger.info("[flowchart {} results]\n{}", n.code, results.toString());
             logger.info("[node {} result]\n{}", n.id, res.toString());
@@ -149,28 +146,35 @@ public class Interpreter {
     }
 
     Result evalCodeNode(Node n) {
-        Object res = null;
+        Result res = new Ok(null);
         try {
-            Token[] tokens = lexer.tokenize(n.code);
-            Expr ast = parser.parse(tokens);
-            res = ast.eval(scope);
-            logger.info("[node {} tokens]\n{}", n.id, Arrays.toString(tokens));
-            logger.info("[node {} ast]\n{}", n.id, exprToString(ast, 0));
-            logger.info("[node {} result]\n{}", n.id, res.toString());
+            if (n.code != null) {
+                Token[] tokens = lexer.tokenize(n.code);
+                logger.info("[node {} tokens]\n{}", n.id, Arrays.toString(tokens));
+                Expr ast = parser.parse(tokens);
+                logger.info("[node {} ast]   \n{}", n.id, exprToString(ast, 0));
+                res = ast.eval(scope);
+                logger.info("[node {} result]\n{}", n.id, res.toString());
+            }
         } catch (Exception e) {
             return new Err(e);
         }
         if (n.type == NodeType.COND) {
-            scope.put("_if_value", (boolean) res);
+            scope.put("_if_value", res);
         }
-        return new Ok(res);
+        return res;
     }
 
     Node nextNode(Node crnt) {
         for (Edge e : eds) {
             boolean edge = (e.source == crnt.id);
             if (crnt.type == NodeType.COND) {
-                edge = edge && (e.branch == (boolean) scope.get("_if_value"));
+                Result ifResult = (Result) scope.get("_if_value");
+                if (ifResult instanceof Ok) {
+                    edge = edge && (e.branch == (boolean) ifResult.unwrap());
+                } else {
+                    return null;
+                }
             }
             if (edge) {
                 for (Node n : nds) {

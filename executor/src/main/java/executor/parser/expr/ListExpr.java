@@ -1,29 +1,38 @@
 package executor.parser.expr;
 
+import executor.interpreter.result.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class ListExpr implements Expr {
 
-    protected Expr value;
-    protected ListExpr next = null;
+    protected Expr value = null;
+    protected Expr next = null;
 
     @Override
-    public Object eval(HashMap<String, Object> scope) {
-        List<Object> acc = null;
-        if (next == null) {
-            acc = new ArrayList<Object>();
-            acc.add(value.eval(scope));
-        } else {
-            acc = (List) next.eval(scope);
-            acc.add(value.eval(scope));
+    public Result eval(HashMap<String, Object> scope) {
+        ArrayList<Object> acc = new ArrayList<Object>();
+        acc.add(this.value.eval(scope).unwrap());
+        Expr cur = next;
+        while (cur != null) {
+            if (cur instanceof ListExpr) {
+                ListExpr curList = (ListExpr) cur;
+                acc.add(curList.value.eval(scope).unwrap());
+                cur = curList.next;
+            } else {
+                acc.add(cur.eval(scope).unwrap());
+                cur = null;
+            }
         }
-        return acc;
+        return new Ok(acc);
     }
 
     public void add(Expr child) {
-        if (child instanceof ListExpr) if (next == null) next = (ListExpr) child;
-        else if (value == null) value = child;
+        if (value == null) {
+            value = child;
+        } else if (next == null) {
+            next = child;
+        }
     }
 }

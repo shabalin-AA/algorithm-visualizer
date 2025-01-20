@@ -169,6 +169,7 @@ body {
 }
 
 .node-result {
+    word-wrap: break-word;
     width: 100%;
     box-sizing: border-box;
     margin: 2px 0px;

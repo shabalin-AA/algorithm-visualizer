@@ -24,7 +24,7 @@ public class ExecuteHandler {
         try {
             response = resultsJson(results);
         } catch (JSONException e) {
-            logger.error("[json] worng response\n{}", response);
+            logger.error("[json] wrong response\n{}", response);
         }
         return response.toString();
     }

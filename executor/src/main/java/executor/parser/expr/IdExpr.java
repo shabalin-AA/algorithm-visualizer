@@ -1,5 +1,6 @@
 package executor.parser.expr;
 
+import executor.interpreter.result.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -15,39 +16,38 @@ public class IdExpr implements Expr {
         this.id = id;
     }
 
-    Object evalField(Field field) {
+    Result evalField(Field field) {
         field.setAccessible(true);
         try {
-            return field.get(null);
+            return new Ok(field.get(null));
         } catch (Exception e) {
-            System.out.println(e);
+            return new Err(e);
         }
-        return null;
     }
 
-    Object evalMethod(Method method, HashMap<String, Object> scope) {
+    Result evalMethod(Method method, HashMap<String, Object> scope) {
         method.setAccessible(true);
         try {
-            Object arguments = this.arg.eval(scope);
+            Result argumentsRes = this.arg.eval(scope);
+            Object arguments = argumentsRes.unwrap();
             //TODO: invoke non-static methods
             if (arguments instanceof List) {
                 List<Object> argList = (List) arguments;
-                return method.invoke(null, argList.toArray());
+                return new Ok(method.invoke(null, argList.toArray()));
             } else {
-                return method.invoke(null, arguments);
+                return new Ok(method.invoke(null, arguments));
             }
         } catch (Exception e) {
-            System.out.println(e);
+            return new Err(e);
         }
-        return null;
     }
 
-    Object evalFlowchart(JSONObject flowchart) {
-        return null;
+    Result evalFlowchart(JSONObject flowchart) {
+        return new Ok(null);
     }
 
     @Override
-    public Object eval(HashMap<String, Object> scope) {
+    public Result eval(HashMap<String, Object> scope) {
         String varName = id;
         if (scope.containsKey(varName)) {
             Object value = scope.get(varName);
@@ -57,12 +57,14 @@ public class IdExpr implements Expr {
                 return evalMethod((Method) value, scope);
             } else if (value instanceof JSONObject) {
                 return evalFlowchart((JSONObject) value);
+            } else if (value == null) {
+                return new Err(new NullPointerException(String.format("Variable %s is null", varName)));
             } else {
-                return value;
+                return new Ok(value);
             }
         } else {
             scope.put(varName, null);
-            return null;
+            return new Err(new NullPointerException(String.format("Variable %s is null", varName)));
         }
     }
 

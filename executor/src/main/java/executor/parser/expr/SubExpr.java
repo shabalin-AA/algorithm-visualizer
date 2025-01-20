@@ -1,21 +1,27 @@
 package executor.parser.expr;
 
+import executor.interpreter.result.*;
 import java.util.HashMap;
 
 public class SubExpr extends BinaryExpr {
 
     @Override
-    public Object eval(HashMap<String, Object> scope) {
+    public Result eval(HashMap<String, Object> scope) {
         try {
             if (r != null) {
-                Object a = this.l.eval(scope);
-                Object b = this.r.eval(scope);
-                return ((double) a - (double) b);
+                Result aRes = this.l.eval(scope);
+                Result bRes = this.r.eval(scope);
+                if (aRes instanceof Err) return aRes;
+                if (bRes instanceof Err) return bRes;
+                double a = (double) aRes.unwrap();
+                double b = (double) bRes.unwrap();
+                return new Ok(a - b);
             } else {
-                return -(double) (this.l.eval(scope));
+                return new Ok(-(double) (this.l.eval(scope).unwrap()));
             }
-        } catch (Exception e) {}
-        return null;
+        } catch (Exception e) {
+            return new Err(e);
+        }
     }
 
     public void add(Expr child) {
