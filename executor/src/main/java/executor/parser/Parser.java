@@ -12,12 +12,14 @@ import org.slf4j.LoggerFactory;
 
 public class Parser {
 
+    ExprFactory exprFactory = new ExprFactory();
+
     Logger logger = LoggerFactory.getLogger(executor.parser.Parser.class);
 
     public Expr parse(Token[] tokens) throws UndefinedTokenException {
         if (tokens.length == 0) return null;
         if (tokens.length == 1) {
-            return newExpr(tokens[0]);
+            return exprFactory.createExpr(tokens[0]);
         }
         if (tokens[0].type == TokenType.LEFT_PAREN && tokens[tokens.length - 1].type == TokenType.RIGHT_PAREN) {
             Token[] inner = Arrays.copyOfRange(tokens, 1, tokens.length - 1);
@@ -35,39 +37,42 @@ public class Parser {
         return res;
     }
 
-    Expr newExpr(Token t) {
-        char[] chars = t.str.toCharArray();
-        switch (t.type) {
-            case OP:
-                if (t.str.equals(";")) return new NextExpr();
-                if (t.str.equals("=")) return new AssignExpr();
-                if (t.str.equals(">")) return new GtExpr();
-                if (t.str.equals("<")) return new LsExpr();
-                if (t.str.equals("+")) return new AddExpr();
-                if (t.str.equals("-")) return new SubExpr();
-                if (t.str.equals("*")) return new MulExpr();
-                if (t.str.equals("/")) return new DivExpr();
-                if (t.str.equals("==")) return new EqExpr();
-                if (t.str.equals("!=")) return new NotEqExpr();
-                if (t.str.equals(",")) return new ListExpr();
-                break;
-            case STRING:
-                if (chars[0] == '\"' && chars[chars.length - 1] == '\"') return new StringExpr(t.str.substring(1, t.str.length() - 1));
-                else return null;
-            case NUM:
-                for (char c : chars) {
-                    if (c == '.' || (c >= '0' && c <= '9')) {} else return null;
-                }
-                return new NumExpr(Double.parseDouble(t.str));
-            case ID:
-                for (char c : chars) {
-                    if (c == '_' || (c >= '0' && c <= '9') || (c >= 'A' && c <= 'z')) {} else return null;
-                }
-                return new IdExpr(t.str);
-            default:
-                break;
+    class ExprFactory {
+
+        Expr createExpr(Token t) {
+            char[] chars = t.str.toCharArray();
+            switch (t.type) {
+                case OP:
+                    if (t.str.equals(";")) return new NextExpr();
+                    if (t.str.equals("=")) return new AssignExpr();
+                    if (t.str.equals(">")) return new GtExpr();
+                    if (t.str.equals("<")) return new LsExpr();
+                    if (t.str.equals("+")) return new AddExpr();
+                    if (t.str.equals("-")) return new SubExpr();
+                    if (t.str.equals("*")) return new MulExpr();
+                    if (t.str.equals("/")) return new DivExpr();
+                    if (t.str.equals("==")) return new EqExpr();
+                    if (t.str.equals("!=")) return new NotEqExpr();
+                    if (t.str.equals(",")) return new ListExpr();
+                    break;
+                case STRING:
+                    if (chars[0] == '\"' && chars[chars.length - 1] == '\"') return new StringExpr(t.str.substring(1, t.str.length() - 1));
+                    else return null;
+                case NUM:
+                    for (char c : chars) {
+                        if (c == '.' || (c >= '0' && c <= '9')) {} else return null;
+                    }
+                    return new NumExpr(Double.parseDouble(t.str));
+                case ID:
+                    for (char c : chars) {
+                        if (c == '_' || (c >= '0' && c <= '9') || (c >= 'A' && c <= 'z')) {} else return null;
+                    }
+                    return new IdExpr(t.str);
+                default:
+                    break;
+            }
+            return null;
         }
-        return null;
     }
 
     int minPrecIdx(Token[] tokens) {
@@ -93,7 +98,7 @@ public class Parser {
                 i++;
                 if (i >= tokens.length) break;
             }
-            int p = precedence(newExpr(tokens[i]));
+            int p = precedence(exprFactory.createExpr(tokens[i]));
             if (p < minPrecedence) {
                 minPrecedence = p;
                 idx = i;
@@ -102,7 +107,7 @@ public class Parser {
         return idx;
     }
 
-    static int precedence(Expr expr) {
+    int precedence(Expr expr) {
         if (expr instanceof NextExpr) return 0;
         if (expr instanceof ListExpr) return 1;
         if (expr instanceof AssignExpr) return 2;

@@ -21,12 +21,24 @@ public class Application {
 
     SQLiteHandler sqliteHandler = new SQLiteHandler();
     ExecuteHandler executeHandler = new ExecuteHandler();
+    CodegenHandler codegenHandler = new CodegenHandler();
 
     @PostMapping(value = "/execute", consumes = "application/json", produces = "application/json")
     String execute(@RequestBody String body) {
         logger.info("[request_body]\t" + body);
         try {
             return executeHandler.executeFlowchart(new JSONObject(body));
+        } catch (JSONException e) {
+            logger.warn("Wrong flowchart json\n" + e.toString());
+        }
+        return "";
+    }
+
+    @PostMapping(value = "/codegen/groovy", consumes = "application/json", produces = "application/json")
+    String codegenGroovy(@RequestBody String body) {
+        logger.info("[request_body]\t" + body);
+        try {
+            return codegenHandler.genGroovy(new JSONObject(body));
         } catch (JSONException e) {
             logger.warn("Wrong flowchart json\n" + e.toString());
         }

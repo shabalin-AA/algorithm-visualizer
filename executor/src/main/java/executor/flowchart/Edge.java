@@ -1,4 +1,4 @@
-package executor.interpreter;
+package executor.flowchart;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 public class Edge {
 
-    Logger logger = LoggerFactory.getLogger(executor.interpreter.Edge.class);
+    Logger logger = LoggerFactory.getLogger(executor.flowchart.Edge.class);
 
     public int target;
     public int source;
